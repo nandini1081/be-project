@@ -6,9 +6,10 @@ Creates candidate profile vector from parsed resume
 import uuid
 from typing import Dict, List
 from database import DatabaseManager
-from utils import embedding_service
+from utils.embedding_service import embedding_service
 from utils.vector_operations import validate_vector
 from config import VECTOR_DIMENSION
+
 
 class ProfileCreator:
     """Create candidate profile vectors"""

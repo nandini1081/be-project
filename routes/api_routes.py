@@ -29,25 +29,37 @@ def create_routes():
     
     @api.route('/parse-resume', methods=['POST'])
     def parse_resume():
-        """Parse resume from text or PDF"""
         try:
-            data = request.get_json()
-            
-            if 'resume_text' in data:
-                parsed = resume_parser.parse_resume(resume_text=data['resume_text'])
+            # CASE 1: Resume sent as JSON text
+            if request.is_json:
+                data = request.get_json()
+                resume_text = data.get('resume_text')
+
+                if not resume_text:
+                    return jsonify({'error': 'resume_text missing'}), 400
+
+                parsed = resume_parser.parse_resume(resume_text=resume_text)
+
+            # CASE 2: Resume sent as PDF file
             elif 'pdf_file' in request.files:
                 pdf_file = request.files['pdf_file']
+
+                if not pdf_file or pdf_file.filename == '':
+                    return jsonify({'error': 'No PDF file provided'}), 400
+
                 parsed = resume_parser.parse_resume(pdf_file=pdf_file)
+
             else:
                 return jsonify({'error': 'No resume provided'}), 400
-            
+
             return jsonify({
                 'success': True,
                 'data': parsed
             })
-        
+
         except Exception as e:
             return jsonify({'error': str(e), 'trace': traceback.format_exc()}), 500
+
     
     @api.route('/create-profile', methods=['POST'])
     def create_profile():

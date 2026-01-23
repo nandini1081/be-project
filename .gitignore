@@ -1,7 +1,11 @@
 venv/
+be-proj-v1/
+
 __pycache__/
 *.pyc
 .env
 .DS_Store
 .idea/
 .vscode/
+
+*.db

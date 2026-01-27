@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Preparation System</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-brain"></i>
+                <span>AI Interview Prep</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active" data-page="home">Home</a></li>
+                <li><a href="#upload" class="nav-link" data-page="upload">Upload Resume</a></li>
+                <li><a href="#interview" class="nav-link" data-page="interview">Start Interview</a></li>
+                <li><a href="#dashboard" class="nav-link" data-page="dashboard">Dashboard</a></li>
+                <li><a href="#questions" class="nav-link" data-page="questions">Manage Questions</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <!-- HOME PAGE -->
+        <section id="home-page" class="page active">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">Master Your Interview Skills</h1>
+                    <p class="hero-subtitle">AI-powered personalized interview preparation tailored to your resume and skills</p>
+                    <div class="hero-buttons">
+                        <button class="btn btn-primary" onclick="navigateTo('upload')">
+                            <i class="fas fa-upload"></i> Upload Resume
+                        </button>
+                        <button class="btn btn-secondary" onclick="navigateTo('interview')">
+                            <i class="fas fa-play"></i> Start Mock Interview
+                        </button>
+                    </div>
+                </div>
+                <div class="hero-features">
+                    <div class="feature-card">
+                        <i class="fas fa-robot"></i>
+                        <h3>AI-Powered</h3>
+                        <p>Smart question generation based on your profile</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Performance Tracking</h3>
+                        <p>Detailed analytics and progress monitoring</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-bullseye"></i>
+                        <h3>Personalized</h3>
+                        <p>Questions tailored to your skills and experience</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-sync-alt"></i>
+                        <h3>Adaptive Learning</h3>
+                        <p>Difficulty adjusts based on your performance</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- UPLOAD RESUME PAGE -->
+        <section id="upload-page" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h2><i class="fas fa-file-upload"></i> Upload Your Resume</h2>
+                    <p>Let our AI analyze your resume and create a personalized profile</p>
+                </div>
+
+                <div class="upload-section">
+                    <!-- Resume Input -->
+                    <div class="upload-card">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3>Paste Resume Text</h3>
+                        <textarea id="resume-text" class="resume-textarea" 
+                                  placeholder="Paste your resume text here...&#10;&#10;Include:&#10;- Skills&#10;- Work Experience&#10;- Projects&#10;- Education"></textarea>
+                        <button class="btn btn-primary" onclick="processResume()">
+                            <i class="fas fa-magic"></i> Process Resume
+                        </button>
+                    </div>
+
+                    <!-- Processing Status -->
+                    <div id="processing-status" class="status-card" style="display: none;">
+                        <div class="loader"></div>
+                        <p id="status-message">Processing your resume...</p>
+                    </div>
+
+                    <!-- Results -->
+                    <div id="resume-results" class="results-card" style="display: none;">
+                        <h3><i class="fas fa-check-circle"></i> Profile Created Successfully!</h3>
+                        <div id="profile-summary"></div>
+                        <div class="result-actions">
+                            <button class="btn btn-primary" onclick="navigateTo('interview')">
+                                <i class="fas fa-play"></i> Start Interview
+                            </button>
+                            <button class="btn btn-secondary" onclick="viewProfile()">
+                                <i class="fas fa-user"></i> View Full Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- INTERVIEW PAGE -->
+        <section id="interview-page" class="page">
+            <div class="container">
+                <!-- Candidate Selection -->
+                <div id="candidate-selection" class="selection-section">
+                    <div class="page-header">
+                        <h2><i class="fas fa-microphone"></i> Mock Interview</h2>
+                        <p>Answer questions and get real-time feedback</p>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="candidate-id-input">Enter Your Candidate ID:</label>
+                        <input type="text" id="candidate-id-input" class="form-input" 
+                               placeholder="e.g., abc123-def456-ghi789">
+                        <button class="btn btn-primary" onclick="startInterview()">
+                            <i class="fas fa-play"></i> Start Interview
+                        </button>
+                    </div>
+
+                    <div class="interview-options">
+                        <h3>Interview Settings</h3>
+                        <div class="options-grid">
+                            <div class="option-item">
+                                <label for="question-count">Number of Questions:</label>
+                                <select id="question-count" class="form-select">
+                                    <option value="5">5 Questions</option>
+                                    <option value="10" selected>10 Questions</option>
+                                    <option value="15">15 Questions</option>
+                                </select>
+                            </div>
+                            <div class="option-item">
+                                <label for="difficulty-level">Difficulty:</label>
+                                <select id="difficulty-level" class="form-select">
+                                    <option value="">Auto (Adaptive)</option>
+                                    <option value="easy">Easy</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="hard">Hard</option>
+                                </select>
+                            </div>
+                            <div class="option-item">
+                                <label for="category-filter">Category:</label>
+                                <select id="category-filter" class="form-select">
+                                    <option value="">All Categories</option>
+                                    <option value="technical">Technical</option>
+                                    <option value="behavioral">Behavioral</option>
+                                    <option value="situational">Situational</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interview Session -->
+                <div id="interview-session" class="interview-container" style="display: none;">
+                    <!-- Progress Bar -->
+                    <div class="progress-section">
+                        <div class="progress-info">
+                            <span>Question <span id="current-question-num">1</span> of <span id="total-questions">10</span></span>
+                            <span id="progress-percentage">10%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="progress-fill" class="progress-fill"></div>
+                        </div>
+                    </div>
+
+                    <!-- Question Display -->
+                    <div class="question-card">
+                        <div class="question-header">
+                            <span class="question-category" id="question-category">Technical</span>
+                            <span class="question-difficulty" id="question-difficulty">Medium</span>
+                        </div>
+                        <h3 id="question-text">Loading question...</h3>
+                        <div class="question-meta">
+                            <span><i class="fas fa-tags"></i> <span id="question-topics"></span></span>
+                            <span><i class="fas fa-bullseye"></i> Similarity: <span id="question-similarity">--</span></span>
+                        </div>
+                    </div>
+
+                    <!-- Answer Input -->
+                    <div class="answer-section">
+                        <label for="answer-text">Your Answer:</label>
+                        <textarea id="answer-text" class="answer-textarea" 
+                                  placeholder="Type your answer here...&#10;&#10;Tips:&#10;- Be specific and detailed&#10;- Use examples from your experience&#10;- Structure your response clearly"></textarea>
+                        
+                        <div class="answer-actions">
+                            <button class="btn btn-success" onclick="submitAnswer()">
+                                <i class="fas fa-paper-plane"></i> Submit Answer
+                            </button>
+                            <button class="btn btn-secondary" onclick="skipQuestion()">
+                                <i class="fas fa-forward"></i> Skip Question
+                            </button>
+                            <button class="btn btn-danger" onclick="endInterview()">
+                                <i class="fas fa-stop"></i> End Interview
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Feedback Display -->
+                    <div id="answer-feedback" class="feedback-card" style="display: none;">
+                        <h4><i class="fas fa-comment-dots"></i> Feedback</h4>
+                        <div class="score-display">
+                            <div class="score-item">
+                                <span>Knowledge Score:</span>
+                                <span id="knowledge-score" class="score-value">--</span>
+                            </div>
+                            <div class="score-item">
+                                <span>Speech Score:</span>
+                                <span id="speech-score" class="score-value">--</span>
+                            </div>
+                            <div class="score-item total">
+                                <span>Total Score:</span>
+                                <span id="total-score" class="score-value">--</span>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="nextQuestion()">
+                            <i class="fas fa-arrow-right"></i> Next Question
+                        </button>
+                    </div>
+
+                    <!-- Interview Complete -->
+                    <div id="interview-complete" class="complete-card" style="display: none;">
+                        <div class="complete-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h3>Interview Complete!</h3>
+                        <div id="final-summary"></div>
+                        <div class="complete-actions">
+                            <button class="btn btn-primary" onclick="navigateTo('dashboard')">
+                                <i class="fas fa-chart-bar"></i> View Dashboard
+                            </button>
+                            <button class="btn btn-secondary" onclick="resetInterview()">
+                                <i class="fas fa-redo"></i> Start New Interview
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DASHBOARD PAGE -->
+        <section id="dashboard-page" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h2><i class="fas fa-chart-line"></i> Performance Dashboard</h2>
+                    <p>Track your progress and analyze your performance</p>
+                </div>
+
+                <div class="input-group">
+                    <label for="dashboard-candidate-id">Candidate ID:</label>
+                    <input type="text" id="dashboard-candidate-id" class="form-input" 
+                           placeholder="Enter your candidate ID">
+                    <button class="btn btn-primary" onclick="loadDashboard()">
+                        <i class="fas fa-sync"></i> Load Dashboard
+                    </button>
+                </div>
+
+                <div id="dashboard-content" style="display: none;">
+                    <!-- Stats Overview -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fas fa-question-circle"></i>
+                            <h3 id="stat-total-questions">0</h3>
+                            <p>Total Questions</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-star"></i>
+                            <h3 id="stat-avg-score">0%</h3>
+                            <p>Average Score</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-trophy"></i>
+                            <h3 id="stat-best-score">0%</h3>
+                            <p>Best Score</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-chart-line"></i>
+                            <h3 id="stat-trend">--</h3>
+                            <p>Trend</p>
+                        </div>
+                    </div>
+
+                    <!-- Profile Info -->
+                    <div class="profile-section">
+                        <h3><i class="fas fa-user"></i> Profile Information</h3>
+                        <div id="profile-info" class="profile-info-grid"></div>
+                    </div>
+
+                    <!-- Performance History -->
+                    <div class="history-section">
+                        <h3><i class="fas fa-history"></i> Recent Performance</h3>
+                        <div id="performance-history" class="history-list"></div>
+                    </div>
+
+                    <!-- Recommendations -->
+                    <div class="recommendations-section">
+                        <h3><i class="fas fa-lightbulb"></i> Personalized Recommendations</h3>
+                        <div id="recommendations-content"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- QUESTIONS MANAGEMENT PAGE -->
+        <section id="questions-page" class="page">
+            <div class="container">
+                <div class="page-header">
+                    <h2><i class="fas fa-tasks"></i> Question Management</h2>
+                    <p>Add and manage interview questions</p>
+                </div>
+
+                <div class="questions-tabs">
+                    <button class="tab-btn active" onclick="switchTab('add-single')">Add Single</button>
+                    <button class="tab-btn" onclick="switchTab('add-bulk')">Bulk Add</button>
+                    <button class="tab-btn" onclick="switchTab('view-all')">View All</button>
+                </div>
+
+                <!-- Add Single Question -->
+                <div id="add-single-tab" class="tab-content active">
+                    <div class="form-card">
+                        <h3>Add New Question</h3>
+                        <form id="add-question-form">
+                            <div class="form-group">
+                                <label for="new-question-text">Question Text:</label>
+                                <textarea id="new-question-text" class="form-textarea" required
+                                          placeholder="Enter the interview question..."></textarea>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="new-category">Category:</label>
+                                    <select id="new-category" class="form-select" required>
+                                        <option value="">Select Category</option>
+                                        <option value="technical">Technical</option>
+                                        <option value="behavioral">Behavioral</option>
+                                        <option value="situational">Situational</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="new-difficulty">Difficulty:</label>
+                                    <select id="new-difficulty" class="form-select" required>
+                                        <option value="">Select Difficulty</option>
+                                        <option value="easy">Easy</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="hard">Hard</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="new-topics">Topics (comma-separated):</label>
+                                <input type="text" id="new-topics" class="form-input" required
+                                       placeholder="e.g., Python, Machine Learning, Flask">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="new-job-roles">Job Roles (comma-separated):</label>
+                                <input type="text" id="new-job-roles" class="form-input" required
+                                       placeholder="e.g., Software Engineer, Data Scientist">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="new-keywords">Ideal Keywords (comma-separated, optional):</label>
+                                <input type="text" id="new-keywords" class="form-input"
+                                       placeholder="e.g., supervised, labeled, training">
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Add Question
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Bulk Add Questions -->
+                <div id="add-bulk-tab" class="tab-content">
+                    <div class="form-card">
+                        <h3>Bulk Add Questions (JSON Format)</h3>
+                        <p class="helper-text">Format: Array of question objects with fields: question_text, category, difficulty, topics, job_roles</p>
+                        <textarea id="bulk-questions-json" class="code-textarea"
+                                  placeholder='[&#10;  {&#10;    "question_text": "Explain polymorphism in OOP",&#10;    "category": "technical",&#10;    "difficulty": "medium",&#10;    "topics": ["OOP", "Java"],&#10;    "job_roles": ["Software Engineer"]&#10;  }&#10;]'></textarea>
+                        <button class="btn btn-primary" onclick="bulkAddQuestions()">
+                            <i class="fas fa-upload"></i> Upload Questions
+                        </button>
+                    </div>
+                </div>
+
+                <!-- View All Questions -->
+                <div id="view-all-tab" class="tab-content">
+                    <div class="questions-header">
+                        <h3>Question Database</h3>
+                        <button class="btn btn-secondary" onclick="loadAllQuestions()">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                    </div>
+                    
+                    <div id="database-stats" class="stats-summary"></div>
+                    
+                    <div class="filter-section">
+                        <select id="filter-category" class="form-select" onchange="filterQuestions()">
+                            <option value="">All Categories</option>
+                            <option value="technical">Technical</option>
+                            <option value="behavioral">Behavioral</option>
+                            <option value="situational">Situational</option>
+                        </select>
+                        <select id="filter-difficulty" class="form-select" onchange="filterQuestions()">
+                            <option value="">All Difficulties</option>
+                            <option value="easy">Easy</option>
+                            <option value="medium">Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                    
+                    <div id="questions-list" class="questions-list"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Processing...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/resume.js"></script>
+    <script src="js/interview.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

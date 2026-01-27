@@ -2,14 +2,20 @@
 Main Flask Application
 """
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 from routes import create_routes
 from database import DatabaseManager
 import os
 
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+FRONTEND_DIR = os.path.join(BASE_DIR, "frontend")
 def create_app():
     """Create and configure Flask app"""
-    app = Flask(__name__)
+    app = Flask(
+        __name__,
+        static_folder=FRONTEND_DIR,
+        static_url_path=""
+    )
     
     # Configuration
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
@@ -29,6 +35,7 @@ def create_app():
     # Root endpoint
     @app.route('/')
     def index():
+        return send_from_directory(FRONTEND_DIR, "index.html")
         return jsonify({
             'service': 'AI Interview Preparation System',
             'version': '1.0.0',
@@ -42,6 +49,11 @@ def create_app():
                 'add_question': '/api/add-question [POST]'
             }
         })
+    
+    @app.route("/<path:path>")
+    def serve_static(path):
+        return send_from_directory(FRONTEND_DIR, path)
+
     
     # Error handlers
     @app.errorhandler(404)

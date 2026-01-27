@@ -5,7 +5,7 @@ Shared configuration for all team members
 # Vector and Model Configuration
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 VECTOR_DIMENSION = 384
-SIMILARITY_THRESHOLD = 0.7
+SIMILARITY_THRESHOLD = 0.2
 
 # Database Configuration
 DATABASE_PATH = "interview_system.db"

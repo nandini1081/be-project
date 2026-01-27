@@ -5,7 +5,7 @@ Updates candidate profile based on interview performance
 
 from typing import Dict, List, Optional
 from database import DatabaseManager
-from utils import embedding_service
+from utils.embedding_service import embedding_service
 from utils.vector_operations import weighted_vector_update, validate_vector
 from config import UPDATE_OLD_WEIGHT, UPDATE_NEW_WEIGHT, HISTORY_LIMIT
 

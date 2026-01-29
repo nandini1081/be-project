@@ -33,7 +33,7 @@
             <div class="hero">
                 <div class="hero-content">
                     <h1 class="hero-title">Master Your Interview Skills</h1>
-                    <p class="hero-subtitle">AI-powered personalized interview preparation tailored to your resume and skills</p>
+                    <p class="hero-subtitle">AI-powered personalized interview preparation with voice interaction</p>
                     <div class="hero-buttons">
                         <button class="btn btn-primary" onclick="navigateTo('upload')">
                             <i class="fas fa-upload"></i> Upload Resume
@@ -50,14 +50,14 @@
                         <p>Smart question generation based on your profile</p>
                     </div>
                     <div class="feature-card">
+                        <i class="fas fa-microphone"></i>
+                        <h3>Voice Interaction</h3>
+                        <p>Speak your answers with voice-to-text</p>
+                    </div>
+                    <div class="feature-card">
                         <i class="fas fa-chart-line"></i>
                         <h3>Performance Tracking</h3>
                         <p>Detailed analytics and progress monitoring</p>
-                    </div>
-                    <div class="feature-card">
-                        <i class="fas fa-bullseye"></i>
-                        <h3>Personalized</h3>
-                        <p>Questions tailored to your skills and experience</p>
                     </div>
                     <div class="feature-card">
                         <i class="fas fa-sync-alt"></i>
@@ -120,7 +120,7 @@
                 <div id="candidate-selection" class="selection-section">
                     <div class="page-header">
                         <h2><i class="fas fa-microphone"></i> Mock Interview</h2>
-                        <p>Answer questions and get real-time feedback</p>
+                        <p>Answer questions with text or voice and get real-time feedback</p>
                     </div>
                     
                     <div class="input-group">
@@ -161,6 +161,12 @@
                                     <option value="situational">Situational</option>
                                 </select>
                             </div>
+                            <div class="option-item">
+                                <label style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" id="auto-speak-questions" checked>
+                                    <span>Auto-speak questions</span>
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -189,13 +195,58 @@
                             <span><i class="fas fa-tags"></i> <span id="question-topics"></span></span>
                             <span><i class="fas fa-bullseye"></i> Similarity: <span id="question-similarity">--</span></span>
                         </div>
+                        
+                        <!-- Voice Controls for Question -->
+                        <div class="voice-controls">
+                            <button id="speak-question-btn" class="btn btn-voice" onclick="speakQuestion(document.getElementById('question-text').textContent)" title="Listen to question">
+                                <i class="fas fa-volume-up"></i> Listen to Question
+                            </button>
+                            <button id="stop-speaking-btn" class="btn btn-voice-danger" onclick="stopSpeaking()" style="display: none;" title="Stop speaking">
+                                <i class="fas fa-volume-mute"></i> Stop Speaking
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Answer Input -->
                     <div class="answer-section">
-                        <label for="answer-text">Your Answer:</label>
+                        <div class="answer-header">
+                            <label for="answer-text">Your Answer:</label>
+                            <div class="voice-input-controls">
+                                <button id="record-answer-btn" class="btn btn-record" onclick="startRecording()" title="Record voice answer">
+                                    <i class="fas fa-microphone"></i> Record Answer
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Recording Indicator -->
+                        <div id="recording-indicator" class="recording-indicator" style="display: none;">
+                            <div class="recording-pulse"></div>
+                            <span>Recording... Speak now</span>
+                        </div>
+                        
+                        <!-- Recording Error Display -->
+                        <div id="recording-error" class="recording-error" style="display: none;"></div>
+                        
+                        <!-- Microphone Permission Help -->
+                        <div id="mic-permission-help" class="mic-permission-warning" style="display: none;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>
+                                <h4>Microphone Access Required</h4>
+                                <p>To use voice recording:</p>
+                                <ol style="margin: 0.5rem 0 0 1.5rem; font-size: 0.9rem;">
+                                    <li>Click the microphone icon in your browser's address bar</li>
+                                    <li>Select "Allow" for microphone permissions</li>
+                                    <li>Reload the page and try again</li>
+                                </ol>
+                                <p style="margin-top: 0.5rem;"><strong>Alternative:</strong> You can type your answer instead of using voice recording.</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Interim Transcript Display -->
+                        <div id="interim-transcript" class="interim-transcript"></div>
+                        
                         <textarea id="answer-text" class="answer-textarea" 
-                                  placeholder="Type your answer here...&#10;&#10;Tips:&#10;- Be specific and detailed&#10;- Use examples from your experience&#10;- Structure your response clearly"></textarea>
+                                  placeholder="Type your answer here or use the Record button to speak...&#10;&#10;Tips:&#10;- Be specific and detailed&#10;- Use examples from your experience&#10;- Structure your response clearly"></textarea>
                         
                         <div class="answer-actions">
                             <button class="btn btn-success" onclick="submitAnswer()">
@@ -256,48 +307,28 @@
         <section id="dashboard-page" class="page">
             <div class="container">
                 <div class="page-header">
-                    <h2><i class="fas fa-chart-line"></i> Performance Dashboard</h2>
-                    <p>Track your progress and analyze your performance</p>
+                    <h2><i class="fas fa-chart-bar"></i> Performance Dashboard</h2>
+                    <p>Track your progress and insights</p>
                 </div>
 
-                <div class="input-group">
-                    <label for="dashboard-candidate-id">Candidate ID:</label>
-                    <input type="text" id="dashboard-candidate-id" class="form-input" 
-                           placeholder="Enter your candidate ID">
-                    <button class="btn btn-primary" onclick="loadDashboard()">
-                        <i class="fas fa-sync"></i> Load Dashboard
-                    </button>
-                </div>
-
-                <div id="dashboard-content" style="display: none;">
+                <div class="dashboard-section">
                     <!-- Stats Overview -->
-                    <div class="stats-grid">
+                    <div class="stats-overview">
                         <div class="stat-card">
-                            <i class="fas fa-question-circle"></i>
-                            <h3 id="stat-total-questions">0</h3>
-                            <p>Total Questions</p>
-                        </div>
-                        <div class="stat-card">
-                            <i class="fas fa-star"></i>
-                            <h3 id="stat-avg-score">0%</h3>
-                            <p>Average Score</p>
+                            <i class="fas fa-comments"></i>
+                            <h3 id="total-interviews">0</h3>
+                            <p>Interviews Completed</p>
                         </div>
                         <div class="stat-card">
                             <i class="fas fa-trophy"></i>
-                            <h3 id="stat-best-score">0%</h3>
-                            <p>Best Score</p>
+                            <h3 id="avg-performance">0%</h3>
+                            <p>Average Performance</p>
                         </div>
                         <div class="stat-card">
-                            <i class="fas fa-chart-line"></i>
-                            <h3 id="stat-trend">--</h3>
-                            <p>Trend</p>
+                            <i class="fas fa-fire"></i>
+                            <h3 id="improvement-rate">0%</h3>
+                            <p>Improvement Rate</p>
                         </div>
-                    </div>
-
-                    <!-- Profile Info -->
-                    <div class="profile-section">
-                        <h3><i class="fas fa-user"></i> Profile Information</h3>
-                        <div id="profile-info" class="profile-info-grid"></div>
                     </div>
 
                     <!-- Performance History -->
@@ -447,6 +478,7 @@
     <script src="js/resume.js"></script>
     <script src="js/interview.js"></script>
     <script src="js/dashboard.js"></script>
+    <script src="js/question.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

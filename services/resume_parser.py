@@ -71,22 +71,16 @@ class ResumeParser:
         return phones[0] if phones else ""
     
     def extract_skills(self, text: str) -> List[str]:
-        """
-        Extract skills from text
-        
-        Args:
-            text: Resume text
-        
-        Returns:
-            List of identified skills
-        """
-        text_upper = text.upper()
+        sections = self.split_sections(text)
+        skills_text = sections.get('SKILLS', text)  # fallback to full text
+
+        text_upper = skills_text.upper()
         found_skills = []
-        
+
         for skill in self.common_skills:
             if skill.upper() in text_upper:
                 found_skills.append(skill)
-        
+
         return list(set(found_skills))
     
     def extract_education(self, text: str) -> List[Dict]:
@@ -177,42 +171,61 @@ class ResumeParser:
         
         return experience[:5]  # Limit to 5 entries
     
+    def split_sections(self, text: str) -> Dict[str, str]:
+        section_titles = [
+            'EDUCATION', 'SKILLS', 'PROJECTS', 'WORK EXPERIENCE',
+            'EXPERIENCE', 'ACHIEVEMENTS', 'EXTRA-CURRICULAR ACTIVITIES',
+            'LEADERSHIP'
+        ]
+
+        pattern = r'(?P<header>' + '|'.join(section_titles) + r')\s*\n'
+        matches = list(re.finditer(pattern, text, re.IGNORECASE))
+
+        sections = {}
+
+        for i, match in enumerate(matches):
+            start = match.end()
+            end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+
+            section_name = match.group('header').upper()
+            section_content = text[start:end].strip()
+
+            sections[section_name] = section_content
+
+        return sections
+    
     def extract_projects(self, text: str) -> List[Dict]:
-        """
-        Extract project information
-        
-        Args:
-            text: Resume text
-        
-        Returns:
-            List of project entries
-        """
         projects = []
-        
-        # Look for "Project" keyword
-        project_pattern = r'(?:Project|PROJECT)[\s:]*([^\n]+)'
-        matches = re.finditer(project_pattern, text)
-        
-        for match in matches:
-            project_name = match.group(1).strip()
-            
-            # Extract technologies from surrounding context
-            context_start = match.start()
-            context_end = min(len(text), match.end() + 300)
-            context = text[context_start:context_end]
-            
+
+        sections = self.split_sections(text)
+        project_text = sections.get('PROJECTS', '')
+
+        if not project_text:
+            return projects
+
+        # Split projects using blank lines
+        project_entries = re.split(r'\n\s*\n', project_text)
+
+        for entry in project_entries:
+            entry = entry.strip()
+            if len(entry) < 20:
+                continue
+
+            lines = entry.split('\n')
+            name = lines[0].strip()
+
             technologies = []
             for skill in self.common_skills:
-                if skill.upper() in context.upper():
+                if skill.upper() in entry.upper():
                     technologies.append(skill)
-            
+
             projects.append({
-                'name': project_name[:100],  # Limit length
-                'technologies': technologies[:10],  # Limit to 10 techs
-                'description': context[:200]  # Limit description
+                'name': name[:100],
+                'technologies': technologies[:10],
+                'description': entry[:300]
             })
-        
-        return projects[:5]  # Limit to 5 projects
+
+        return projects[:5]
     
     def parse_resume(self, resume_text: str = None, pdf_file=None) -> Dict:
         """
@@ -249,5 +262,6 @@ class ResumeParser:
             'education': self.extract_education(text),
             'raw_text': text
         }
+        # print(parsed_data)
         
         return parsed_data

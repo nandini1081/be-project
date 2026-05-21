@@ -11,12 +11,55 @@ const appState = {
 
 // Initialize app
 document.addEventListener('DOMContentLoaded', () => {
+    initThemeToggle();
     initializeNavigation();
     loadSavedState();
     
     // Check API health
     checkAPIHealth();
 });
+
+const THEME_STORAGE_KEY = 'theme';
+
+function getCurrentTheme() {
+    return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+}
+
+function setTheme(theme) {
+    const next = theme === 'dark' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem(THEME_STORAGE_KEY, next);
+    syncThemeToggleUI(next);
+}
+
+function syncThemeToggleUI(theme) {
+    const btn = document.getElementById('theme-toggle');
+    const icon = document.getElementById('theme-toggle-icon');
+    const label = document.getElementById('theme-toggle-label');
+    if (!btn || !icon) return;
+    if (theme === 'dark') {
+        icon.className = 'fas fa-sun';
+        btn.setAttribute('aria-label', 'Switch to light theme');
+        if (label) label.textContent = 'Light';
+    } else {
+        icon.className = 'fas fa-moon';
+        btn.setAttribute('aria-label', 'Switch to dark theme');
+        if (label) label.textContent = 'Dark';
+    }
+}
+
+function initThemeToggle() {
+    const saved = localStorage.getItem(THEME_STORAGE_KEY);
+    const initial = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    setTheme(initial);
+
+    const btn = document.getElementById('theme-toggle');
+    if (btn) {
+        btn.addEventListener('click', () => {
+            setTheme(getCurrentTheme() === 'dark' ? 'light' : 'dark');
+        });
+    }
+}
 
 /**
  * Navigation handling
@@ -155,6 +198,6 @@ function formatDate(isoString) {
  * Generate random color
  */
 function getRandomColor() {
-    const colors = ['#4F46E5', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'];
+    const colors = ['#0d9488', '#6366f1', '#059669', '#d97706', '#dc2626', '#8b5cf6'];
     return colors[Math.floor(Math.random() * colors.length)];
 }

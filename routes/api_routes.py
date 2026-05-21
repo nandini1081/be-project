@@ -125,7 +125,8 @@ def create_routes():
                     'experience_count': len(parsed['experience']),
                     'project_count': len(parsed['projects'])
                 },
-                'metadata': profile['metadata']
+                'metadata': profile['metadata'],
+                'vector_dimensions': len(profile['profile_vector'])
             })
         
         except Exception as e:

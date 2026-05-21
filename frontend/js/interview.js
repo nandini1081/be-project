@@ -22,8 +22,32 @@ const speechState = {
     voices: [],
     selectedVoice: null,
     networkErrorCount: 0,
-    maxNetworkRetries: 3
+    maxNetworkRetries: 3,
+    /** Recording sessions started this question (first start is not a pause) */
+    recordingSessionsStarted: 0
 };
+
+/** Scoring weights — knowledge weighted higher (matches config.py) */
+const SCORING_WEIGHTS = {
+    knowledge: 0.6,
+    speech: 0.4
+};
+
+const FILLER_PATTERNS = [
+    /\bumm+\b/gi,
+    /\buhm+\b/gi,
+    /\buh+\b/gi,
+    /\bhmm+\b/gi,
+    /\bhm+\b/gi,
+    /\ber+\b/gi,
+    /\bah+\b/gi,
+    /\blike\b/gi,
+    /\byou know\b/gi,
+    /\bbasically\b/gi,
+    /\bactually\b/gi,
+    /\bsort of\b/gi,
+    /\bkind of\b/gi
+];
 
 /**
  * Initialize Speech APIs
@@ -170,7 +194,7 @@ function setupRecognitionHandlers() {
             console.log(`Retrying speech recognition (attempt ${speechState.networkErrorCount})...`);
             setTimeout(() => {
                 if (!speechState.isListening) {
-                    startRecording();
+                    startRecording(false);
                 }
             }, 1000);
         }
@@ -272,8 +296,9 @@ function stopSpeaking() {
 
 /**
  * Start voice recording for answer - IMPROVED
+ * @param {boolean} userInitiated - false for automatic retries (do not count as pauses)
  */
-function startRecording() {
+function startRecording(userInitiated = true) {
     if (!speechState.recognition) {
         showToast('Speech recognition not supported. Please use Chrome or Edge browser.', 'error');
         return;
@@ -289,7 +314,10 @@ function startRecording() {
             errorDiv.style.display = 'none';
         }
         
-        // Start recording
+        // First session is normal; later user-initiated starts count as pauses
+        if (userInitiated) {
+            speechState.recordingSessionsStarted += 1;
+        }
         try {
             speechState.recognition.start();
         } catch (error) {
@@ -462,8 +490,9 @@ function displayCurrentQuestion() {
     stopSpeaking();
     stopRecording();
     
-    // Reset error count for new question
+    // Reset error count and recording session counter for new question
     speechState.networkErrorCount = 0;
+    speechState.recordingSessionsStarted = 0;
     
     // Auto-speak question (optional - can be disabled)
     const autoSpeak = document.getElementById('auto-speak-questions')?.checked;
@@ -492,9 +521,9 @@ async function submitAnswer() {
     const question = interviewState.questions[interviewState.currentQuestionIndex];
     
     try {
-        // Simulate scoring (in real app, this would be done by backend)
-        const knowledgeScore = calculateKnowledgeScore(answerText, question);
-        const speechScore = calculateSpeechScore(answerText);
+        const pauseCount = Math.max(0, speechState.recordingSessionsStarted - 1);
+        const knowledgeScore = await calculateKnowledgeScore(answerText, question);
+        const speechScore = calculateSpeechScore(answerText, pauseCount);
         
         // Record response
         await api.recordResponse(
@@ -511,7 +540,11 @@ async function submitAnswer() {
             answerText: answerText,
             knowledgeScore: knowledgeScore,
             speechScore: speechScore,
-            totalScore: (knowledgeScore * 0.6) + (speechScore * 0.4)
+            totalScore: computeTotalScore(knowledgeScore, speechScore),
+            pauseCount: pauseCount,
+            topics: question.topics || [],
+            idealKeywords: question.ideal_keywords || [],
+            jobRoles: question.job_roles || []
         });
         
         // Show feedback
@@ -526,81 +559,147 @@ async function submitAnswer() {
     }
 }
 
-/**
- * Calculate knowledge score (simplified)
- */
-function calculateKnowledgeScore(answer, question) {
-    const words = answer.trim().split(/\s+/);
-    const wordCount = words.length;
+function clampScore(value) {
+    return Math.max(0, Math.min(1, value));
+}
 
-    // ---------------------------
-    // HARD PENALTY FOR SHORT ANSWERS
-    // ---------------------------
+function computeTotalScore(knowledgeScore, speechScore) {
+    return clampScore(
+        knowledgeScore * SCORING_WEIGHTS.knowledge +
+        speechScore * SCORING_WEIGHTS.speech
+    );
+}
+
+/**
+ * Cosine similarity between two normalized embedding vectors
+ */
+function cosineSimilarity(vecA, vecB) {
+    if (!vecA?.length || !vecB?.length || vecA.length !== vecB.length) {
+        return 0;
+    }
+    let dot = 0;
+    for (let i = 0; i < vecA.length; i++) {
+        dot += vecA[i] * vecB[i];
+    }
+    return dot;
+}
+
+/**
+ * Map raw cosine similarity (0–1 on related answers) to a 0–1 knowledge score
+ */
+function mapSimilarityToKnowledgeScore(similarity) {
+    const floor = 0.25;
+    const span = 0.65;
+    if (similarity <= floor) {
+        return clampScore(similarity / floor * 0.35);
+    }
+    return clampScore(0.35 + ((similarity - floor) / span) * 0.65);
+}
+
+function countFillerWords(answer) {
+    let count = 0;
+    FILLER_PATTERNS.forEach(pattern => {
+        const matches = answer.match(pattern);
+        if (matches) count += matches.length;
+    });
+    return count;
+}
+
+/**
+ * Fallback when ideal_answer_embedding is unavailable
+ */
+function calculateKnowledgeScoreFallback(answer, question) {
+    const wordCount = answer.trim().split(/\s+/).length;
     if (wordCount <= 2) return 0.1;
     if (wordCount <= 5) return 0.3;
 
-    let score = 0.4; // lower base (not 0.5)
-
-    // Length bonus
-    if (wordCount >= 50) score += 0.3;
-    else if (wordCount >= 30) score += 0.2;
-    else if (wordCount >= 15) score += 0.1;
-
-    // Keyword matching
+    let score = 0.35;
     const answerLower = answer.toLowerCase();
-    let keywordMatches = 0;
+    const signals = [
+        ...(question.ideal_keywords || []),
+        ...(question.topics || [])
+    ];
 
-    (question.topics || []).forEach(topic => {
-        if (answerLower.includes(topic.toLowerCase())) {
+    let keywordMatches = 0;
+    signals.forEach(signal => {
+        const token = String(signal || '').toLowerCase().trim();
+        if (token && answerLower.includes(token)) {
             keywordMatches++;
         }
     });
 
     if (keywordMatches > 0) {
-        score += Math.min(0.3, keywordMatches * 0.1);
+        score += Math.min(0.45, keywordMatches * 0.12);
     }
+    if (wordCount >= 30) score += 0.1;
+    if (wordCount >= 50) score += 0.1;
 
-    return Math.min(1.0, score);
+    return clampScore(score);
 }
 
 /**
- * Calculate speech score (simplified - based on text quality)
+ * Knowledge score: cosine similarity between answer and ideal-answer embeddings
  */
-function calculateSpeechScore(answer) {
-    const words = answer.trim().split(/\s+/);
-    const wordCount = words.length;
+async function calculateKnowledgeScore(answer, question) {
+    const wordCount = answer.trim().split(/\s+/).length;
+    if (wordCount <= 2) return 0.1;
+    if (wordCount <= 5) return 0.25;
 
-    // ---------------------------
-    // HARD PENALTY
-    // ---------------------------
-    if (wordCount <= 2) return 0.2;
-    if (wordCount <= 5) return 0.4;
+    const idealVector = question.ideal_answer_embedding;
+    if (!idealVector?.length) {
+        return calculateKnowledgeScoreFallback(answer, question);
+    }
 
-    let score = 0.5;
+    try {
+        const result = await api.getEmbedding(answer);
+        const answerVector = result.embedding;
+        const similarity = cosineSimilarity(answerVector, idealVector);
+        let score = mapSimilarityToKnowledgeScore(similarity);
 
-    const fillerWords = ['umm', 'uh', 'like', 'you know', 'basically'];
-    const answerLower = answer.toLowerCase();
+        if (wordCount < 10) {
+            score *= 0.75;
+        } else if (wordCount < 20) {
+            score *= 0.9;
+        }
 
-    let fillerCount = 0;
-    fillerWords.forEach(filler => {
-        const matches = answerLower.match(new RegExp(filler, 'gi'));
-        if (matches) fillerCount += matches.length;
-    });
+        return clampScore(score);
+    } catch (error) {
+        console.warn('Embedding API unavailable, using keyword fallback:', error);
+        return calculateKnowledgeScoreFallback(answer, question);
+    }
+}
 
-    if (fillerCount === 0) score += 0.2;
-    else if (fillerCount <= 2) score += 0.1;
+/**
+ * Speech score: filler-word usage and extra recording sessions (pauses)
+ * @param {number} pauseCount - recording starts after the first (ignored)
+ */
+function calculateSpeechScore(answer, pauseCount = 0) {
+    const wordCount = answer.trim().split(/\s+/).length;
+    if (wordCount <= 2) return 0.15;
+    if (wordCount <= 5) return 0.3;
+
+    let score = 1.0;
+
+    const fillerCount = countFillerWords(answer);
+    const fillerPenalty = Math.min(0.45, fillerCount * 0.09);
+    score -= fillerPenalty;
+
+    const pausePenalty = Math.min(0.4, pauseCount * 0.12);
+    score -= pausePenalty;
 
     const sentences = answer.split(/[.!?]+/).filter(s => s.trim().length > 0);
-    if (sentences.length >= 2) score += 0.2;
+    if (sentences.length >= 2 && fillerCount <= 2) {
+        score += 0.05;
+    }
 
-    return Math.min(1.0, score);
+    return clampScore(score);
 }
 
 /**
  * Display answer feedback
  */
 function displayAnswerFeedback(knowledgeScore, speechScore) {
-    const totalScore = (knowledgeScore * 0.6) + (speechScore * 0.4);
+    const totalScore = computeTotalScore(knowledgeScore, speechScore);
     
     document.getElementById('knowledge-score').textContent = (knowledgeScore * 100).toFixed(0) + '%';
     document.getElementById('speech-score').textContent = (speechScore * 100).toFixed(0) + '%';
@@ -651,7 +750,10 @@ function skipQuestion() {
             answerText: '[Skipped]',
             knowledgeScore: 0,
             speechScore: 0,
-            totalScore: 0
+            totalScore: 0,
+            topics: question.topics || [],
+            idealKeywords: question.ideal_keywords || [],
+            jobRoles: question.job_roles || []
         });
         
         nextQuestion();
@@ -672,7 +774,143 @@ function endInterview() {
 /**
  * Complete interview
  */
-function completeInterview() {
+function normalizeToken(text) {
+    return String(text || '').toLowerCase().trim();
+}
+
+function answerIncludesKeyword(answerText, keyword) {
+    const answer = normalizeToken(answerText);
+    const key = normalizeToken(keyword);
+    if (!answer || !key) return false;
+    return answer.includes(key);
+}
+
+function countOccurrences(items) {
+    const counts = {};
+    (items || []).forEach(item => {
+        const normalized = normalizeToken(item);
+        if (!normalized) return;
+        counts[normalized] = (counts[normalized] || 0) + 1;
+    });
+    return counts;
+}
+
+function pickTopKeys(countMap, limit = 5) {
+    return Object.entries(countMap || {})
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, limit)
+        .map(([key]) => key);
+}
+
+function computeInterviewImprovementFeedback(answers) {
+    const attempted = (answers || []).filter(a => a.answerText !== '[Skipped]');
+    const lowScoreAnswers = attempted.filter(a => (a.knowledgeScore || 0) < 0.6);
+
+    const weakTopicCounts = countOccurrences(
+        lowScoreAnswers.flatMap(a => a.topics || [])
+    );
+    const weakTopics = pickTopKeys(weakTopicCounts, 5);
+
+    const missingKeywordCounts = {};
+    attempted.forEach(answer => {
+        const expectedKeywords = (answer.idealKeywords && answer.idealKeywords.length > 0)
+            ? answer.idealKeywords
+            : (answer.topics || []);
+
+        expectedKeywords.forEach(keyword => {
+            if (!answerIncludesKeyword(answer.answerText, keyword)) {
+                const normalized = normalizeToken(keyword);
+                if (!normalized) return;
+                missingKeywordCounts[normalized] = (missingKeywordCounts[normalized] || 0) + 1;
+            }
+        });
+    });
+
+    const missingKeywords = pickTopKeys(missingKeywordCounts, 8);
+    const focusAreas = weakTopics.length > 0 ? weakTopics : missingKeywords.slice(0, 4);
+
+    const staticSentence = focusAreas.length > 0
+        ? `These are the topics you need to focus more on: ${focusAreas.join(', ')}.`
+        : 'Your performance is stable; continue practicing with more depth in your explanations.';
+
+    const basicsSentence = missingKeywords.length > 0
+        ? `Brush up on basics like ${missingKeywords.slice(0, 4).join(', ')} and include these terms explicitly in your answers.`
+        : 'Try to include key concepts and terminology clearly while answering to improve your score.';
+
+    return {
+        focusAreas,
+        missingKeywords,
+        sentences: [staticSentence, basicsSentence]
+    };
+}
+
+function buildRoleSkillMap() {
+    return {
+        'data scientist': ['python', 'machine learning', 'statistics', 'sql', 'pandas', 'numpy', 'model evaluation'],
+        'ml engineer': ['python', 'machine learning', 'deep learning', 'tensorflow', 'pytorch', 'mlops', 'deployment'],
+        'software engineer': ['data structures', 'algorithms', 'system design', 'oop', 'git', 'testing'],
+        'backend engineer': ['apis', 'database', 'sql', 'microservices', 'scalability', 'caching'],
+        'frontend engineer': ['javascript', 'html', 'css', 'react', 'state management', 'performance'],
+        'product manager': ['product strategy', 'metrics', 'stakeholder management', 'prioritization']
+    };
+}
+
+function computeResumeSuggestions(resume = {}, answers = []) {
+    const roleCounts = countOccurrences(answers.flatMap(a => a.jobRoles || []));
+    const topRoles = pickTopKeys(roleCounts, 3);
+    const primaryRole = topRoles[0] || '';
+
+    const roleSkillMap = buildRoleSkillMap();
+    const roleSkills = roleSkillMap[primaryRole] || [];
+    const interviewTopics = pickTopKeys(countOccurrences(answers.flatMap(a => a.topics || [])), 8);
+    const requiredSignals = [...new Set([...roleSkills, ...interviewTopics.map(normalizeToken)])];
+
+    const resumeSkills = (resume.skills || []).map(normalizeToken);
+    const missingSkills = requiredSignals.filter(skill =>
+        skill && !resumeSkills.some(rs => rs.includes(skill) || skill.includes(rs))
+    );
+
+    const hasExperience = (resume.experience || []).length > 0;
+    const projectText = (resume.projects || [])
+        .map(p => `${p.name || ''} ${p.description || ''}`)
+        .join(' ')
+        .toLowerCase();
+    const hasMetrics = /\b(\d+(\.\d+)?%|accuracy|f1|auc|precision|recall|latency)\b/.test(projectText);
+    const roleLooksML = primaryRole.includes('data scientist') || primaryRole.includes('ml');
+
+    const sentences = [];
+    if (missingSkills.length > 0) {
+        sentences.push(`For the ${primaryRole || 'target'} role, consider adding or highlighting skills such as: ${missingSkills.slice(0, 6).join(', ')}.`);
+    } else {
+        sentences.push('Your resume aligns reasonably well with the role topics from this interview; keep skill names explicit for better matching.');
+    }
+
+    if (!hasExperience) {
+        sentences.push('Add internship, freelance, or academic project experience to show practical application of your skills.');
+    }
+
+    if (roleLooksML && !hasMetrics) {
+        sentences.push('For ML projects, include measurable outcomes like model accuracy, F1-score, AUC, or latency improvements.');
+    } else if (!hasMetrics) {
+        sentences.push('Add measurable impact in projects (percent improvements, scale, or business outcomes) to strengthen your resume.');
+    }
+
+    return {
+        topRoles,
+        missingSkills: missingSkills.slice(0, 8),
+        sentences
+    };
+}
+
+function renderSuggestionList(items) {
+    return `
+        <ul style="margin: 0.75rem 0 0 1rem; color: var(--text-secondary);">
+            ${items.map(item => `<li style="margin-bottom: 0.4rem;">${item}</li>`).join('')}
+        </ul>
+    `;
+}
+
+async function completeInterview() {
     interviewState.isActive = false;
     
     // Stop any ongoing speech
@@ -681,8 +919,24 @@ function completeInterview() {
     
     // Calculate final statistics
     const totalAnswers = interviewState.answers.length;
-    const avgScore = interviewState.answers.reduce((sum, a) => sum + a.totalScore, 0) / totalAnswers;
+    const avgScore = totalAnswers > 0
+        ? interviewState.answers.reduce((sum, a) => sum + a.totalScore, 0) / totalAnswers
+        : 0;
     const skipped = interviewState.answers.filter(a => a.answerText === '[Skipped]').length;
+    const improvementFeedback = computeInterviewImprovementFeedback(interviewState.answers);
+
+    let resumeSuggestions = {
+        sentences: ['Resume suggestions could not be generated at this time.'],
+        topRoles: [],
+        missingSkills: []
+    };
+
+    try {
+        const candidateData = await api.getCandidate(interviewState.candidateId);
+        resumeSuggestions = computeResumeSuggestions(candidateData.resume || {}, interviewState.answers);
+    } catch (error) {
+        console.error('Could not fetch candidate resume for suggestions:', error);
+    }
     
     // Display summary
     const summaryDiv = document.getElementById('final-summary');
@@ -708,6 +962,20 @@ function completeInterview() {
             Great job! Your responses have been recorded and your profile has been updated.
             Check your dashboard for detailed analytics.
         </p>
+        <div style="margin-top: 1.5rem; background: var(--bg-color); border-radius: 0.75rem; padding: 1rem;">
+            <h4 style="margin-bottom: 0.5rem;"><i class="fas fa-lightbulb"></i> Interview Improvement Feedback</h4>
+            ${renderSuggestionList(improvementFeedback.sentences)}
+            ${improvementFeedback.missingKeywords.length > 0 ? `
+                <p style="margin-top: 0.75rem;"><strong>Missing expected keywords:</strong> ${improvementFeedback.missingKeywords.slice(0, 8).join(', ')}</p>
+            ` : ''}
+        </div>
+        <div style="margin-top: 1rem; background: var(--bg-color); border-radius: 0.75rem; padding: 1rem;">
+            <h4 style="margin-bottom: 0.5rem;"><i class="fas fa-file-alt"></i> Resume Enhancement Suggestions</h4>
+            ${renderSuggestionList(resumeSuggestions.sentences)}
+            ${resumeSuggestions.topRoles.length > 0 ? `
+                <p style="margin-top: 0.75rem;"><strong>Role context from interview:</strong> ${resumeSuggestions.topRoles.join(', ')}</p>
+            ` : ''}
+        </div>
     `;
     
     // Hide question section, show complete

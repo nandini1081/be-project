@@ -82,6 +82,10 @@ function displayResumeResults(result) {
             <div class="info-label">Projects</div>
             <div class="info-value">${result.parsed_data.project_count} projects</div>
         </div>
+        <div class="info-item">
+            <div class="info-label">Resume Vector</div>
+            <div class="info-value">${result.vector_dimensions || 0} dimensions</div>
+        </div>
     `;
     
     resultsDiv.style.display = 'block';

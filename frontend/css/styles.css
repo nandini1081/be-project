@@ -421,7 +421,7 @@ body {
 }
 
 .resume-textarea {
-    min-height: 100px;
+    min-height: 120px;
     max-height: 300px;
     width:30%;
     font-family: monospace;
@@ -439,6 +439,11 @@ body {
     background: var(--code-bg);
     color: var(--code-fg);
     border-color: var(--border-color);
+}
+
+textarea{
+    background: var(--bg-color);
+    color: var(--text-primary);
 }
 
 /* ==================== UPLOAD SECTION ==================== */

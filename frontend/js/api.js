@@ -224,6 +224,16 @@ class APIService {
     async healthCheck() {
         return this.request('/health');
     }
+
+    /**
+     * Get text embedding vector (384-dim, normalized)
+     */
+    async getEmbedding(text) {
+        return this.request('/get-embedding', {
+            method: 'POST',
+            body: JSON.stringify({ text })
+        });
+    }
 }
 
 // Create global API instance

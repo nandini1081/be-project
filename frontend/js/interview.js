@@ -7,6 +7,7 @@
 // Interview state
 const interviewState = {
     candidateId: null,
+    sessionId: null,
     questions: [],
     currentQuestionIndex: 0,
     answers: [],
@@ -32,6 +33,13 @@ const SCORING_WEIGHTS = {
     knowledge: 0.6,
     speech: 0.4
 };
+
+function createInterviewSessionId() {
+    if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+        return crypto.randomUUID();
+    }
+    return `session-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
 
 const FILLER_PATTERNS = [
     /\bumm+\b/gi,
@@ -424,8 +432,15 @@ async function startInterview() {
         const result = await api.retrieveQuestions(candidateId, options);
         
         if (result.success && result.questions.length > 0) {
+            if (result.questions.length < maxQuestions) {
+                showToast(
+                    `Only ${result.questions.length} questions matched your filters (requested ${maxQuestions}).`,
+                    'warning'
+                );
+            }
             // Initialize interview state
             interviewState.candidateId = candidateId;
+            interviewState.sessionId = createInterviewSessionId();
             interviewState.questions = result.questions;
             interviewState.currentQuestionIndex = 0;
             interviewState.answers = [];
@@ -531,12 +546,14 @@ async function submitAnswer() {
             question.question_id,
             answerText,
             knowledgeScore,
-            speechScore
+            speechScore,
+            interviewState.sessionId
         );
         
         // Store answer
         interviewState.answers.push({
             questionId: question.question_id,
+            questionText: question.question_text,
             answerText: answerText,
             knowledgeScore: knowledgeScore,
             speechScore: speechScore,
@@ -747,6 +764,7 @@ function skipQuestion() {
         
         interviewState.answers.push({
             questionId: question.question_id,
+            questionText: question.question_text,
             answerText: '[Skipped]',
             knowledgeScore: 0,
             speechScore: 0,
@@ -802,6 +820,26 @@ function pickTopKeys(countMap, limit = 5) {
         .map(([key]) => key);
 }
 
+function getExpectedKeywords(answer) {
+    return (answer.idealKeywords && answer.idealKeywords.length > 0)
+        ? answer.idealKeywords
+        : (answer.topics || []);
+}
+
+function getMissingKeywordsForAnswer(answer) {
+    return getExpectedKeywords(answer).filter(
+        keyword => !answerIncludesKeyword(answer.answerText, keyword)
+    );
+}
+
+function escapeHtml(text) {
+    return String(text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
 function computeInterviewImprovementFeedback(answers) {
     const attempted = (answers || []).filter(a => a.answerText !== '[Skipped]');
     const lowScoreAnswers = attempted.filter(a => (a.knowledgeScore || 0) < 0.6);
@@ -813,16 +851,10 @@ function computeInterviewImprovementFeedback(answers) {
 
     const missingKeywordCounts = {};
     attempted.forEach(answer => {
-        const expectedKeywords = (answer.idealKeywords && answer.idealKeywords.length > 0)
-            ? answer.idealKeywords
-            : (answer.topics || []);
-
-        expectedKeywords.forEach(keyword => {
-            if (!answerIncludesKeyword(answer.answerText, keyword)) {
-                const normalized = normalizeToken(keyword);
-                if (!normalized) return;
-                missingKeywordCounts[normalized] = (missingKeywordCounts[normalized] || 0) + 1;
-            }
+        getMissingKeywordsForAnswer(answer).forEach(keyword => {
+            const normalized = normalizeToken(keyword);
+            if (!normalized) return;
+            missingKeywordCounts[normalized] = (missingKeywordCounts[normalized] || 0) + 1;
         });
     });
 
@@ -837,10 +869,18 @@ function computeInterviewImprovementFeedback(answers) {
         ? `Brush up on basics like ${missingKeywords.slice(0, 4).join(', ')} and include these terms explicitly in your answers.`
         : 'Try to include key concepts and terminology clearly while answering to improve your score.';
 
+    const questionFeedback = (answers || []).map((answer, index) => ({
+        questionNumber: index + 1,
+        questionText: answer.questionText || `Question ${index + 1}`,
+        answerText: answer.answerText,
+        missingKeywords: getMissingKeywordsForAnswer(answer)
+    }));
+
     return {
         focusAreas,
         missingKeywords,
-        sentences: [staticSentence, basicsSentence]
+        sentences: [staticSentence, basicsSentence],
+        questionFeedback
     };
 }
 
@@ -910,6 +950,32 @@ function renderSuggestionList(items) {
     `;
 }
 
+function renderQuestionImprovementFeedback(questionFeedback) {
+    if (!questionFeedback || questionFeedback.length === 0) {
+        return '';
+    }
+
+    return `
+        <div style="margin-top: 1rem;">
+            <p style="margin-bottom: 0.5rem;"><strong>Question-wise keyword feedback</strong></p>
+            ${questionFeedback.map((item, index) => `
+                <div style="margin-top: ${index === 0 ? '0' : '1rem'}; padding-top: ${index === 0 ? '0' : '1rem'}; border-top: ${index === 0 ? 'none' : '1px solid var(--border-color)'};">
+                    <p style="margin-bottom: 0.5rem;"><strong>Q${item.questionNumber}:</strong> ${escapeHtml(item.questionText)}</p>
+                    <p style="margin-bottom: 0.35rem; color: var(--text-secondary);">
+                        <strong>Your answer:</strong> ${escapeHtml(item.answerText)}
+                    </p>
+                    <p style="color: var(--text-secondary);">
+                        <strong>Missing expected keywords:</strong>
+                        ${item.missingKeywords.length > 0
+                            ? escapeHtml(item.missingKeywords.join(', '))
+                            : '<span style="color: var(--success-color, #10B981);">None</span>'}
+                    </p>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
 async function completeInterview() {
     interviewState.isActive = false;
     
@@ -965,9 +1031,7 @@ async function completeInterview() {
         <div style="margin-top: 1.5rem; background: var(--bg-color); border-radius: 0.75rem; padding: 1rem;">
             <h4 style="margin-bottom: 0.5rem;"><i class="fas fa-lightbulb"></i> Interview Improvement Feedback</h4>
             ${renderSuggestionList(improvementFeedback.sentences)}
-            ${improvementFeedback.missingKeywords.length > 0 ? `
-                <p style="margin-top: 0.75rem;"><strong>Missing expected keywords:</strong> ${improvementFeedback.missingKeywords.slice(0, 8).join(', ')}</p>
-            ` : ''}
+            ${renderQuestionImprovementFeedback(improvementFeedback.questionFeedback)}
         </div>
         <div style="margin-top: 1rem; background: var(--bg-color); border-radius: 0.75rem; padding: 1rem;">
             <h4 style="margin-bottom: 0.5rem;"><i class="fas fa-file-alt"></i> Resume Enhancement Suggestions</h4>
@@ -998,6 +1062,7 @@ function resetInterview() {
     
     // Reset state
     interviewState.candidateId = null;
+    interviewState.sessionId = null;
     interviewState.questions = [];
     interviewState.currentQuestionIndex = 0;
     interviewState.answers = [];

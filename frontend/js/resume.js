@@ -33,6 +33,7 @@ async function processResume() {
         if (result.success) {
             appState.currentCandidateId = result.candidate_id;
             saveState();
+            fillCandidateIdInputs(result.candidate_id);
 
             document.getElementById('status-message').textContent = 'Profile created successfully!';
 
@@ -41,7 +42,7 @@ async function processResume() {
                 displayResumeResults(result);
             }, 1000);
 
-            showToast('Profile created successfully!', 'success');
+            showToast(`Profile created! Candidate ID: ${result.candidate_id}`, 'success');
         }
 
     } catch (error) {
@@ -51,44 +52,80 @@ async function processResume() {
 }
 
 /**
+ * Fill candidate ID into interview and dashboard inputs
+ */
+function fillCandidateIdInputs(candidateId) {
+    ['candidate-id-input', 'dashboard-candidate-id'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.value = candidateId;
+    });
+}
+
+/**
+ * Copy candidate ID to clipboard
+ */
+function copyCandidateId(candidateId) {
+    const id = candidateId || document.getElementById('created-candidate-id')?.textContent?.trim();
+    if (!id) return;
+
+    navigator.clipboard.writeText(id).then(() => {
+        showToast('Candidate ID copied to clipboard', 'success');
+    }).catch(() => {
+        showToast('Could not copy — select and copy the ID manually', 'error');
+    });
+}
+
+/**
  * Display resume processing results
  */
 function displayResumeResults(result) {
     const resultsDiv = document.getElementById('resume-results');
     const summaryDiv = document.getElementById('profile-summary');
-    
+    if (!summaryDiv || !resultsDiv) return;
+
+    const candidateId = result.candidate_id;
+    const metadata = result.metadata || {};
+    const parsed = result.parsed_data || {};
+
     summaryDiv.innerHTML = `
-        <div class="info-item">
-            <div class="info-label">Candidate ID</div>
-            <div class="info-value">${result.candidate_id}</div>
+        <div class="candidate-id-banner">
+            <div class="info-label">Your Candidate ID</div>
+            <div class="candidate-id-row">
+                <code id="created-candidate-id" class="candidate-id-value">${candidateId}</code>
+                <button type="button" class="btn btn-secondary candidate-id-copy" onclick="copyCandidateId('${candidateId}')">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+            </div>
+            <p class="candidate-id-hint">Paste this ID on the <strong>Interview</strong> page under &ldquo;Enter Your Candidate ID&rdquo; to start your mock interview.</p>
         </div>
         <div class="info-item">
             <div class="info-label">Experience Level</div>
-            <div class="info-value">${result.metadata.experience_level}</div>
+            <div class="info-value">${metadata.experience_level || 'N/A'}</div>
         </div>
         <div class="info-item">
             <div class="info-label">Primary Domain</div>
-            <div class="info-value">${result.metadata.primary_domain}</div>
+            <div class="info-value">${metadata.primary_domain || 'N/A'}</div>
         </div>
         <div class="info-item">
             <div class="info-label">Skills Detected</div>
-            <div class="info-value">${result.parsed_data.skills.length} skills</div>
+            <div class="info-value">${parsed.skills?.length ?? 0} skills</div>
         </div>
         <div class="info-item">
             <div class="info-label">Experience Count</div>
-            <div class="info-value">${result.parsed_data.experience_count} positions</div>
+            <div class="info-value">${parsed.experience_count ?? 0} positions</div>
         </div>
         <div class="info-item">
             <div class="info-label">Projects</div>
-            <div class="info-value">${result.parsed_data.project_count} projects</div>
+            <div class="info-value">${parsed.project_count ?? 0} projects</div>
         </div>
         <div class="info-item">
             <div class="info-label">Resume Vector</div>
             <div class="info-value">${result.vector_dimensions || 0} dimensions</div>
         </div>
     `;
-    
+
     resultsDiv.style.display = 'block';
+    resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 /**

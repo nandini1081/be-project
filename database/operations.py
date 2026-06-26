@@ -13,6 +13,24 @@ class DatabaseManager:
     
     def __init__(self, db_path='interview_system.db'):
         self.db_path = db_path
+        self._ensure_schema()
+    
+    def _ensure_schema(self):
+        """Apply lightweight migrations for existing databases."""
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        cursor.execute('PRAGMA table_info(interview_history)')
+        columns = {row[1] for row in cursor.fetchall()}
+        if 'interview_session_id' not in columns:
+            cursor.execute(
+                'ALTER TABLE interview_history ADD COLUMN interview_session_id TEXT'
+            )
+            cursor.execute(
+                'CREATE INDEX IF NOT EXISTS idx_history_session '
+                'ON interview_history(interview_session_id)'
+            )
+            conn.commit()
+        conn.close()
     
     def get_connection(self):
         """Get database connection with row factory"""
@@ -207,11 +225,12 @@ class DatabaseManager:
                     ih.history_id,
                     ih.candidate_id,
                     ih.question_id,
-                    q.question_text,              -- ✅ ADD THIS
+                    q.question_text,
                     ih.answer_text,
                     ih.knowledge_score,
                     ih.speech_score,
                     ih.total_score,
+                    ih.interview_session_id,
                     ih.timestamp
                 FROM interview_history ih
                 JOIN questions q 
@@ -233,8 +252,71 @@ class DatabaseManager:
             'knowledge_score': row['knowledge_score'],
             'speech_score': row['speech_score'],
             'total_score': row['total_score'],
+            'interview_session_id': row['interview_session_id'],
             'timestamp': row['timestamp']
         } for row in rows]
+
+    def _group_history_by_gap(self, history: List[Dict], gap_minutes: int = 30) -> List[List[Dict]]:
+        """Legacy grouping for rows without interview_session_id."""
+        if not history:
+            return []
+
+        sorted_asc = sorted(history, key=lambda h: h['timestamp'])
+        sessions = [[sorted_asc[0]]]
+        gap = timedelta(minutes=gap_minutes)
+
+        for item in sorted_asc[1:]:
+            prev_ts = datetime.fromisoformat(sessions[-1][-1]['timestamp'])
+            curr_ts = datetime.fromisoformat(item['timestamp'])
+            if curr_ts - prev_ts > gap:
+                sessions.append([item])
+            else:
+                sessions[-1].append(item)
+
+        return sessions
+
+    def _group_history_into_sessions(self, history: List[Dict], gap_minutes: int = 30) -> List[List[Dict]]:
+        """Group responses into interview sessions by session id, with gap fallback."""
+        if not history:
+            return []
+
+        with_session_id = [h for h in history if h.get('interview_session_id')]
+        without_session_id = [h for h in history if not h.get('interview_session_id')]
+
+        sessions: List[List[Dict]] = []
+        session_map: Dict[str, List[Dict]] = {}
+
+        for item in with_session_id:
+            sid = item['interview_session_id']
+            session_map.setdefault(sid, []).append(item)
+
+        for items in session_map.values():
+            sessions.append(sorted(items, key=lambda h: h['timestamp']))
+
+        if without_session_id:
+            sessions.extend(self._group_history_by_gap(without_session_id, gap_minutes))
+
+        sessions.sort(key=lambda s: s[-1]['timestamp'])
+        return sessions
+
+    def get_interview_sessions(self, candidate_id: str, limit: int = 10) -> List[Dict]:
+        """Summarize recent interview sessions for dashboard display."""
+        history = self.get_candidate_history(candidate_id, limit=500)
+        sessions = self._group_history_into_sessions(history)
+        summaries = []
+
+        for index, session in enumerate(reversed(sessions), start=1):
+            scores = [h['total_score'] for h in session]
+            summaries.append({
+                'session_number': len(sessions) - index + 1,
+                'started_at': session[0]['timestamp'],
+                'ended_at': session[-1]['timestamp'],
+                'question_count': len(session),
+                'avg_score': round(sum(scores) / len(scores), 2),
+                'responses': session
+            })
+
+        return summaries[:limit]
     
     # ============================================================
     # PERSON C: DATABASE CREATION (QUESTIONS)
@@ -505,7 +587,8 @@ class DatabaseManager:
                               answer_text: str,
                               knowledge_score: float,
                               speech_score: float,
-                              total_score: float) -> int:
+                              total_score: float,
+                              interview_session_id: Optional[str] = None) -> int:
         """
         Record interview response
         
@@ -526,8 +609,8 @@ class DatabaseManager:
         cursor.execute('''
             INSERT INTO interview_history 
             (candidate_id, question_id, answer_text, knowledge_score, 
-             speech_score, total_score, timestamp)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+             speech_score, total_score, interview_session_id, timestamp)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
             candidate_id,
             question_id,
@@ -535,6 +618,7 @@ class DatabaseManager:
             knowledge_score,
             speech_score,
             total_score,
+            interview_session_id,
             datetime.now().isoformat()
         ))
         
@@ -562,12 +646,26 @@ class DatabaseManager:
         
         row = cursor.fetchone()
         conn.close()
+
+        history = self.get_candidate_history(candidate_id, limit=500)
+        sessions = self._group_history_into_sessions(history)
+        total_interviews = len(sessions)
+
+        if sessions:
+            session_avgs = [
+                sum(h['total_score'] for h in session) / len(session)
+                for session in sessions
+            ]
+            avg_total_score = round(sum(session_avgs) / len(session_avgs), 2)
+        else:
+            avg_total_score = 0
         
         return {
             'total_questions': row['total_questions'],
+            'total_interviews': total_interviews,
             'avg_knowledge_score': round(row['avg_knowledge'], 2) if row['avg_knowledge'] else 0,
             'avg_speech_score': round(row['avg_speech'], 2) if row['avg_speech'] else 0,
-            'avg_total_score': round(row['avg_total'], 2) if row['avg_total'] else 0,
+            'avg_total_score': avg_total_score,
             'best_score': round(row['best_score'], 2) if row['best_score'] else 0,
             'worst_score': round(row['worst_score'], 2) if row['worst_score'] else 0
         }

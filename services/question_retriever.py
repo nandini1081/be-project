@@ -3,11 +3,12 @@ Question Retriever - Person D
 Retrieves personalized questions based on candidate profile
 """
 
-from typing import Dict, List, Tuple, Optional
+import random
+from typing import Dict, List, Optional
 from database import DatabaseManager
 from utils import batch_cosine_similarity
 from utils.vector_operations import validate_vector
-from config import SIMILARITY_THRESHOLD, MAX_QUESTIONS_PER_SESSION
+from config import TOP_MATCH_POOL_SIZE
 
 class QuestionRetriever:
     """Retrieve personalized questions for candidates"""
@@ -24,102 +25,96 @@ class QuestionRetriever:
             self._question_cache = self.db.get_all_questions()
             print(f"✅ Loaded {len(self._question_cache)} questions")
     
-    def retrieve_questions(self, candidate_id: str,
-                          min_similarity: float = SIMILARITY_THRESHOLD,
-                          max_questions: int = MAX_QUESTIONS_PER_SESSION,
+    def _filter_questions(self, questions: List[Dict],
                           difficulty: Optional[str] = None,
                           category: Optional[str] = None) -> List[Dict]:
+        """Apply optional difficulty and category filters."""
+        filtered = [q for q in questions if q]
+        if difficulty:
+            filtered = [q for q in filtered if q.get('difficulty') == difficulty]
+        if category:
+            filtered = [q for q in filtered if q.get('category') == category]
+        return filtered
+
+    def retrieve_questions(self, candidate_id: str,
+                          max_questions: int = 15,
+                          difficulty: Optional[str] = None,
+                          category: Optional[str] = None,
+                          randomize: bool = True) -> List[Dict]:
         """
         Retrieve personalized questions for candidate
         
         Args:
             candidate_id: Candidate identifier
-            min_similarity: Minimum similarity threshold
-            max_questions: Maximum number of questions to return
+            max_questions: Number of questions to return (5, 10, or 15)
             difficulty: Optional filter by difficulty
             category: Optional filter by category
+            randomize: If True, sample randomly from top pool and shuffle order
         
         Returns:
             List of matched questions with similarity scores
         """
         print(f"🔄 Retrieving questions for candidate: {candidate_id}")
-        
-        # Check cache first
-        """
-        Assumption: The questions for unique candidate_id are fetched amd stored in cache. During each interview for the same candidate, this cache is used. This logic needs to be changed because ques shouldn't be repeated as it is in the next interviews of that candidate
-        """
-        
-        cached = self.db.get_cached_retrieval(candidate_id)
-        if cached:
-            print("✅ Using cached results")
-            question_ids = cached['question_ids'][:max_questions]
-            similarity_scores = cached['similarity_scores'][:max_questions]
-            results = []
-            for qid, score in zip(question_ids, similarity_scores):
-                q = self.db.get_question_by_id(qid)
-                if q:
-                    q['similarity_score'] = score  # 🔥 restore score
-                results.append(q)
-            return results
-        
-        # Get candidate profile
+        print(f"   Requested count: {max_questions}")
+        if category:
+            print(f"   Category filter: {category}")
+        if difficulty:
+            print(f"   Difficulty filter: {difficulty}")
+        if randomize:
+            print(f"   Pool size: top {TOP_MATCH_POOL_SIZE}, then random sample + shuffle")
+
         profile = self.db.get_candidate_profile(candidate_id)
         if not profile:
             print(f"❌ Profile not found for: {candidate_id}")
             return []
-        
+
         profile_vector = profile['profile_vector']
-        
-        # Validate
+
         try:
             validate_vector(profile_vector, "profile_vector")
         except ValueError as e:
             print(f"❌ Invalid profile vector: {e}")
             return []
-        
-        # Load questions
+
         self._load_questions()
-        
-        # Filter by difficulty and category if specified
-        ##This should happen from  the question database and not the cache
-        questions = self._question_cache
-        if difficulty:
-            questions = [q for q in questions if q['difficulty'] == difficulty]
-        if category:
-            questions = [q for q in questions if q['category'] == category]
-        
-        print(f"📊 Comparing with {len(questions)} questions...")
-        
-        # Extract embeddings
+        questions = self._filter_questions(self._question_cache, difficulty, category)
+
+        print(f"📊 Comparing with {len(questions)} questions after filters...")
+
+        if not questions:
+            print("❌ No questions match the selected filters")
+            return []
+
         question_embeddings = [q['embedding'] for q in questions]
-        
-        # Compute similarities (vectorized - FAST!)
         similarities = batch_cosine_similarity(profile_vector, question_embeddings)
-        
-        # Combine questions with scores
+
         scored_questions = []
         for q, sim in zip(questions, similarities):
-            if sim >= min_similarity:
-                q_with_score = q.copy()
-                q_with_score['similarity_score'] = round(sim, 4)
-                scored_questions.append(q_with_score)
-        
-        # Sort by similarity (highest first)
+            q_with_score = q.copy()
+            q_with_score['similarity_score'] = round(sim, 4)
+            scored_questions.append(q_with_score)
+
         scored_questions.sort(key=lambda x: x['similarity_score'], reverse=True)
-        
-        # Limit results
-        results = scored_questions[:max_questions]
-        
-        print(f"✅ Found {len(results)} matching questions")
+
+        top_pool = scored_questions[:TOP_MATCH_POOL_SIZE]
+        pick_count = min(max_questions, len(top_pool))
+
+        if pick_count == 0:
+            print("❌ No questions available in match pool")
+            return []
+
+        if randomize and len(top_pool) > pick_count:
+            results = random.sample(top_pool, pick_count)
+            random.shuffle(results)
+        else:
+            results = top_pool[:pick_count]
+            if randomize:
+                random.shuffle(results)
+
+        print(f"✅ Selected {len(results)} questions (requested {max_questions})")
         if results:
-            print(f"   Top score: {results[0]['similarity_score']:.4f}")
-            print(f"   Lowest score: {results[-1]['similarity_score']:.4f}")
-        
-        # Cache results
-        question_ids = [q['question_id'] for q in results]
-        scores = [q['similarity_score'] for q in results]
-        self.db.cache_retrieval_results(candidate_id, question_ids, scores)
-        
+            print(f"   Top pool score range: {top_pool[0]['similarity_score']:.4f} – {top_pool[-1]['similarity_score']:.4f}")
+
         return results
     
     def retrieve_adaptive_questions(self, candidate_id: str,
@@ -196,8 +191,10 @@ class QuestionRetriever:
         
         metadata = profile['metadata']
         
-        # Get questions
-        questions = self.retrieve_questions(candidate_id, max_questions=10)
+        # Get questions (stable top matches for dashboard recommendations)
+        questions = self.retrieve_questions(
+            candidate_id, max_questions=10, randomize=False
+        )
         
         # Analyze recommendations
         recommended_topics = {}

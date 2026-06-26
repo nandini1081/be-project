@@ -124,10 +124,11 @@ class ProfileUpdater:
             return None
     
     def update_after_response(self, candidate_id: str,
-                            question_id: str,
-                            answer_text: str,
-                            knowledge_score: float,
-                            speech_score: float) -> bool:
+                             question_id: str,
+                             answer_text: str,
+                             knowledge_score: float,
+                             speech_score: float,
+                             interview_session_id: Optional[str] = None) -> bool:
         """
         Record response and trigger profile update
         
@@ -154,7 +155,8 @@ class ProfileUpdater:
             answer_text=answer_text,
             knowledge_score=knowledge_score,
             speech_score=speech_score,
-            total_score=total_score
+            total_score=total_score,
+            interview_session_id=interview_session_id
         )
         
         print(f"✅ Response recorded (ID: {history_id}, Score: {total_score:.2f})")
@@ -175,23 +177,25 @@ class ProfileUpdater:
             Performance statistics
         """
         stats = self.db.get_candidate_statistics(candidate_id)
-        history = self.db.get_candidate_history(candidate_id, limit=10)
+        sessions = self.db.get_interview_sessions(candidate_id, limit=10)
         
-        # Calculate trends
-        if len(history) >= 5:
-            recent_scores = [h['total_score'] for h in history[:5]]
-            older_scores = [h['total_score'] for h in history[5:10]] if len(history) > 5 else []
-            
-            recent_avg = sum(recent_scores) / len(recent_scores)
-            older_avg = sum(older_scores) / len(older_scores) if older_scores else recent_avg
-            
-            trend = "improving" if recent_avg > older_avg else "declining" if recent_avg < older_avg else "stable"
+        # Calculate trend from per-interview averages (need at least 2 sessions)
+        if len(sessions) >= 2:
+            recent_avg = sessions[0]['avg_score']
+            older_avg = sessions[1]['avg_score']
+            if recent_avg > older_avg + 0.02:
+                trend = "improving"
+            elif recent_avg < older_avg - 0.02:
+                trend = "declining"
+            else:
+                trend = "stable"
         else:
             trend = "insufficient_data"
         
         return {
                 **stats,
                 'trend': trend,
-                'recent_responses': len(history),
-                'history': history   # ✅ ADD THIS
+                'recent_responses': stats['total_questions'],
+                'sessions': sessions,
+                'history': sessions
             }

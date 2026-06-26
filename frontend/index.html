@@ -122,7 +122,7 @@
                     <!-- Results -->
                     <div id="resume-results" class="results-card" style="display: none;">
                         <h3><i class="fas fa-check-circle"></i> Profile Created Successfully!</h3>
-                        <div id="profile-info"></div>
+                        <div id="profile-summary"></div>
                         <div class="result-actions">
                             <button class="btn btn-primary" onclick="navigateTo('interview')">
                                 <i class="fas fa-play"></i> Start Interview
@@ -340,7 +340,7 @@
                         Load Dashboard
                     </button>
                 </div>
-                <div class="dashboard-section">
+                <div class="dashboard-section" id="dashboard-content">
                     <!-- Stats Overview -->
                     <div class="stats-overview">
                         <div class="stat-card">
@@ -355,22 +355,33 @@
                         </div>
                         <div class="stat-card">
                             <i class="fas fa-fire"></i>
-                            <h3 id="improvement-rate">0%</h3>
-                            <!-- <p id="stat-trend">--</p> -->
-                            <p>Improvement Rate</p>
+                            <h3 id="improvement-rate">--</h3>
+                            <p>Improvement Trend</p>
                         </div>
+                    </div>
+
+                    <!-- Candidate Profile -->
+                    <div class="profile-section">
+                        <h3><i class="fas fa-user"></i> Candidate Profile</h3>
+                        <div id="profile-info" class="profile-info-grid"></div>
                     </div>
 
                     <!-- Performance History -->
                     <div class="history-section">
-                        <h3><i class="fas fa-history"></i> Recent Performance</h3>
-                        <div id="performance-history" class="history-list"></div>
+                        <h3 class="dashboard-panel-toggle" onclick="toggleDashboardPanel('performance-history')">
+                            <i class="fas fa-history"></i> Recent Performance
+                            <i class="fas fa-chevron-down panel-chevron" id="performance-history-chevron"></i>
+                        </h3>
+                        <div id="performance-history" class="history-list dashboard-panel-body"></div>
                     </div>
 
                     <!-- Recommendations -->
                     <div class="recommendations-section">
-                        <h3><i class="fas fa-lightbulb"></i> Personalized Recommendations</h3>
-                        <div id="recommendations-content"></div>
+                        <h3 class="dashboard-panel-toggle" onclick="toggleDashboardPanel('recommendations-content')">
+                            <i class="fas fa-lightbulb"></i> Personalized Recommendations
+                            <i class="fas fa-chevron-down panel-chevron" id="recommendations-content-chevron"></i>
+                        </h3>
+                        <div id="recommendations-content" class="dashboard-panel-body"></div>
                     </div>
                 </div>
             </div>

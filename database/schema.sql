@@ -46,6 +46,7 @@ CREATE TABLE IF NOT EXISTS interview_history (
     knowledge_score REAL,  -- 0.0 to 1.0
     speech_score REAL,  -- 0.0 to 1.0
     total_score REAL,  -- Weighted combination
+    interview_session_id TEXT,
     timestamp TEXT NOT NULL,
     FOREIGN KEY (candidate_id) REFERENCES candidate_profiles(candidate_id),
     FOREIGN KEY (question_id) REFERENCES questions(question_id)
@@ -65,5 +66,6 @@ CREATE TABLE IF NOT EXISTS retrieval_cache (
 CREATE INDEX IF NOT EXISTS idx_candidate_history ON interview_history(candidate_id);
 CREATE INDEX IF NOT EXISTS idx_question_difficulty ON questions(difficulty);
 CREATE INDEX IF NOT EXISTS idx_question_category ON questions(category);
+CREATE INDEX IF NOT EXISTS idx_history_session ON interview_history(interview_session_id);
 CREATE INDEX IF NOT EXISTS idx_history_timestamp ON interview_history(timestamp DESC);
 CREATE INDEX IF NOT EXISTS idx_cache_candidate ON retrieval_cache(candidate_id);

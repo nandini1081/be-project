@@ -169,7 +169,8 @@ def create_routes():
                 question_id=data['question_id'],
                 answer_text=data['answer_text'],
                 knowledge_score=data['knowledge_score'],
-                speech_score=data['speech_score']
+                speech_score=data['speech_score'],
+                interview_session_id=data.get('interview_session_id')
             )
             
             return jsonify({'success': success})
@@ -255,7 +256,7 @@ def create_routes():
         """Retrieve personalized questions"""
         try:
             # Get query parameters
-            max_questions = request.args.get('max_questions', 10, type=int)
+            max_questions = request.args.get('max_questions', 15, type=int)
             difficulty = request.args.get('difficulty')
             category = request.args.get('category')
             
@@ -263,7 +264,8 @@ def create_routes():
                 candidate_id=candidate_id,
                 max_questions=max_questions,
                 difficulty=difficulty,
-                category=category
+                category=category,
+                randomize=True
             )
             
             return jsonify({

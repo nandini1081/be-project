@@ -1,4 +1,5 @@
 venv/
+.venv/
 be-proj-v1/
 
 __pycache__/

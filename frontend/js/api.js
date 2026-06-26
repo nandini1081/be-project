@@ -3,7 +3,8 @@
  * API Service - Handles all backend communication
  */
 
-const API_BASE_URL = 'http://localhost:5000/api';
+// Same origin as the page (avoids CORS when using 127.0.0.1 vs localhost)
+const API_BASE_URL = '/api';
 
 class APIService {
     
@@ -113,7 +114,7 @@ class APIService {
     /**
      * Record interview response
      */
-    async recordResponse(candidateId, questionId, answerText, knowledgeScore, speechScore) {
+    async recordResponse(candidateId, questionId, answerText, knowledgeScore, speechScore, interviewSessionId = null) {
         return this.request('/record-response', {
             method: 'POST',
             body: JSON.stringify({
@@ -121,7 +122,8 @@ class APIService {
                 question_id: questionId,
                 answer_text: answerText,
                 knowledge_score: knowledgeScore,
-                speech_score: speechScore
+                speech_score: speechScore,
+                interview_session_id: interviewSessionId
             })
         });
     }

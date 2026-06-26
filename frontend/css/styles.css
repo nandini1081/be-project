@@ -506,6 +506,46 @@ textarea{
     border: 1px solid var(--border-color);
 }
 
+.candidate-id-banner {
+    margin-bottom: 1.25rem;
+    padding: 1rem 1.25rem;
+    background: color-mix(in srgb, var(--primary-color) 12%, var(--card-bg));
+    border: 2px solid var(--primary-color);
+    border-radius: var(--radius-sm);
+}
+
+.candidate-id-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+}
+
+.candidate-id-value {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    word-break: break-all;
+    padding: 0.35rem 0.5rem;
+    background: var(--card-bg);
+    border-radius: 4px;
+}
+
+.candidate-id-copy {
+    flex-shrink: 0;
+    padding: 0.4rem 0.85rem;
+    font-size: 0.875rem;
+}
+
+.candidate-id-hint {
+    margin: 0.75rem 0 0;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
 .result-actions {
     display: flex;
     gap: 1rem;
@@ -780,6 +820,26 @@ textarea{
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+.dashboard-panel-toggle {
+    cursor: pointer;
+    user-select: none;
+    justify-content: space-between;
+}
+
+.dashboard-panel-toggle .panel-chevron {
+    margin-left: auto;
+    font-size: 0.85rem;
+    transition: transform 0.2s ease;
+}
+
+.dashboard-panel-toggle .panel-chevron.collapsed {
+    transform: rotate(-90deg);
+}
+
+.dashboard-panel-body {
+    display: block;
 }
 
 .profile-info-grid {

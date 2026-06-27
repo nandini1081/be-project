@@ -27,3 +27,16 @@ MIN_SIMILARITY_SCORE = 0.7
 # Scoring Weights
 KNOWLEDGE_WEIGHT = 0.6
 SPEECH_WEIGHT = 0.4
+
+# Audio speech analysis (faster-whisper + librosa)
+SPEECH_WHISPER_MODEL = "base"
+SPEECH_WHISPER_DEVICE = "cpu"
+SPEECH_COMPONENT_WEIGHTS = {
+    "filler": 0.25,
+    "pause_pacing": 0.25,
+    "pronunciation": 0.25,
+    "tone_energy": 0.25,
+}
+SPEECH_IDEAL_WPM = 135
+SPEECH_LONG_PAUSE_SECONDS = 1.2
+SPEECH_MAX_FILLER_RATE = 0.15

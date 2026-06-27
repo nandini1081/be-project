@@ -24,8 +24,12 @@ const speechState = {
     selectedVoice: null,
     networkErrorCount: 0,
     maxNetworkRetries: 3,
-    /** Recording sessions started this question (first start is not a pause) */
-    recordingSessionsStarted: 0
+    recordingSessionsStarted: 0,
+    mediaRecorder: null,
+    audioStream: null,
+    audioChunks: [],
+    recordedAudioBlob: null,
+    audioMimeType: 'audio/webm'
 };
 
 /** Scoring weights — knowledge weighted higher (matches config.py) */
@@ -56,6 +60,118 @@ const FILLER_PATTERNS = [
     /\bsort of\b/gi,
     /\bkind of\b/gi
 ];
+
+/** Phrases that mean "ask the question again" — whole-utterance only, not mid-sentence use */
+const REPEAT_QUESTION_EXACT = new Set([
+    'repeat',
+    'repeat please',
+    'repeat the question',
+    'repeat question',
+    'repeat it',
+    'repeat that',
+    'pardon',
+    'pardon me',
+    'sorry pardon',
+    'excuse me pardon',
+    'say again',
+    'say that again',
+    'say it again',
+    'come again',
+    'once more',
+    'what was the question',
+    'what is the question',
+    'can you repeat',
+    'could you repeat',
+    'would you repeat',
+    'please repeat',
+    'please repeat the question',
+    'can you repeat the question',
+    'could you repeat the question',
+    'would you repeat the question',
+    'can you say that again',
+    'could you say that again',
+    'can you say it again',
+    'could you say it again',
+    'i didnt hear',
+    'i didnt catch',
+    'i did not hear',
+    'i did not catch',
+    'sorry i didnt hear',
+    'sorry i didnt catch',
+    'didnt hear',
+    'didnt catch'
+]);
+
+const REPEAT_QUESTION_PATTERNS = [
+    /^(?:um |uh |hmm )*(?:can|could|would) you (?:please )?repeat(?: (?:the )?(?:question|it|that))?(?: please)?$/,
+    /^(?:um |uh )*please repeat(?: (?:the )?(?:question|it|that))?(?: please)?$/,
+    /^(?:um |uh )*repeat(?: (?:the )?(?:question|it|that))?(?: please)?$/,
+    /^(?:excuse me )?(?:sorry )?pardon(?: me)?$/,
+    /^(?:can|could|would) you (?:please )?say (?:that|it) again$/,
+    /^(?:i )?(?:didnt|did not) (?:hear|catch)(?: (?:you|that|it|the question))?$/,
+    /^what (?:was|is) (?:the )?question$/,
+    /^(?:come again|once more)(?: please)?$/
+];
+
+function normalizeRepeatCheckText(text) {
+    return String(text || '')
+        .toLowerCase()
+        .replace(/['']/g, '')
+        .replace(/[^\w\s]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+/**
+ * True when the user is asking to hear the question again — not answering with
+ * "repeat"/"pardon" used in normal speech (e.g. "repeat the deployment process").
+ */
+function isRepeatQuestionRequest(answerText) {
+    const normalized = normalizeRepeatCheckText(answerText);
+    if (!normalized) {
+        return false;
+    }
+
+    const wordCount = normalized.split(/\s+/).length;
+
+    if (REPEAT_QUESTION_EXACT.has(normalized)) {
+        return true;
+    }
+
+    const withoutTrailingPlease = normalized.replace(/\s+please$/, '').trim();
+    if (REPEAT_QUESTION_EXACT.has(withoutTrailingPlease)) {
+        return true;
+    }
+
+    // Long answers are real responses even if they contain "repeat" or "pardon"
+    if (wordCount > 10) {
+        return false;
+    }
+
+    return REPEAT_QUESTION_PATTERNS.some(pattern => pattern.test(normalized));
+}
+
+/**
+ * Re-ask the current question without advancing or scoring.
+ */
+async function repeatCurrentQuestion() {
+    const question = interviewState.questions[interviewState.currentQuestionIndex];
+
+    document.getElementById('answer-text').value = '';
+    const interimEl = document.getElementById('interim-transcript');
+    if (interimEl) {
+        interimEl.textContent = '';
+    }
+    document.getElementById('answer-feedback').style.display = 'none';
+
+    await stopRecording();
+    stopSpeaking();
+    speechState.recordingSessionsStarted = 0;
+    resetQuestionAudioCapture();
+
+    showToast('Repeating the question...', 'info');
+    setTimeout(() => speakQuestion(question.question_text), 400);
+}
 
 /**
  * Initialize Speech APIs
@@ -303,10 +419,93 @@ function stopSpeaking() {
 }
 
 /**
+ * Ensure microphone stream and start capturing raw audio for server analysis.
+ */
+async function ensureAudioStream() {
+    if (speechState.audioStream) {
+        return speechState.audioStream;
+    }
+    speechState.audioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    return speechState.audioStream;
+}
+
+async function startAudioCapture() {
+    if (speechState.mediaRecorder && speechState.mediaRecorder.state === 'recording') {
+        return;
+    }
+
+    try {
+        const stream = await ensureAudioStream();
+        const preferredTypes = [
+            'audio/webm;codecs=opus',
+            'audio/webm',
+            'audio/ogg;codecs=opus'
+        ];
+        const mimeType = preferredTypes.find(type => MediaRecorder.isTypeSupported(type)) || '';
+        speechState.audioMimeType = mimeType || 'audio/webm';
+
+        const options = mimeType ? { mimeType } : undefined;
+        speechState.mediaRecorder = new MediaRecorder(stream, options);
+        speechState.audioChunks = [];
+
+        speechState.mediaRecorder.ondataavailable = (event) => {
+            if (event.data && event.data.size > 0) {
+                speechState.audioChunks.push(event.data);
+            }
+        };
+
+        speechState.mediaRecorder.start(250);
+    } catch (error) {
+        console.warn('Could not start audio capture:', error);
+    }
+}
+
+function finalizeAudioBlob() {
+    if (!speechState.audioChunks.length) {
+        return speechState.recordedAudioBlob;
+    }
+    speechState.recordedAudioBlob = new Blob(
+        speechState.audioChunks,
+        { type: speechState.audioMimeType || 'audio/webm' }
+    );
+    return speechState.recordedAudioBlob;
+}
+
+async function stopAudioCapture() {
+    if (!speechState.mediaRecorder || speechState.mediaRecorder.state === 'inactive') {
+        return finalizeAudioBlob();
+    }
+
+    return new Promise((resolve) => {
+        speechState.mediaRecorder.onstop = () => {
+            resolve(finalizeAudioBlob());
+        };
+        speechState.mediaRecorder.stop();
+    });
+}
+
+function resetQuestionAudioCapture() {
+    speechState.audioChunks = [];
+    speechState.recordedAudioBlob = null;
+    speechState.mediaRecorder = null;
+}
+
+async function releaseAudioStream() {
+    if (speechState.mediaRecorder && speechState.mediaRecorder.state === 'recording') {
+        await stopAudioCapture();
+    }
+    if (speechState.audioStream) {
+        speechState.audioStream.getTracks().forEach(track => track.stop());
+        speechState.audioStream = null;
+    }
+    resetQuestionAudioCapture();
+}
+
+/**
  * Start voice recording for answer - IMPROVED
  * @param {boolean} userInitiated - false for automatic retries (do not count as pauses)
  */
-function startRecording(userInitiated = true) {
+async function startRecording(userInitiated = true) {
     if (!speechState.recognition) {
         showToast('Speech recognition not supported. Please use Chrome or Edge browser.', 'error');
         return;
@@ -327,6 +526,7 @@ function startRecording(userInitiated = true) {
             speechState.recordingSessionsStarted += 1;
         }
         try {
+            await startAudioCapture();
             speechState.recognition.start();
         } catch (error) {
             console.error('Error starting recognition:', error);
@@ -351,10 +551,11 @@ function startRecording(userInitiated = true) {
 /**
  * Stop voice recording
  */
-function stopRecording() {
+async function stopRecording() {
     if (speechState.recognition && speechState.isListening) {
         speechState.recognition.stop();
     }
+    await stopAudioCapture();
 }
 
 /**
@@ -477,7 +678,7 @@ async function startInterview() {
 /**
  * Display current question
  */
-function displayCurrentQuestion() {
+async function displayCurrentQuestion() {
     const question = interviewState.questions[interviewState.currentQuestionIndex];
     const totalQuestions = interviewState.questions.length;
     const currentNum = interviewState.currentQuestionIndex + 1;
@@ -503,11 +704,12 @@ function displayCurrentQuestion() {
     
     // Reset speech states
     stopSpeaking();
-    stopRecording();
+    await stopRecording();
     
     // Reset error count and recording session counter for new question
     speechState.networkErrorCount = 0;
     speechState.recordingSessionsStarted = 0;
+    resetQuestionAudioCapture();
     
     // Auto-speak question (optional - can be disabled)
     const autoSpeak = document.getElementById('auto-speak-questions')?.checked;
@@ -526,9 +728,14 @@ async function submitAnswer() {
         showToast('Please provide an answer', 'error');
         return;
     }
+
+    if (isRepeatQuestionRequest(answerText)) {
+        await repeatCurrentQuestion();
+        return;
+    }
     
     // Stop any ongoing recording or speaking
-    stopRecording();
+    await stopRecording();
     stopSpeaking();
     
     showLoading(true);
@@ -538,7 +745,25 @@ async function submitAnswer() {
     try {
         const pauseCount = Math.max(0, speechState.recordingSessionsStarted - 1);
         const knowledgeScore = await calculateKnowledgeScore(answerText, question);
-        const speechScore = calculateSpeechScore(answerText, pauseCount);
+
+        let speechScore = calculateSpeechScore(answerText, pauseCount);
+        let speechBreakdown = null;
+        let speechSource = 'text';
+
+        const audioBlob = speechState.recordedAudioBlob || finalizeAudioBlob();
+        if (audioBlob && audioBlob.size > 800) {
+            try {
+                const speechResult = await api.analyzeSpeech(audioBlob, answerText);
+                if (speechResult.success && typeof speechResult.speech_score === 'number') {
+                    speechScore = speechResult.speech_score;
+                    speechBreakdown = speechResult.breakdown || null;
+                    speechSource = speechResult.source || 'audio';
+                }
+            } catch (audioError) {
+                console.warn('Audio speech analysis failed, using text fallback:', audioError);
+                speechSource = 'text_fallback';
+            }
+        }
         
         // Record response
         await api.recordResponse(
@@ -559,13 +784,15 @@ async function submitAnswer() {
             speechScore: speechScore,
             totalScore: computeTotalScore(knowledgeScore, speechScore),
             pauseCount: pauseCount,
+            speechBreakdown: speechBreakdown,
+            speechSource: speechSource,
             topics: question.topics || [],
             idealKeywords: question.ideal_keywords || [],
             jobRoles: question.job_roles || []
         });
         
         // Show feedback
-        displayAnswerFeedback(knowledgeScore, speechScore);
+        displayAnswerFeedback(knowledgeScore, speechScore, speechBreakdown, speechSource);
         
         showLoading(false);
         showToast('Answer submitted successfully!', 'success');
@@ -715,12 +942,41 @@ function calculateSpeechScore(answer, pauseCount = 0) {
 /**
  * Display answer feedback
  */
-function displayAnswerFeedback(knowledgeScore, speechScore) {
+function displayAnswerFeedback(knowledgeScore, speechScore, speechBreakdown = null, speechSource = 'text') {
     const totalScore = computeTotalScore(knowledgeScore, speechScore);
     
     document.getElementById('knowledge-score').textContent = (knowledgeScore * 100).toFixed(0) + '%';
     document.getElementById('speech-score').textContent = (speechScore * 100).toFixed(0) + '%';
     document.getElementById('total-score').textContent = (totalScore * 100).toFixed(0) + '%';
+
+    const breakdownDiv = document.getElementById('speech-breakdown');
+    if (breakdownDiv) {
+        if (speechBreakdown) {
+            const labels = {
+                filler: 'Filler words',
+                pause_pacing: 'Pauses & pacing',
+                pronunciation: 'Pronunciation',
+                tone_energy: 'Tone & energy'
+            };
+            breakdownDiv.style.display = 'block';
+            breakdownDiv.innerHTML = `
+                <p style="margin: 0.75rem 0 0.5rem; font-size: 0.875rem; color: var(--text-secondary);">
+                    Speech analysis (${speechSource === 'audio' ? 'audio' : 'text fallback'})
+                </p>
+                <div class="speech-breakdown-grid">
+                    ${Object.entries(labels).map(([key, label]) => `
+                        <div class="speech-breakdown-item">
+                            <span>${label}</span>
+                            <strong>${((speechBreakdown[key] || 0) * 100).toFixed(0)}%</strong>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        } else {
+            breakdownDiv.style.display = 'none';
+            breakdownDiv.innerHTML = '';
+        }
+    }
     
     // Color code based on score
     const totalScoreElement = document.getElementById('total-score');
@@ -755,26 +1011,24 @@ function nextQuestion() {
  */
 function skipQuestion() {
     if (confirm('Are you sure you want to skip this question?')) {
-        // Stop any ongoing speech
         stopSpeaking();
-        stopRecording();
-        
-        // Record as skipped with zero scores
-        const question = interviewState.questions[interviewState.currentQuestionIndex];
-        
-        interviewState.answers.push({
-            questionId: question.question_id,
-            questionText: question.question_text,
-            answerText: '[Skipped]',
-            knowledgeScore: 0,
-            speechScore: 0,
-            totalScore: 0,
-            topics: question.topics || [],
-            idealKeywords: question.ideal_keywords || [],
-            jobRoles: question.job_roles || []
+        stopRecording().then(() => {
+            const question = interviewState.questions[interviewState.currentQuestionIndex];
+
+            interviewState.answers.push({
+                questionId: question.question_id,
+                questionText: question.question_text,
+                answerText: '[Skipped]',
+                knowledgeScore: 0,
+                speechScore: 0,
+                totalScore: 0,
+                topics: question.topics || [],
+                idealKeywords: question.ideal_keywords || [],
+                jobRoles: question.job_roles || []
+            });
+
+            nextQuestion();
         });
-        
-        nextQuestion();
     }
 }
 
@@ -784,8 +1038,7 @@ function skipQuestion() {
 function endInterview() {
     if (confirm('Are you sure you want to end the interview? Your progress will be saved.')) {
         stopSpeaking();
-        stopRecording();
-        completeInterview();
+        stopRecording().then(() => completeInterview());
     }
 }
 
@@ -981,7 +1234,7 @@ async function completeInterview() {
     
     // Stop any ongoing speech
     stopSpeaking();
-    stopRecording();
+    await stopRecording();
     
     // Calculate final statistics
     const totalAnswers = interviewState.answers.length;
@@ -1055,10 +1308,10 @@ async function completeInterview() {
 /**
  * Reset interview
  */
-function resetInterview() {
+async function resetInterview() {
     // Stop any ongoing speech
     stopSpeaking();
-    stopRecording();
+    await releaseAudioStream();
     
     // Reset state
     interviewState.candidateId = null;

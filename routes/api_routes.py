@@ -13,6 +13,7 @@ from services import (
     QuestionRetriever
 )
 from database import DatabaseManager
+import os
 import traceback
 
 # Load model once (global)
@@ -176,6 +177,34 @@ def create_routes():
             return jsonify({'success': success})
         
         except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    @api.route('/analyze-speech', methods=['POST'])
+    def analyze_speech():
+        """Analyze answer audio and return speech score breakdown."""
+        try:
+            if 'audio_file' not in request.files:
+                return jsonify({'error': 'audio_file required'}), 400
+
+            audio_file = request.files['audio_file']
+            if not audio_file.filename and not audio_file.content_length:
+                return jsonify({'error': 'Empty audio upload'}), 400
+
+            reference_text = request.form.get('reference_text', '')
+            audio_bytes = audio_file.read()
+            filename = audio_file.filename or 'answer.webm'
+            suffix = os.path.splitext(filename)[1] or '.webm'
+
+            from services.speech_analyzer import speech_analyzer
+            result = speech_analyzer.analyze(audio_bytes, reference_text, suffix=suffix)
+
+            return jsonify({
+                'success': True,
+                **result
+            })
+
+        except Exception as e:
+            print("Speech analysis error:", traceback.format_exc())
             return jsonify({'error': str(e)}), 500
     
     @api.route('/performance-summary/<candidate_id>', methods=['GET'])

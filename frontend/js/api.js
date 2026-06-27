@@ -112,6 +112,26 @@ class APIService {
     }
     
     /**
+     * Analyze speech audio and return speech score
+     */
+    async analyzeSpeech(audioBlob, referenceText = '') {
+        const formData = new FormData();
+        formData.append('audio_file', audioBlob, 'answer.webm');
+        formData.append('reference_text', referenceText);
+
+        const response = await fetch(`${API_BASE_URL}/analyze-speech`, {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error || 'Speech analysis failed');
+        }
+        return data;
+    }
+
+    /**
      * Record interview response
      */
     async recordResponse(candidateId, questionId, answerText, knowledgeScore, speechScore, interviewSessionId = null) {

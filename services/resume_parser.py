@@ -15,6 +15,7 @@ class ResumeParser:
 
     SECTION_ALIASES = {
         'TECHNICAL SKILLS': 'SKILLS',
+        'TECHNICAL SKILLS AND INTERESTS': 'SKILLS',
         'CORE SKILLS': 'SKILLS',
         'KEY SKILLS': 'SKILLS',
         'PROJECT': 'PROJECTS',
@@ -23,6 +24,53 @@ class ResumeParser:
         'WORK EXPERIENCE': 'EXPERIENCE',
         'PROFESSIONAL EXPERIENCE': 'EXPERIENCE',
         'EMPLOYMENT': 'EXPERIENCE',
+        'EMPLOYMENT HISTORY': 'EXPERIENCE',
+        'INTERNSHIP': 'EXPERIENCE',
+        'INTERNSHIPS': 'EXPERIENCE',
+        'INTERNSHIP EXPERIENCE': 'EXPERIENCE',
+    }
+
+    SECTION_TITLES = [
+        'EDUCATION', 'TECHNICAL SKILLS AND INTERESTS', 'TECHNICAL SKILLS', 'CORE SKILLS', 'KEY SKILLS', 'SKILLS',
+        'ACADEMIC PROJECTS', 'PERSONAL PROJECTS', 'PROJECTS', 'PROJECT',
+        'WORK EXPERIENCE', 'PROFESSIONAL EXPERIENCE', 'EXPERIENCE', 'EMPLOYMENT',
+        'EMPLOYMENT HISTORY', 'INTERNSHIP EXPERIENCE', 'INTERNSHIPS', 'INTERNSHIP',
+        'ACHIEVEMENTS', 'EXTRA-CURRICULAR ACTIVITIES', 'LEADERSHIP',
+        'CERTIFICATIONS', 'PUBLICATIONS', 'AWARDS', 'HOBBIES', 'OBJECTIVE',
+        'SUMMARY', 'PROFILE', 'CONTACT', 'REFERENCES',
+    ]
+
+    MAX_TITLE_WORDS = 8
+
+    DESCRIPTION_VERBS = {
+        'built', 'developed', 'implemented', 'designed', 'used', 'created',
+        'worked', 'deployed', 'maintained', 'integrated', 'led', 'managed',
+        'collaborated', 'achieved', 'improved', 'optimized', 'automated',
+        'conducted', 'performed', 'assisted', 'supported', 'delivered',
+    }
+
+    ENTRY_LABEL_BLACKLIST = {
+        'languages', 'language', 'tools', 'tool', 'technologies', 'technology',
+        'tech stack', 'frameworks', 'framework', 'skills', 'skill',
+        'duration', 'role', 'responsibilities', 'description', 'platform',
+        'database', 'features', 'key features', 'environment', 'libraries',
+        'stack', 'frontend', 'backend', 'summary', 'location', 'company',
+        'achievements', 'highlights', 'cgpa', 'percentage', 'coursework',
+    }
+
+    SKILLS_FOOTER_LABELS = {
+        'languages', 'libraries/frameworks', 'cloud/databases', 'coursework',
+        'libraries', 'interests',
+    }
+
+    PROJECT_SECTION_STARTS = {
+        'personal projects', 'academic projects', 'projects', 'project',
+    }
+
+    HARD_STOP_SECTIONS = {
+        'achievements', 'education', 'certifications', 'experience',
+        'work experience', 'professional experience', 'employment',
+        'references', 'publications',
     }
 
     def __init__(self):
@@ -50,6 +98,7 @@ class ResumeParser:
             for skill in self.common_skills
         }
         self._skills_by_length = sorted(self.common_skills, key=len, reverse=True)
+        self._section_header_lookup = self._build_section_header_lookup()
 
     def _compile_skill_pattern(self, skill: str) -> re.Pattern:
         """Build a regex that matches whole skill tokens, not substrings."""
@@ -157,60 +206,41 @@ class ResumeParser:
         return education[:3]
 
     def extract_experience(self, text: str) -> List[Dict]:
-        """
-        Extract work experience
+        """Extract jobs/internships only from an experience section."""
+        sections = self.split_sections(text)
+        experience_text = sections.get('EXPERIENCE', '').strip()
 
-        Args:
-            text: Resume text
+        if not experience_text:
+            return []
 
-        Returns:
-            List of experience entries
-        """
+        experience_text = self._truncate_at_next_section(experience_text)
+        entries = self._choose_section_entries(experience_text, entry_type='experience')
         experience = []
+        seen_keys: Set[str] = set()
 
-        job_titles = [
-            'Software Engineer', 'Developer', 'Data Scientist', 'Analyst',
-            'Manager', 'Intern', 'Consultant', 'Architect', 'Lead'
-        ]
+        for entry in entries:
+            fields = self._extract_experience_fields(entry)
+            title_key = fields['role'].lower()
+            if not title_key or title_key in seen_keys:
+                continue
+            if not self._entry_has_valid_title(entry, 'experience'):
+                continue
 
-        doc = self.nlp(text)
+            seen_keys.add(title_key)
+            experience.append(fields)
 
-        for ent in doc.ents:
-            if ent.label_ == "ORG":
-                exp_entry = {
-                    'company': ent.text,
-                    'role': '',
-                    'duration': '',
-                    'description': ''
-                }
+        return experience
 
-                context = text[max(0, ent.start_char-200):min(len(text), ent.start_char+200)]
-
-                for title in job_titles:
-                    if title.lower() in context.lower():
-                        exp_entry['role'] = title
-                        break
-
-                year_pattern = r'(19|20)\d{2}\s*[-–]\s*(19|20)\d{2}|(19|20)\d{2}\s*[-–]\s*Present'
-                years = re.search(year_pattern, context, re.IGNORECASE)
-                if years:
-                    exp_entry['duration'] = years.group(0)
-
-                if exp_entry['role']:
-                    experience.append(exp_entry)
-
-        return experience[:5]
+    def _build_section_header_lookup(self) -> Set[str]:
+        lookup: Set[str] = set()
+        for title in self.SECTION_TITLES:
+            lookup.add(self._normalize_heading(title))
+        for alias in self.SECTION_ALIASES:
+            lookup.add(self._normalize_heading(alias))
+        return lookup
 
     def split_sections(self, text: str) -> Dict[str, str]:
-        section_titles = [
-            'EDUCATION', 'TECHNICAL SKILLS', 'CORE SKILLS', 'KEY SKILLS', 'SKILLS',
-            'ACADEMIC PROJECTS', 'PERSONAL PROJECTS', 'PROJECTS', 'PROJECT',
-            'WORK EXPERIENCE', 'PROFESSIONAL EXPERIENCE', 'EXPERIENCE', 'EMPLOYMENT',
-            'ACHIEVEMENTS', 'EXTRA-CURRICULAR ACTIVITIES', 'LEADERSHIP',
-            'CERTIFICATIONS', 'PUBLICATIONS'
-        ]
-
-        titles_sorted = sorted(section_titles, key=len, reverse=True)
+        titles_sorted = sorted(self.SECTION_TITLES, key=len, reverse=True)
         pattern = (
             r'(?im)^(?P<header>' +
             '|'.join(re.escape(title) for title in titles_sorted) +
@@ -218,7 +248,7 @@ class ResumeParser:
         )
         matches = list(re.finditer(pattern, text))
 
-        sections = {}
+        sections: Dict[str, str] = {}
 
         for i, match in enumerate(matches):
             start = match.end()
@@ -228,228 +258,639 @@ class ResumeParser:
             section_name = self.SECTION_ALIASES.get(section_name, section_name)
             section_content = text[start:end].strip()
 
-            if section_name not in sections or len(section_content) > len(sections[section_name]):
+            if section_name in sections:
+                sections[section_name] = (
+                    sections[section_name].rstrip() + '\n\n' + section_content
+                ).strip()
+            else:
                 sections[section_name] = section_content
 
         return sections
 
-    PROJECT_LABEL_BLACKLIST = {
-        'languages', 'language', 'tools', 'tool', 'technologies', 'technology',
-        'tech stack', 'frameworks', 'framework', 'skills', 'skill',
-        'duration', 'role', 'responsibilities', 'description', 'platform',
-        'database', 'features', 'key features', 'environment', 'libraries',
-        'stack', 'frontend', 'backend', 'summary',
-    }
-
-    PROJECT_TITLE_VERBS = {
-        'built', 'developed', 'implemented', 'created', 'designed', 'used',
-        'worked', 'developed', 'deployed', 'maintained', 'integrated',
-    }
-
     def _normalize_heading(self, line: str) -> str:
         return re.sub(r'\s+', ' ', line.strip().lower().rstrip(':'))
 
-    def _is_label_line(self, line: str) -> bool:
+    def _is_section_header_line(self, line: str) -> bool:
         normalized = self._normalize_heading(line)
-        if normalized in self.PROJECT_LABEL_BLACKLIST:
+        return normalized in self._section_header_lookup
+
+    def _truncate_at_next_section(self, section_text: str) -> str:
+        """Stop parsing when another resume section header appears inline."""
+        kept_lines: List[str] = []
+        for line in section_text.split('\n'):
+            if self._is_section_header_line(line):
+                break
+            kept_lines.append(line)
+        return '\n'.join(kept_lines).strip()
+
+    def _is_label_line(self, line: str) -> bool:
+        stripped = line.strip()
+        if ':' in stripped:
+            label_part = self._normalize_heading(stripped.split(':', 1)[0])
+            if label_part in self.ENTRY_LABEL_BLACKLIST:
+                return True
+
+        normalized = self._normalize_heading(stripped)
+        if normalized in self.ENTRY_LABEL_BLACKLIST:
             return True
         return bool(re.match(
-            r'^(languages?|tools?|technologies?|skills?|frameworks?|stack)\b',
+            r'^(languages?|tools?|technologies?|skills?|frameworks?|stack|duration)\b',
             normalized
         ))
 
-    def _clean_project_line(self, line: str) -> str:
+    def _clean_entry_line(self, line: str) -> str:
         line = line.strip()
         line = re.sub(r'^[-•●▪◦*]\s+', '', line)
         line = re.sub(r'^\d+[\.)]\s+', '', line)
         line = re.sub(r'^\*\*(.+?)\*\*$', r'\1', line)
         return line.strip()
 
-    def _ner_validates_project_title(self, title: str) -> bool:
-        """Use spaCy POS/NER to check if text looks like a project name."""
+    def _looks_like_title_case_name(self, text: str) -> bool:
+        words = [word for word in text.split() if word]
+        if len(words) < 2:
+            return False
+        capped = sum(1 for word in words if word[0].isupper())
+        return capped >= max(2, len(words) - 1)
+
+    def _starts_with_description_verb(self, line: str) -> bool:
+        cleaned = self._clean_entry_line(line)
+        if not cleaned:
+            return False
+        if self._looks_like_title_case_name(cleaned):
+            return False
+        first_word = re.split(r'\s+', cleaned.lower())[0]
+        if first_word in self.DESCRIPTION_VERBS:
+            return True
+
+        doc = self.nlp(cleaned)
+        if doc and doc[0].pos_ == 'VERB':
+            return True
+        return False
+
+    def _is_skills_footer_line(self, line: str) -> bool:
+        stripped = line.strip()
+        if not stripped:
+            return False
+        label = self._normalize_heading(stripped.split(':', 1)[0])
+        if label in self.SKILLS_FOOTER_LABELS:
+            return True
+        return bool(re.match(
+            r'(?i)^(languages|libraries/frameworks|cloud/databases|coursework)\s*:',
+            stripped,
+        ))
+
+    def _is_project_date_line(self, line: str) -> bool:
+        stripped = line.strip()
+        if re.fullmatch(
+            r'(?i)(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+\d{4}',
+            stripped,
+        ):
+            return True
+        if re.fullmatch(r'^(19|20)\d{2}\s*[-–]\s*(19|20)\d{2}$', stripped):
+            return True
+        return False
+
+    def _is_project_metadata_colon_title(self, title: str) -> bool:
+        if re.search(r'(?i)tools?\s*&\s*technologies?', title):
+            return True
+        if re.search(
+            r'(?i)\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+\d{4}\b',
+            title,
+        ):
+            return True
+        return False
+
+    def _gather_project_section_text(self, text: str) -> str:
+        """
+        Collect project content from PERSONAL PROJECTS onward.
+        PDFs often insert TECHNICAL SKILLS or education lines before project bodies.
+        """
+        lines = text.splitlines()
+        start_idx = None
+        for index, line in enumerate(lines):
+            if self._normalize_heading(line) in self.PROJECT_SECTION_STARTS:
+                start_idx = index + 1
+                break
+
+        if start_idx is None:
+            sections = self.split_sections(text)
+            return sections.get('PROJECTS', '').strip()
+
+        kept: List[str] = []
+        for line in lines[start_idx:]:
+            stripped = line.strip()
+            if not stripped:
+                if kept and kept[-1] != '':
+                    kept.append('')
+                continue
+
+            normalized = self._normalize_heading(stripped)
+            if normalized in self.HARD_STOP_SECTIONS:
+                break
+            if self._is_skills_footer_line(stripped):
+                break
+            if self._is_section_header_line(stripped):
+                if 'skill' in normalized or normalized in ('skills', 'key skills', 'core skills'):
+                    continue
+                if normalized in self.HARD_STOP_SECTIONS:
+                    break
+
+            if self._is_junk_line(stripped, 'project'):
+                continue
+            kept.append(stripped)
+
+        return '\n'.join(kept).strip()
+
+    def _is_junk_line(self, line: str, entry_type: str = 'project') -> bool:
+        """Skip years, skill lists, and metadata labels inside a section."""
+        stripped = line.strip()
+        if not stripped:
+            return True
+        if self._is_section_header_line(stripped):
+            return True
+        if self._is_label_line(stripped):
+            return True
+        if re.fullmatch(r'(?i)expected\s+(19|20)\d{2}', stripped):
+            return True
+        if re.fullmatch(r'^(19|20)\d{2}$', stripped):
+            return True
+        if re.fullmatch(r'^(19|20)\d{2}\s*[-–]\s*(19|20)\d{2}$', stripped):
+            return True
+        if re.search(r'(?i)\b(?:cgpa|percentage)\b', stripped):
+            return True
+        if re.fullmatch(r'[•●▪◦*\-–]+', stripped):
+            return True
+        if entry_type == 'project' and self._is_project_date_line(stripped):
+            return True
+        if entry_type == 'project' and self._extract_colon_title(stripped, 'project'):
+            return False
+        if entry_type == 'project' and ':' not in stripped and stripped.count(',') >= 2:
+            words = stripped.split()
+            if len(words) <= 14:
+                return True
+        return False
+
+    def _clean_section_text(self, section_text: str, entry_type: str = 'project') -> str:
+        section_text = self._truncate_at_next_section(section_text)
+        kept: List[str] = []
+        for line in section_text.split('\n'):
+            stripped = line.strip()
+            if not stripped:
+                if kept and kept[-1] != '':
+                    kept.append('')
+                continue
+            if self._is_section_header_line(stripped):
+                break
+            if self._is_junk_line(stripped, entry_type):
+                continue
+            kept.append(stripped)
+        return '\n'.join(kept).strip()
+
+    def _validates_project_colon_title(self, title: str) -> bool:
         title = title.strip()
-        if len(title) < 3 or len(title.split()) > 10:
+        if len(title) < 3 or len(title.split()) > self.MAX_TITLE_WORDS:
             return False
         if self._is_label_line(title):
             return False
-        if title.split()[0].lower() in self.PROJECT_TITLE_VERBS:
+        if self._starts_with_description_verb(title):
+            return False
+        if self._ner_validates_entry_title(title, 'project'):
+            return True
+
+        doc = self.nlp(title)
+        words = title.split()
+        title_case_words = sum(1 for word in words if word[:1].isupper())
+        has_noun = any(token.pos_ in ('NOUN', 'PROPN', 'ADJ') for token in doc) if doc else False
+
+        # Multi-word Title Case names (e.g. "Automated Video Transcription To Summarized Text")
+        if len(words) >= 3 and title_case_words >= max(3, len(words) - 1) and has_noun:
+            return True
+
+        if not doc or doc[0].pos_ == 'VERB':
+            return False
+        return has_noun and (title_case_words >= 2 or len(words) <= 4)
+
+    def _extract_colon_title(self, line: str, entry_type: str = 'project') -> str:
+        """
+        Parse 'Project Name : description' lines — title is the text before the colon.
+        Ignores metadata labels like Languages: or Tools:.
+        """
+        stripped = line.strip()
+        if not stripped or ':' not in stripped:
+            return ''
+        if re.match(r'^[-•●▪◦*]\s+', stripped):
+            return ''
+
+        left, _right = stripped.split(':', 1)
+        title = left.strip()
+        if not title or self._is_label_line(stripped):
+            return ''
+        if self._is_project_metadata_colon_title(title):
+            return ''
+        if len(title.split()) > self.MAX_TITLE_WORDS:
+            return ''
+        if self._starts_with_description_verb(title):
+            return ''
+
+        if entry_type == 'project':
+            if self._validates_project_colon_title(title):
+                return title
+            return ''
+
+        if self._ner_validates_entry_title(title, entry_type):
+            return title
+        return ''
+
+    def _is_valid_project_name(self, name: str) -> bool:
+        if not name or self._is_label_line(name):
+            return False
+        return (
+            self._validates_project_colon_title(name)
+            or self._ner_validates_entry_title(name, 'project')
+        )
+
+    def _is_metadata_line(self, line: str) -> bool:
+        """Date/location lines that belong inside an experience entry, not as titles."""
+        stripped = line.strip()
+        if not stripped:
+            return True
+        if re.search(
+            r'\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\b',
+            stripped,
+            re.IGNORECASE,
+        ) and re.search(r'\b(19|20)\d{2}\b', stripped):
+            return True
+        if re.fullmatch(
+            r'(?i)(?:\d{1,2}/\d{4}|\w+\s+\d{4})\s*[-–]\s*(?:(?:\d{1,2}/\d{4}|\w+\s+\d{4})|present|current)',
+            stripped,
+        ):
+            return True
+        if re.fullmatch(r'(?i)(19|20)\d{2}\s*[-–]\s*(?:(19|20)\d{2}|present|current)', stripped):
+            return True
+        return False
+
+    def _ner_validates_entry_title(self, title: str, entry_type: str = 'project') -> bool:
+        title = title.strip()
+        if len(title) < 3 or len(title.split()) > self.MAX_TITLE_WORDS:
+            return False
+        if self._is_label_line(title):
+            return False
+        if self._starts_with_description_verb(title):
             return False
 
         doc = self.nlp(title)
         if not doc:
             return False
 
+        if entry_type == 'experience':
+            if any(ent.label_ in ('ORG', 'PRODUCT') for ent in doc.ents):
+                return True
+            return any(token.pos_ in ('NOUN', 'PROPN') for token in doc)
+
         if any(ent.label_ in ('WORK_OF_ART', 'PRODUCT') for ent in doc.ents):
             return True
 
         has_noun = any(token.pos_ in ('NOUN', 'PROPN') for token in doc)
         starts_with_verb = doc[0].pos_ == 'VERB'
-        mostly_nouns = sum(1 for t in doc if t.pos_ in ('NOUN', 'PROPN', 'ADJ')) >= max(1, len(doc) // 2)
+        mostly_nouns = sum(
+            1 for token in doc if token.pos_ in ('NOUN', 'PROPN', 'ADJ')
+        ) >= max(1, len(doc) // 2)
 
         return has_noun and not starts_with_verb and mostly_nouns
 
-    def _looks_like_project_title_line(self, line: str) -> bool:
-        """High-confidence project title line: bullet, number, or Title: description."""
+    def _is_entry_title_line(self, line: str, entry_type: str = 'project') -> bool:
         stripped = line.strip()
-        if not stripped or self._is_label_line(stripped):
+        if not stripped or self._is_section_header_line(stripped):
+            return False
+        if self._is_label_line(stripped):
+            return False
+        if entry_type == 'experience' and self._is_metadata_line(stripped):
             return False
 
-        if re.match(r'^[-•●▪◦*]\s+\S', stripped):
-            return True
-        if re.match(r'^\d+[\.)]\s+\S', stripped):
-            return True
+        if entry_type == 'project':
+            colon_title = self._extract_colon_title(stripped, entry_type)
+            if colon_title:
+                return True
 
-        colon_match = re.match(r'^(.+?):\s*(\S.*)?$', stripped)
-        if colon_match:
-            title = colon_match.group(1).strip()
-            if len(title.split()) > 8 or len(title) < 3:
+        cleaned = self._clean_entry_line(stripped)
+        if not cleaned or len(cleaned) < 3:
+            return False
+        if len(cleaned.split()) > self.MAX_TITLE_WORDS:
+            return False
+        if self._starts_with_description_verb(cleaned):
+            return False
+
+        has_list_marker = bool(
+            re.match(r'^[-•●▪◦*]\s+\S', stripped) or re.match(r'^\d+[\.)]\s+\S', stripped)
+        )
+        if has_list_marker:
+            if entry_type == 'project' and not self._extract_colon_title(stripped, entry_type):
                 return False
-            return self._ner_validates_project_title(title)
+            return self._ner_validates_entry_title(cleaned, entry_type)
 
-        return False
+        if cleaned.endswith('.') and len(cleaned.split()) > 5:
+            return False
 
-    def _split_by_blank_lines(self, project_text: str) -> List[str]:
-        return [
-            block.strip()
-            for block in re.split(r'\n\s*\n+', project_text)
-            if len(block.strip()) >= 20
-        ]
+        return self._ner_validates_entry_title(cleaned, entry_type)
 
-    def _split_by_bullets_or_numbers(self, project_text: str) -> List[str]:
-        lines = project_text.split('\n')
+    def _is_standalone_project_title_line(self, line: str) -> bool:
+        """Title on its own line (no colon), followed by description paragraphs."""
+        stripped = line.strip()
+        if not stripped or self._is_section_header_line(stripped):
+            return False
+        if self._is_label_line(stripped) or self._is_junk_line(stripped, 'project'):
+            return False
+        if self._extract_colon_title(stripped, 'project'):
+            return False
+        if re.match(r'^[-•●▪◦*]\s+', stripped):
+            return False
+
+        cleaned = self._clean_entry_line(stripped)
+        if not cleaned or len(cleaned.split()) > self.MAX_TITLE_WORDS:
+            return False
+        if self._starts_with_description_verb(cleaned):
+            return False
+        if self._is_project_date_line(cleaned):
+            return False
+        if re.search(r'(?i)tools?\s*&\s*technologies?', cleaned):
+            return False
+        if cleaned.endswith('.') and len(cleaned.split()) > 5:
+            return False
+
+        return self._validates_project_colon_title(cleaned)
+
+    def _entry_has_valid_title(self, entry: str, entry_type: str = 'project') -> bool:
+        entry = entry.strip()
+        if len(entry) < 12:
+            return False
+
+        first_line = entry.split('\n', 1)[0].strip()
+        title = self._extract_entry_title(entry, entry_type)
+        if not title or self._is_label_line(title):
+            return False
+        if self._starts_with_description_verb(title):
+            return False
+        if entry_type == 'project':
+            if not self._is_valid_project_name(title):
+                return False
+        elif not self._ner_validates_entry_title(title, entry_type):
+            return False
+
+        lines = [line.strip() for line in entry.split('\n') if line.strip()]
+        if len(lines) == 1 and self._starts_with_description_verb(first_line):
+            return False
+
+        return True
+
+    def _split_by_colon_titles(self, section_text: str, entry_type: str) -> List[str]:
+        """Split on 'Title : description' lines common in student resumes."""
+        section_text = self._clean_section_text(section_text, entry_type)
+        lines = section_text.split('\n')
         entries: List[str] = []
         current: List[str] = []
 
         def flush():
-            if current:
-                block = '\n'.join(current).strip()
-                if len(block) >= 20:
-                    entries.append(block)
-                current.clear()
+            if not current:
+                return
+            block = '\n'.join(current).strip()
+            if self._entry_has_valid_title(block, entry_type):
+                entries.append(block)
+            current.clear()
+
+        for line in lines:
+            stripped = line.strip()
+            if not stripped:
+                continue
+            if self._is_section_header_line(stripped):
+                break
+
+            colon_title = self._extract_colon_title(stripped, entry_type)
+            if colon_title and current:
+                flush()
+            if colon_title:
+                current.append(stripped)
+            elif current:
+                current.append(stripped)
+
+        flush()
+        return entries
+
+    def _split_by_standalone_titles(self, section_text: str, entry_type: str) -> List[str]:
+        section_text = self._clean_section_text(section_text, entry_type)
+        lines = section_text.split('\n')
+        entries: List[str] = []
+        current: List[str] = []
+
+        def flush():
+            if not current:
+                return
+            block = '\n'.join(current).strip()
+            if self._entry_has_valid_title(block, entry_type):
+                entries.append(block)
+            current.clear()
+
+        for line in lines:
+            stripped = line.strip()
+            if not stripped:
+                continue
+            if self._is_section_header_line(stripped) or self._is_skills_footer_line(stripped):
+                break
+            if self._is_standalone_project_title_line(stripped) and current:
+                flush()
+            if self._is_standalone_project_title_line(stripped) or current:
+                current.append(stripped)
+
+        flush()
+        return entries
+
+    def _split_by_blank_lines(self, section_text: str, entry_type: str) -> List[str]:
+        section_text = self._clean_section_text(section_text, entry_type)
+        entries: List[str] = []
+        for block in re.split(r'\n\s*\n+', section_text):
+            block = block.strip()
+            if not block or self._is_section_header_line(block):
+                continue
+            if self._entry_has_valid_title(block, entry_type):
+                entries.append(block)
+        return entries
+
+    def _split_by_title_lines(self, section_text: str, entry_type: str) -> List[str]:
+        section_text = self._clean_section_text(section_text, entry_type)
+        lines = section_text.split('\n')
+        entries: List[str] = []
+        current: List[str] = []
+
+        def flush():
+            if not current:
+                return
+            block = '\n'.join(current).strip()
+            if self._entry_has_valid_title(block, entry_type):
+                entries.append(block)
+            current.clear()
+
+        for line in lines:
+            stripped = line.strip()
+            if not stripped:
+                continue
+            if self._is_section_header_line(stripped):
+                break
+            if self._is_entry_title_line(stripped, entry_type) and current:
+                flush()
+            current.append(stripped)
+
+        flush()
+        return entries
+
+    def _split_by_list_markers(self, section_text: str, entry_type: str) -> List[str]:
+        """New entry only when a bullet/number line is a title (not a description verb)."""
+        section_text = self._clean_section_text(section_text, entry_type)
+        lines = section_text.split('\n')
+        entries: List[str] = []
+        current: List[str] = []
+
+        def flush():
+            if not current:
+                return
+            block = '\n'.join(current).strip()
+            if self._entry_has_valid_title(block, entry_type):
+                entries.append(block)
+            current.clear()
 
         for line in lines:
             stripped = line.strip()
             if not stripped:
                 flush()
                 continue
+            if self._is_section_header_line(stripped):
+                break
 
-            if self._looks_like_project_title_line(stripped) and (
-                re.match(r'^[-•●▪◦*]\s+', stripped) or re.match(r'^\d+[\.)]\s+', stripped)
-            ):
+            is_marker_line = bool(
+                re.match(r'^[-•●▪◦*]\s+\S', stripped)
+                or re.match(r'^\d+[\.)]\s+\S', stripped)
+            )
+            if is_marker_line and self._is_entry_title_line(stripped, entry_type):
                 flush()
-                current.append(self._clean_project_line(stripped))
+                current.append(self._clean_entry_line(stripped))
             else:
                 current.append(stripped)
 
         flush()
         return entries
 
-    def _split_by_colon_titles(self, project_text: str) -> List[str]:
-        lines = [line.strip() for line in project_text.split('\n') if line.strip()]
-        entries: List[str] = []
-        current: List[str] = []
-
-        for line in lines:
-            if self._looks_like_project_title_line(line) and ':' in line and current:
-                entries.append('\n'.join(current))
-                current = [line]
-            else:
-                current.append(line)
-
-        if current:
-            entries.append('\n'.join(current))
-
-        return [entry.strip() for entry in entries if len(entry.strip()) >= 20]
-
-    def _score_project_entries(self, entries: List[str]) -> float:
+    def _score_section_entries(self, entries: List[str], entry_type: str) -> float:
         if not entries:
             return 0.0
 
-        validated = 0
-        for entry in entries:
-            title = self._extract_project_name(entry)
-            if self._ner_validates_project_title(title):
-                validated += 1
-
-        over_split_penalty = max(0, len(entries) - 6) * 1.5
+        validated = sum(
+            1 for entry in entries
+            if self._entry_has_valid_title(entry, entry_type)
+        )
+        over_split_penalty = max(0, len(entries) - 8) * 1.5
         invalid_penalty = (len(entries) - validated) * 2.0
         return validated * 3.0 - over_split_penalty - invalid_penalty
 
-    def _choose_project_entries(self, project_text: str) -> List[str]:
+    def _choose_section_entries(self, section_text: str, entry_type: str = 'project') -> List[str]:
         strategies = [
-            self._split_by_blank_lines,
-            self._split_by_bullets_or_numbers,
             self._split_by_colon_titles,
+            self._split_by_standalone_titles,
+            self._split_by_title_lines,
+            self._split_by_list_markers,
+            self._split_by_blank_lines,
         ]
 
         best_entries: List[str] = []
         best_score = float('-inf')
 
         for strategy in strategies:
-            entries = strategy(project_text)
-            score = self._score_project_entries(entries)
+            entries = strategy(section_text, entry_type)
+            score = self._score_section_entries(entries, entry_type)
             if score > best_score:
                 best_score = score
                 best_entries = entries
 
-        if best_entries:
-            return best_entries
+        return best_entries
 
-        trimmed = project_text.strip()
-        if len(trimmed) >= 20:
-            return [trimmed]
-        return []
+    def _extract_entry_title(self, entry: str, entry_type: str = 'project') -> str:
+        first_line_raw = entry.split('\n', 1)[0].strip()
 
-    def _extract_project_name(self, entry: str) -> str:
-        first_line = self._clean_project_line(entry.split('\n', 1)[0].strip())
+        colon_title = self._extract_colon_title(first_line_raw, entry_type)
+        if colon_title:
+            return colon_title[:100]
 
-        colon_match = re.match(r'^(.+?):\s*(.*)$', first_line)
-        if colon_match:
-            title = colon_match.group(1).strip()
-            if self._ner_validates_project_title(title):
-                return title[:100]
+        first_line = self._clean_entry_line(first_line_raw)
+
+        if self._ner_validates_entry_title(first_line, entry_type):
+            return first_line[:100]
 
         doc = self.nlp(first_line)
         noun_chunks = list(doc.noun_chunks)
         if noun_chunks:
             chunk = noun_chunks[0].text.strip()
-            if len(chunk) >= 3 and self._ner_validates_project_title(chunk):
+            if self._ner_validates_entry_title(chunk, entry_type):
                 return chunk[:100]
-
-        if self._ner_validates_project_title(first_line):
-            return first_line[:100]
 
         title_tokens = [
             token.text for token in doc
             if token.pos_ in ('PROPN', 'NOUN', 'ADJ') and not token.is_stop
         ]
         if title_tokens:
-            candidate = ' '.join(title_tokens[:6])
-            if self._ner_validates_project_title(candidate):
+            candidate = ' '.join(title_tokens[:self.MAX_TITLE_WORDS])
+            if self._ner_validates_entry_title(candidate, entry_type):
                 return candidate[:100]
 
         return first_line[:100]
 
+    def _extract_experience_fields(self, entry: str) -> Dict:
+        title = self._extract_entry_title(entry, 'experience')
+        duration_match = re.search(
+            r'(?i)(?:'
+            r'(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+\d{4}'
+            r'|\d{1,2}/\d{4}'
+            r'|\d{4}'
+            r')\s*[-–]\s*'
+            r'(?:'
+            r'(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\s+\d{4}'
+            r'|\d{1,2}/\d{4}'
+            r'|\d{4}'
+            r'|present|current'
+            r')',
+            entry,
+        )
+        duration = duration_match.group(0).strip() if duration_match else ''
+
+        role = title
+        company = ''
+        if '|' in title:
+            parts = [part.strip() for part in title.split('|') if part.strip()]
+            if parts:
+                role = parts[0]
+            if len(parts) > 1:
+                company = parts[1]
+        elif re.search(r'\bat\b', title, re.IGNORECASE):
+            parts = re.split(r'\bat\b', title, maxsplit=1, flags=re.IGNORECASE)
+            role = parts[0].strip()
+            company = parts[1].strip() if len(parts) > 1 else ''
+
+        return {
+            'company': company or title,
+            'role': role,
+            'duration': duration,
+            'description': entry[:500],
+        }
+
     def extract_projects(self, text: str) -> List[Dict]:
-        sections = self.split_sections(text)
-        project_text = sections.get('PROJECTS', '')
+        project_text = self._gather_project_section_text(text)
 
         if not project_text:
             return []
 
-        project_entries = self._choose_project_entries(project_text)
+        project_entries = self._choose_section_entries(project_text, entry_type='project')
         projects = []
         seen_names: Set[str] = set()
 
         for entry in project_entries:
-            entry = entry.strip()
-            if len(entry) < 20:
-                continue
-
-            name = self._extract_project_name(entry)
-            if not name or self._is_label_line(name):
-                continue
-            if not self._ner_validates_project_title(name):
+            name = self._extract_entry_title(entry, 'project')
+            if not self._is_valid_project_name(name):
                 continue
 
             name_key = name.lower()
@@ -461,7 +902,7 @@ class ResumeParser:
             projects.append({
                 'name': name[:100],
                 'technologies': technologies[:10],
-                'description': entry[:500]
+                'description': entry[:500],
             })
 
         return projects

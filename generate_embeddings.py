@@ -2,9 +2,23 @@ from sentence_transformers import SentenceTransformer
 import sqlite3
 import json
 from datetime import datetime
+import google.generativeai as genai
+import time
 
 # Load 384-d embedding model
 model = SentenceTransformer("all-MiniLM-L6-v2")
+
+# ----------------------------
+# Configure Gemini
+# ----------------------------
+genai.configure(api_key="AIzaSyB6vCP3q03wtWaybBpmuLyHn4iOSce7ROM")
+
+llm = genai.GenerativeModel("gemini-2.5-flash")
+
+# ----------------------------
+# Load embedding model
+# ----------------------------
+embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
 
 def generate_embedding(text):
     return json.dumps(
@@ -12,21 +26,96 @@ def generate_embedding(text):
     )
 
 # 🔥 ADD THIS FUNCTION (ideal answer generator)
-def generate_ideal_answer(question_text, topics_json, keywords_json):
-    try:
-        topics = json.loads(topics_json)
-    except:
-        topics = []
+def generate_ideal_answers(question_batch):
+    """
+    question_batch = [
+        {
+            "question_id": ...,
+            "question": ...,
+            "topics": ...,
+            "keywords": ...
+        }
+    ]
+    """
 
-    try:
-        keywords = json.loads(keywords_json) if keywords_json else []
-    except:
-        keywords = []
+    prompt = """
+You are an expert technical interviewer.
 
-    topic_part = ", ".join(topics)
-    keyword_part = ", ".join(keywords)
+Generate the IDEAL interview answer for every question.
 
-    return f"A strong answer explaining {topic_part}, covering key concepts such as {keyword_part}."
+Rules:
+1. Return ONLY valid JSON.
+2. Preserve question_id.
+3. Each answer should be 120-180 words.
+4. Be technically accurate.
+5. Naturally include all supplied keywords.
+6. No bullet points.
+7. No markdown.
+
+Output format:
+
+[
+  {
+    "question_id": 1,
+    "ideal_answer": "..."
+  }
+]
+
+Questions:
+
+"""
+
+    for q in question_batch:
+
+        try:
+            topics = json.loads(q["topics"]) if q["topics"] else []
+        except:
+            topics = []
+
+        try:
+            keywords = json.loads(q["keywords"]) if q["keywords"] else []
+        except:
+            keywords = []
+
+        prompt += f"""
+
+Question ID: {q['question_id']}
+
+Question:
+{q['question']}
+
+Topics:
+{', '.join(topics)}
+
+Keywords:
+{', '.join(keywords)}
+
+"""
+
+    while True:
+
+        try:
+
+            response = llm.generate_content(prompt)
+
+            text = response.text.strip()
+
+            text = text.replace("```json", "").replace("```", "").strip()
+
+            return json.loads(text)
+
+        except Exception as e:
+
+            if "429" in str(e):
+
+                print("Rate limit exceeded.")
+                print("Waiting 40 seconds...\n")
+
+                time.sleep(40)
+                continue
+
+            print(e)
+            return []   
 
 # Connect DB
 conn = sqlite3.connect("interview_system.db")
@@ -40,30 +129,79 @@ cursor.execute("""
 
 questions = cursor.fetchall()
 
-for qid, qtext, topics, keywords in questions:
-    
-    # 1️⃣ Question embedding (already existed)
-    question_embedding = generate_embedding(qtext)
+batch_size = 10
 
-    # 2️⃣ Generate ideal answer (NEW)
-    ideal_answer = generate_ideal_answer(qtext, topics, keywords)
+for start in range(0, len(questions), batch_size):
 
-    # 3️⃣ Ideal answer embedding (NEW)
-    ideal_embedding = generate_embedding(ideal_answer)
+    batch_rows = questions[start:start+batch_size]
 
-    # 4️⃣ Store both
-    cursor.execute("""
+    batch = []
+
+    for qid, qtext, topics, keywords in batch_rows:
+
+        batch.append({
+
+            "question_id": qid,
+            "question": qtext,
+            "topics": topics,
+            "keywords": keywords
+
+        })
+
+    print(f"Processing questions {start+1} - {start+len(batch)}")
+
+    ideal_answers = generate_ideal_answers(batch)
+
+    ideal_answer_lookup = {
+
+        item["question_id"]: item["ideal_answer"]
+
+        for item in ideal_answers
+
+    }
+
+    for qid, qtext, topics, keywords in batch_rows:
+
+        question_embedding = generate_embedding(qtext)
+
+        ideal_answer = ideal_answer_lookup.get(qid, "")
+
+        ideal_embedding = generate_embedding(ideal_answer)
+
+        cursor.execute("""
+
         UPDATE questions
-        SET embedding = ?, 
-            ideal_answer_embedding = ?, 
-            updated_at = ?
-        WHERE question_id = ?
-    """, (
-        question_embedding,
-        ideal_embedding,
-        datetime.utcnow().isoformat(),
-        qid
-    ))
+
+        SET
+
+            embedding=?,
+
+            ideal_answer_embedding=?,
+
+            updated_at=?
+
+        WHERE question_id=?
+
+        """,
+
+        (
+
+            question_embedding,
+
+            ideal_embedding,
+
+            datetime.utcnow().isoformat(),
+
+            qid
+
+        ))
+
+    conn.commit()
+
+    print("Batch saved.\n")
+
+    # Stay below free-tier limit
+    time.sleep(15)
 
 conn.commit()
 conn.close()

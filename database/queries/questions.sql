@@ -3,773 +3,755 @@ INSERT INTO questions
 VALUES
 
 -- =====================================================
--- THREAD 1: MACHINE LEARNING & AI (MODEL PERFORMANCE, DATA QUALITY, FEATURE ENGINEERING, MODEL SELECTION, ETHICS, LLM)
+-- SEARCHING ALGORITHMS (QUESTIONS 1 - 30)
 -- =====================================================
 
--- Technical (easy)
-('Q001','Your ML model performs well on training data but poorly on validation data. What is your first suspicion and why?','technical','easy','["ML"]','["Software Engineer"]','[]','["overfitting","generalization","training-validation gap"]','2026-01-22','2026-01-22'),
-('Q002','What data quality checks do you perform before starting any analysis?','technical','easy','["Data Analyst"]','["Software Engineer"]','[]','["missing values","duplicates","outliers"]','2026-01-22','2026-01-22'),
-('Q003','What characteristics make a feature useful for a machine learning model?','technical','easy','["ML"]','["Software Engineer"]','[]','["predictive signal","relevance","variance"]','2026-01-22','2026-01-22'),
-('Q004','When would you choose logistic regression over more complex models?','technical','easy','["ML"]','["Software Engineer"]','[]','["interpretability","baseline","simplicity"]','2026-01-22','2026-01-22'),
-('Q005','What challenges arise when moving an ML model from experimentation to production?','technical','easy','["ML"]','["Software Engineer"]','[]','["reproducibility","versioning","latency"]','2026-01-22','2026-01-22'),
-('Q006','What does bias mean in the context of machine learning models?','technical','easy','["AI","ML"]','["Software Engineer"]','[]','["bias","fairness","representation"]','2026-01-22','2026-01-22'),
-('Q007','What is A/B testing and when would you use it?','technical','easy','["Data Analyst"]','["Software Engineer"]','[]','["A/B testing","experimentation","control group"]','2026-01-22','2026-01-22'),
-('Q008','How would you explain model confidence to a product manager?','situational','easy','["ML"]','["Software Engineer"]','[]','["probability","uncertainty","interpretation"]','2026-01-22','2026-01-22'),
-('Q009','What is prompt engineering and why is it important for LLM applications?','technical','easy','["AI","LLM"]','["Software Engineer"]','[]','["prompts","instructions","LLM behavior"]','2026-01-22','2026-01-22'),
-('Q010','What is Retrieval-Augmented Generation (RAG)?','technical','easy','["AI","LLM"]','["Software Engineer"]','[]','["retrieval","knowledge base","generation"]','2026-01-22','2026-01-22'),
-('Q011','What are embeddings and how are they used in AI applications?','technical','easy','["AI","LLM"]','["Software Engineer"]','[]','["embeddings","vector search","semantic similarity"]','2026-01-22','2026-01-22'),
-('Q012','What is vector search and why is it important in RAG systems?','technical','easy','["AI","LLM"]','["Software Engineer"]','[]','["vector database","retrieval","similarity search"]','2026-01-22','2026-01-22'),
+-- Set 1: Binary Search Foundations & Boundaries
+('Q1','Explain how Binary Search achieves O(log n) time complexity, and state the absolute prerequisite condition for the input array.','technical','easy','["DSA"]','["Software Engineer"]','[]','["divide and conquer","sorted order constraint","logarithmic time"]','2026-06-27','2026-06-27'),
+('Q2','How do you calculate the middle index in Binary Search to safely prevent integer overflow errors in languages like Java or C++?','technical','easy','["DSA"]','["Software Engineer"]','[]','["integer overflow avoidance","index math","unsigned right shift"]','2026-06-27','2026-06-27'),
+('Q3','If the input sorted array contains duplicate target values, how do you modify Binary Search to find the exact first or last occurrence instead of an arbitrary one?','technical','medium','["DSA"]','["Software Engineer"]','[]','["boundary scanning","index tracking","truncating search space"]','2026-06-27','2026-06-27'),
 
--- Technical (medium)
-('Q013','How would you confirm whether overfitting is actually the root cause?','technical','medium','["ML"]','["Software Engineer"]','[]','["learning curves","cross validation","regularization"]','2026-01-22','2026-01-22'),
-('Q014','How do you decide whether an outlier should be removed or kept?','technical','medium','["Data Analyst"]','["Software Engineer"]','[]','["domain knowledge","distribution","impact analysis"]','2026-01-22','2026-01-22'),
-('Q015','How do you verify that a new feature genuinely improves a model?','technical','medium','["ML"]','["Software Engineer"]','[]','["ablation","cross validation","metric comparison"]','2026-01-22','2026-01-22'),
-('Q016','How do you choose between two models with similar performance metrics?','technical','medium','["ML"]','["Software Engineer"]','[]','["latency","maintainability","explainability"]','2026-01-22','2026-01-22'),
-('Q017','What metrics would you continuously monitor for a deployed ML model?','technical','medium','["AI","ML"]','["Software Engineer"]','[]','["drift","performance","alerts"]','2026-01-22','2026-01-22'),
-('Q018','How do you design an experiment to ensure statistically valid results?','technical','medium','["Data Analyst"]','["Software Engineer"]','[]','["randomization","sample size","statistical power"]','2026-01-22','2026-01-22'),
-('Q019','How do you validate insights before presenting them to leadership?','technical','medium','["Data Analyst"]','["Software Engineer"]','[]','["sanity checks","cross validation","confidence"]','2026-01-22','2026-01-22'),
-('Q020','What trade-offs do you consider when choosing real-time versus batch processing?','technical','medium','["Data Analyst","AI"]','["Software Engineer"]','[]','["latency","consistency","cost"]','2026-01-22','2026-01-22'),
-('Q021','What makes an ML system maintainable over time?','technical','medium','["AI","ML"]','["Software Engineer"]','[]','["documentation","versioning","monitoring"]','2026-01-22','2026-01-22'),
-('Q022','How would you evaluate the quality of responses generated by an LLM?','technical','medium','["AI","LLM"]','["Software Engineer"]','[]','["evaluation","metrics","human feedback"]','2026-01-22','2026-01-22'),
-('Q023','What techniques can reduce hallucinations in LLM systems?','technical','medium','["AI","LLM"]','["Software Engineer"]','[]','["RAG","grounding","verification"]','2026-01-22','2026-01-22'),
-('Q024','How would you monitor an LLM application in production?','technical','medium','["AI","LLM"]','["Software Engineer"]','[]','["monitoring","latency","quality"]','2026-01-22','2026-01-22'),
-('Q025','How would you evaluate a retrieval component separately from an LLM?','technical','medium','["AI","LLM"]','["Software Engineer"]','[]','["precision","recall","retrieval quality"]','2026-01-22','2026-01-22'),
-('Q026','What challenges arise when serving LLMs at scale?','technical','medium','["AI","LLM"]','["Software Engineer"]','[]','["latency","cost","throughput"]','2026-01-22','2026-01-22'),
-('Q027','How would you improve the response quality of a RAG pipeline?','technical','medium','["AI","LLM"]','["Software Engineer"]','[]','["chunking","retrieval","reranking"]','2026-01-22','2026-01-22'),
+-- Set 2: Rotated Array Searching
+('Q4','Given an array sorted in ascending order that has been rotated at an unknown pivot point, how can you determine which side of the split is sorted?','technical','medium','["DSA"]','["Software Engineer"]','[]','["rotated array pivot","monotonic segment","mid comparisons"]','2026-06-27','2026-06-27'),
+('Q5','Building on that pivot logic, how do you execute a full target search in a rotated sorted array in O(log n) time?','technical','medium','["DSA"]','["Software Engineer"]','[]','["conditional binary search","range check","pointer adjustment"]','2026-06-27','2026-06-27'),
+('Q6','What happens to the O(log n) time complexity guarantee if the rotated sorted array contains widespread duplicate values, and how do you handle it?','technical','hard','["DSA"]','["Software Engineer"]','[]','["linear degradation","duplicate edge case","pointer reduction"]','2026-06-27','2026-06-27'),
 
--- Technical (hard)
-('Q028','How does your debugging strategy change if this model is already in production?','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["data drift","monitoring","rollback"]','2026-01-22','2026-01-22'),
-('Q029','How would you quantify the impact of poor data quality on model performance?','technical','hard','["ML","Data Analyst"]','["Software Engineer"]','[]','["ablation study","error analysis","sensitivity"]','2026-01-22','2026-01-22'),
-('Q030','Explain feature leakage using a real-world example.','technical','hard','["ML"]','["Software Engineer"]','[]','["target leakage","temporal leakage","causality"]','2026-01-22','2026-01-22'),
-('Q031','How do you fairly compare models trained on different feature sets?','technical','hard','["ML"]','["Software Engineer"]','[]','["controlled experiments","fair evaluation"]','2026-01-22','2026-01-22'),
-('Q032','Design a scalable inference architecture for millions of users.','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["load balancing","horizontal scaling","caching"]','2026-01-22','2026-01-22'),
-('Q033','How would you detect bias in a deployed AI system?','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["fairness metrics","monitoring","subgroup analysis"]','2026-01-22','2026-01-22'),
-('Q034','Explain a time-series forecasting approach you have used.','technical','hard','["ML","Data Analyst"]','["Software Engineer"]','[]','["trend","seasonality","forecasting"]','2026-01-22','2026-01-22'),
-('Q035','Explain a recommendation system you have designed or studied.','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["collaborative filtering","ranking","evaluation"]','2026-01-22','2026-01-22'),
-('Q036','How do you ensure data privacy when building ML systems?','technical','hard','["AI","Data Analyst"]','["Software Engineer"]','[]','["anonymization","access control","compliance"]','2026-01-22','2026-01-22'),
-('Q037','How do you debug silent failures in data pipelines?','technical','hard','["Data Analyst","AI"]','["Software Engineer"]','[]','["logging","data validation","monitoring"]','2026-01-22','2026-01-22'),
-('Q038','What risks do you consider before deploying an AI system affecting users directly?','technical','hard','["AI"]','["Software Engineer"]','[]','["risk assessment","ethics","monitoring"]','2026-01-22','2026-01-22'),
-('Q039','Explain the trade-offs between fine-tuning and prompt engineering.','technical','hard','["AI","LLM"]','["Software Engineer"]','[]','["fine tuning","cost","performance"]','2026-01-22','2026-01-22'),
-('Q040','How would you design an enterprise chatbot using an LLM?','technical','hard','["AI","LLM"]','["Software Engineer"]','[]','["architecture","RAG","security"]','2026-01-22','2026-01-22'),
-('Q041','How would you detect prompt injection attacks in an AI system?','technical','hard','["AI","Security"]','["Software Engineer"]','[]','["prompt injection","guardrails","validation"]','2026-01-22','2026-01-22'),
-('Q042','How would you evaluate an AI agent performing multi-step tasks?','technical','hard','["AI","Agents"]','["Software Engineer"]','[]','["task completion","evaluation","reasoning"]','2026-01-22','2026-01-22'),
-('Q043','How would you design guardrails for an enterprise AI assistant?','technical','hard','["AI","Security"]','["Software Engineer"]','[]','["safety","guardrails","compliance"]','2026-01-22','2026-01-22'),
-('Q044','Explain the trade-offs between open-source and proprietary LLMs.','technical','hard','["AI","LLM"]','["Software Engineer"]','[]','["cost","privacy","performance"]','2026-01-22','2026-01-22'),
+-- Set 3: Matrix Searching
+('Q7','How can you perform an efficient target search in a 2D matrix where each row is sorted, and the first integer of each row is greater than the last integer of the previous row?','technical','easy','["DSA"]','["Software Engineer"]','[]','["virtual flattening","coordinate mapping","matrix row column mapping"]','2026-06-27','2026-06-27'),
+('Q8','If the matrix row-to-row continuity breaks, but it remains sorted both row-wise from left-to-right and column-wise from top-to-bottom, why does virtual flattening fail?','technical','medium','["DSA"]','["Software Engineer"]','[]','["independent sorting","mapping breakdown","structural discontinuity"]','2026-06-27','2026-06-27'),
+('Q9','How do you search that row-and-column sorted matrix in linear O(m + n) time by picking a strategic corner starting point?','technical','medium','["DSA"]','["Software Engineer"]','[]','["staircase search","top-right origin","space reduction elimination"]','2026-06-27','2026-06-27'),
 
--- Behavioral (medium/hard)
-('Q045','Tell me about a time you had to learn a new data or ML concept quickly.','behavioral','medium','["ML","Data Analyst"]','["Software Engineer"]','[]','["learning","adaptability","initiative"]','2026-01-22','2026-01-22'),
-('Q046','Describe a situation where you had to explain a model failure to a non-technical stakeholder.','behavioral','hard','["ML"]','["Software Engineer"]','[]','["communication","accountability","simplification"]','2026-01-22','2026-01-22'),
-('Q047','Tell me about a project where data quality issues forced you to redesign your solution.','behavioral','hard','["Data Analyst"]','["Software Engineer"]','[]','["adaptability","problem solving","decision making"]','2026-01-22','2026-01-22'),
-('Q048','Describe a feature you removed after initially believing it was important.','behavioral','hard','["ML"]','["Software Engineer"]','[]','["learning","iteration","evidence driven"]','2026-01-22','2026-01-22'),
-('Q049','Tell me about a time you pushed back against unnecessary technical complexity.','behavioral','hard','["AI"]','["Software Engineer"]','[]','["judgment","communication","impact"]','2026-01-22','2026-01-22'),
-('Q050','Describe a production issue you detected before users noticed it.','behavioral','hard','["AI"]','["Software Engineer"]','[]','["ownership","monitoring","proactiveness"]','2026-01-22','2026-01-22'),
-('Q051','Tell me about an ethical concern you encountered while working with data or AI.','behavioral','hard','["AI"]','["Software Engineer"]','[]','["ethics","responsibility","decision making"]','2026-01-22','2026-01-22'),
-('Q052','How do you balance business intuition with data-driven insights?','behavioral','hard','["Data Analyst"]','["Software Engineer"]','[]','["judgment","trade-offs","decision making"]','2026-01-22','2026-01-22'),
-('Q053','Describe a time your data-driven recommendation was challenged or rejected.','behavioral','hard','["Data Analyst"]','["Software Engineer"]','[]','["resilience","feedback","learning"]','2026-01-22','2026-01-22'),
-('Q054','Tell me about a time you improved a pipeline or model for efficiency rather than accuracy.','behavioral','medium','["AI","ML"]','["Software Engineer"]','[]','["optimization","trade-offs","impact"]','2026-01-22','2026-01-22'),
-('Q055','How do you mentor junior team members on data or ML concepts?','behavioral','medium','["AI","ML"]','["Software Engineer"]','[]','["mentorship","knowledge sharing"]','2026-01-22','2026-01-22'),
-('Q056','Describe a situation where monitoring revealed an unexpected issue.','behavioral','medium','["AI"]','["Software Engineer"]','[]','["observability","problem solving"]','2026-01-22','2026-01-22'),
-('Q057','Tell me about a project where data influenced a major engineering decision.','behavioral','hard','["Data Analyst","AI"]','["Software Engineer"]','[]','["impact","decision making","evidence"]','2026-01-22','2026-01-22'),
+-- Set 4: Search Space Optimization (Binary Search on Answer)
+('Q10','What structural signals in an optimization problem indicate that you can perform a Binary Search over the answer space rather than a literal data index array?','technical','medium','["DSA"]','["Software Engineer"]','[]','["monotonic feasibility","upper lower bound constraints","predicated checking"]','2026-06-27','2026-06-27'),
+('Q11','Apply this answer-space concept to the "Capacity To Ship Packages Within D Days" problem. How do you define the exact low and high bounds for the search interval?','technical','medium','["DSA"]','["Software Engineer"]','[]','["max element lower bound","sum elements upper bound","capacity constraints"]','2026-06-27','2026-06-27'),
+('Q12','Write out the structural architecture of the boolean "feasible()" validator helper function used to check if a specific target capacity can distribute the load under day limits.','technical','hard','["DSA"]','["Software Engineer"]','[]','["greedy allocation tracking","partition count loops","feasibility predicate"]','2026-06-27','2026-06-27'),
 
--- Situational (easy/medium/hard)
-('Q058','If regularization lowers training accuracy but improves validation stability, would you deploy the model?','situational','medium','["ML"]','["Software Engineer"]','[]','["bias variance tradeoff","stability","business impact"]','2026-01-22','2026-01-22'),
-('Q059','If business teams want to keep noisy data, how do you handle the disagreement?','situational','medium','["Data Analyst"]','["Software Engineer"]','[]','["evidence","visualization","stakeholder communication"]','2026-01-22','2026-01-22'),
-('Q060','A feature improves offline metrics but hurts real-world performance. What could be the reason?','situational','medium','["ML"]','["Software Engineer"]','[]','["data leakage","distribution shift","proxy feature"]','2026-01-22','2026-01-22'),
-('Q061','Leadership wants a deep learning model, but simpler models perform better. What do you do?','situational','medium','["AI","ML"]','["Software Engineer"]','[]','["trade-offs","business alignment","evidence"]','2026-01-22','2026-01-22'),
-('Q062','Inference latency spikes during peak traffic. How would you investigate?','situational','medium','["AI"]','["Software Engineer"]','[]','["profiling","bottleneck","scaling"]','2026-01-22','2026-01-22'),
-('Q063','How can biased data negatively impact real-world decisions?','situational','medium','["AI"]','["Software Engineer"]','[]','["ethical impact","skewed outcomes"]','2026-01-22','2026-01-22'),
-('Q064','If an experiment shows inconclusive results, how do you proceed?','situational','medium','["Data Analyst"]','["Software Engineer"]','[]','["confidence intervals","iteration","decision making"]','2026-01-22','2026-01-22'),
-('Q065','If leadership questions your analysis, how do you defend it?','situational','medium','["Data Analyst"]','["Software Engineer"]','[]','["data backed reasoning","communication"]','2026-01-22','2026-01-22'),
-('Q066','Describe a scenario where simpler analytics outperformed complex modeling.','situational','medium','["Data Analyst"]','["Software Engineer"]','[]','["simplicity","interpretability","impact"]','2026-01-22','2026-01-22'),
-('Q067','Your AI model suddenly shows degraded performance in production. How would you investigate?','situational','medium','["AI","ML"]','["Software Engineer"]','[]','["monitoring","drift","root cause analysis"]','2026-01-22','2026-01-22'),
-('Q068','A critical service is unavailable and executives are requesting updates every 15 minutes. How would you manage the incident?','situational','hard','["Incident Management"]','["Software Engineer"]','[]','["communication","incident response","leadership"]','2026-01-22','2026-01-22'),
+-- Set 5: Median of Two Sorted Arrays
+('Q13','When tasked with finding the median of two separate sorted arrays, why is a naive merge-and-index solution computationally suboptimal?','technical','easy','["DSA"]','["Software Engineer"]','[]','["linear space allocation","redundant elements traversal","merge overhead"]','2026-06-27','2026-06-27'),
+('Q14','How can you reframe the median extraction challenge into an optimal binary search partition-cutting strategy between both arrays simultaneously?','technical','hard','["DSA"]','["Software Engineer"]','[]','["simultaneous cuts","binary search on partitions","left right balance verification"]','2026-06-27','2026-06-27'),
+('Q15','What are the mathematical boundary conditions using infinity markers that handle cases where a partition cut falls outside the array indices during the binary search?','technical','hard','["DSA"]','["Software Engineer"]','[]','["index out of bounds protection","integer min max boundaries","edge index clipping"]','2026-06-27','2026-06-27'),
+
+-- Set 6: Bitwise / Peak Searching
+('Q16','What defines a "peak element" in an unsorted array, and why does a peak always exist if boundary edges are treated as negative infinity?','technical','easy','["DSA"]','["Software Engineer"]','[]','["local extrema","boundary conditions","neighbor comparisons"]','2026-06-27','2026-06-27'),
+('Q17','How can a binary search strategy be validly applied to locate a peak element in a completely unsorted array? Which direction do you step?','technical','medium','["DSA"]','["Software Engineer"]','[]','["gradient climbing","slope evaluation","mid neighbor check"]','2026-06-27','2026-06-27'),
+('Q18','Extend this logic to a 2D matrix landscape. How do you locate a 2D peak element in $O(n \log m)$ or $O(m \log n)$ time using global row/column maximums?','technical','hard','["DSA"]','["Software Engineer"]','[]','["global column maximum","row selection search","2D grid gradient climbing"]','2026-06-27','2026-06-27'),
+
+-- Set 7: Interpolation Search & Non-Uniform Data
+('Q19','How does Interpolation Search estimate target position index locations, and how does its mathematical calculation step change relative to standard Binary Search?','technical','medium','["DSA"]','["Software Engineer"]','[]','["proportional distribution formula","slope calculation","linear data mapping"]','2026-06-27','2026-06-27'),
+('Q20','Under what data distribution scenario does Interpolation Search reach an optimal $O(\log \log n)$ performance runtime?','technical','medium','["DSA"]','["Software Engineer"]','[]','["uniform data distribution","linear progression scaling","even spacing patterns"]','2026-06-27','2026-06-27'),
+('Q21','What is the worst-case time complexity of Interpolation Search, and what exact data sequence patterns cause this systemic performance breakdown?','technical','hard','["DSA"]','["Software Engineer"]','[]','["exponential spacing collapse","quadratic worst case","highly skewed data points"]','2026-06-27','2026-06-27'),
+
+-- Set 8: Exponential & Unbounded Search
+('Q22','How do you locate a target element inside an infinite or unbounded sorted array where the array size is completely unknown to the runtime engine?','technical','medium','["DSA"]','["Software Engineer"]','[]','["exponential stride expansion","index doubling lookup","range bounding phase"]','2026-06-27','2026-06-27'),
+('Q23','Once the range boundaries are isolated via stride expansion, what is the exact combined time complexity of the range identification and final extraction steps?','technical','medium','["DSA"]','["Software Engineer"]','[]','["logarithmic search phase","two step bound isolation","asymptotic bound constraints"]','2026-06-27','2026-06-27'),
+('Q24','How can you adapt this unbounded stride logic to build a high-performance system system that detects structural null padding boundaries inside massive, low-level string buffer pools?','technical','hard','["DSA"]','["Software Engineer"]','[]','["null terminator scanning","memory layout analysis","unbounded buffer range checks"]','2026-06-27','2026-06-27'),
+
+-- Set 9: Ternary Search & Unimodal Functions
+('Q25','What is a Unimodal Function, and how does Ternary Search divide an internal range array to discover its precise peak coordinate point?','technical','medium','["DSA"]','["Software Engineer"]','[]','["unimodal curve peaks","two internal cut points","range trisect divisions"]','2026-06-27','2026-06-27'),
+('Q26','Derive the recurrence relation and final time complexity equation for a Ternary Search execution cycle.','technical','medium','["DSA"]','["Software Engineer"]','[]','["recurrence equation parsing","log base three scale","mathematical operation derivation"]','2026-06-27','2026-06-27'),
+('Q27','Why is Ternary Search rarely used over standard binary search variations for locating regular elements inside standard monotonically sorted datasets?','technical','hard','["DSA"]','["Software Engineer"]','[]','["higher comparison counts per step","cache line utilization drop","redundant index calculations"]','2026-06-27','2026-06-27'),
+
+-- Set 10: Quickselect & Order Statistics
+('Q28','Explain the Quickselect algorithm. How can it locate the kth smallest element in an unsorted array in $O(n)$ average time without performing a full sort?','technical','medium','["DSA"]','["Software Engineer"]','[]','["hoare partition partitioning","pivot placement index","expected linear selection"]','2026-06-27','2026-06-27'),
+('Q29','What specific input conditions drive Quickselect into a worst-case $O(n^2)$ time performance track, and how do you mitigate this using randomized selection hooks?','technical','medium','["DSA"]','["Software Engineer"]','[]','["highly skewed unbalanced splits","quadratic degradation curves","randomized pivot swap"]','2026-06-27','2026-06-27'),
+('Q30','How does the deterministic "Median-of-Medians" selection strategy guarantee a strict worst-case $O(n)$ timeline for order statistics? Describe the group-of-5 reduction logic.','technical','hard','["DSA"]','["Software Engineer"]','[]','["five element clustering","median of medians pivot","worst case linear runtime selection"]','2026-06-27','2026-06-27'),
+
 
 -- =====================================================
--- THREAD 2: DATA STRUCTURES & ALGORITHMS (DSA)
+-- SORTING ALGORITHMS (QUESTIONS 31 - 60)
 -- =====================================================
 
--- Technical (easy)
-('Q069','What is the difference between an array and a linked list?','technical','easy','["DSA"]','["Software Engineer"]','[]','["contiguous memory","dynamic size","access time"]','2026-01-22','2026-01-22'),
-('Q070','When would you choose a linked list over an array?','technical','easy','["DSA"]','["Software Engineer"]','[]','["insertions","deletions","memory tradeoff"]','2026-01-22','2026-01-22'),
-('Q071','What are the advantages of using a heap over a sorted array for priority-based operations?','technical','easy','["DSA"]','["Software Engineer"]','[]','["priority queue","insert","extract min"]','2026-01-22','2026-01-22'),
-('Q072','How does a binary heap maintain its properties during insertion?','technical','easy','["DSA"]','["Software Engineer"]','[]','["heapify","parent child"]','2026-01-22','2026-01-22'),
-('Q073','What is the difference between iterative and recursive solutions?','technical','easy','["DSA"]','["Software Engineer"]','[]','["stack","recursion","memory"]','2026-01-22','2026-01-22'),
-('Q074','How do you analyze the time complexity of a nested loop?','technical','easy','["DSA"]','["Software Engineer"]','[]','["big o","iterations","complexity"]','2026-01-22','2026-01-22'),
-('Q075','What is the purpose of a queue data structure?','technical','easy','["DSA"]','["Software Engineer"]','[]','["FIFO","enqueue","dequeue"]','2026-01-22','2026-01-22'),
-('Q076','How is a stack used in function call management?','technical','easy','["DSA"]','["Software Engineer"]','[]','["LIFO","call stack","recursion"]','2026-01-22','2026-01-22'),
-('Q077','What is the difference between linear search and binary search?','technical','easy','["DSA"]','["Software Engineer"]','[]','["sorted data","time complexity"]','2026-01-22','2026-01-22'),
-('Q078','Why are hash maps commonly used in software applications?','technical','easy','["DSA"]','["Software Engineer"]','[]','["key value","constant lookup"]','2026-01-22','2026-01-22'),
-('Q079','What is the difference between a complete binary tree and a full binary tree?','technical','easy','["DSA"]','["Software Engineer"]','[]','["tree properties","nodes"]','2026-01-22','2026-01-22'),
-('Q080','Why is binary search only applicable to sorted data?','technical','easy','["DSA"]','["Software Engineer"]','[]','["ordering","divide and conquer"]','2026-01-22','2026-01-22'),
+-- Set 11: Comparison Baselines & Inversion Counts
+('Q31','Explain the primary functional mechanism of Merge Sort. Is it an in-place sorting routine? Why or why not?','technical','easy','["DSA"]','["Software Engineer"]','[]','["divide and conquer strategy","auxiliary array tracking","stable memory footprint allocations"]','2026-06-27','2026-06-27'),
+('Q32','How can you alter the merge step of a Merge Sort framework to calculate the exact total count of array inversions in $O(n \log n)$ time?','technical','medium','["DSA"]','["Software Engineer"]','[]','["inversion tracking variables","left right array cross jumps","split index counts"]','2026-06-27','2026-06-27'),
+('Q33','What does the count of array inversions tell you about how close an unsorted array sequence is to being fully sorted? Prove the mathematical relation to Insertion Sort swap counts.','technical','medium','["DSA"]','["Software Engineer"]','[]','["insertion sort equivalence","element swap counts","disorder tracking metrics"]','2026-06-27','2026-06-27'),
 
--- Technical (medium)
-('Q081','How would you determine whether a problem requires a stack or a queue?','technical','medium','["DSA"]','["Software Engineer"]','[]','["LIFO","FIFO","problem pattern"]','2026-01-22','2026-01-22'),
-('Q082','Explain the time complexity of searching in a balanced binary search tree.','technical','medium','["DSA"]','["Software Engineer"]','[]','["log n","BST","height"]','2026-01-22','2026-01-22'),
-('Q083','How do hash tables achieve average O(1) lookup time?','technical','medium','["DSA"]','["Software Engineer"]','[]','["hashing","collisions","buckets"]','2026-01-22','2026-01-22'),
-('Q084','What factors influence the choice of sorting algorithm in practice?','technical','medium','["DSA"]','["Software Engineer"]','[]','["stability","memory","input size"]','2026-01-22','2026-01-22'),
-('Q085','How would you detect and remove a cycle in a linked list?','technical','medium','["DSA"]','["Software Engineer"]','[]','["floyd algorithm","slow fast pointers"]','2026-01-22','2026-01-22'),
-('Q086','When would you choose a Trie instead of a hash table?','technical','medium','["DSA"]','["Software Engineer"]','[]','["prefix search","autocomplete","strings"]','2026-01-22','2026-01-22'),
-('Q087','Explain how Union-Find helps solve connectivity problems efficiently.','technical','medium','["DSA"]','["Software Engineer"]','[]','["disjoint set","path compression"]','2026-01-22','2026-01-22'),
-('Q088','What is the difference between BFS and DFS in graph traversal?','technical','medium','["DSA"]','["Software Engineer"]','[]','["queue","stack","traversal"]','2026-01-22','2026-01-22'),
-('Q089','How would you detect whether a graph contains a cycle?','technical','medium','["DSA"]','["Software Engineer"]','[]','["DFS","visited","back edge"]','2026-01-22','2026-01-22'),
-('Q090','What is dynamic programming and when is it useful?','technical','medium','["DSA"]','["Software Engineer"]','[]','["overlapping subproblems","memoization"]','2026-01-22','2026-01-22'),
-('Q091','How does memoization improve recursive algorithms?','technical','medium','["DSA"]','["Software Engineer"]','[]','["cache","optimization"]','2026-01-22','2026-01-22'),
-('Q092','Explain the sliding window technique and its common applications.','technical','medium','["DSA"]','["Software Engineer"]','[]','["subarray","optimization"]','2026-01-22','2026-01-22'),
-('Q093','How does the two-pointer technique reduce algorithm complexity?','technical','medium','["DSA"]','["Software Engineer"]','[]','["sorted arrays","optimization"]','2026-01-22','2026-01-22'),
-('Q094','What are the trade-offs between adjacency lists and adjacency matrices for graph representation?','technical','medium','["DSA"]','["Software Engineer"]','[]','["space complexity","graph"]','2026-01-22','2026-01-22'),
-('Q095','What is the difference between greedy algorithms and dynamic programming?','technical','medium','["DSA"]','["Software Engineer"]','[]','["local optimum","global optimum","optimization"]','2026-01-22','2026-01-22'),
-('Q096','How does binary search reduce search complexity?','technical','medium','["DSA"]','["Software Engineer"]','[]','["sorted array","divide and conquer"]','2026-01-22','2026-01-22'),
-('Q097','When would you use backtracking to solve a problem?','technical','medium','["DSA"]','["Software Engineer"]','[]','["search space","constraints"]','2026-01-22','2026-01-22'),
-('Q098','Explain the divide-and-conquer paradigm with an example.','technical','medium','["DSA"]','["Software Engineer"]','[]','["merge sort","recursion"]','2026-01-22','2026-01-22'),
-('Q099','How does a priority queue differ from a regular queue?','technical','medium','["DSA"]','["Software Engineer"]','[]','["heap","priority"]','2026-01-22','2026-01-22'),
-('Q100','What is amortized analysis and where is it useful?','technical','medium','["DSA"]','["Software Engineer"]','[]','["average cost","dynamic array"]','2026-01-22','2026-01-22'),
-('Q101','How does quicksort work and what is its average time complexity?','technical','medium','["DSA"]','["Software Engineer"]','[]','["partition","divide and conquer"]','2026-01-22','2026-01-22'),
-('Q102','What is the difference between BFS and Dijkstra’s algorithm?','technical','medium','["DSA"]','["Software Engineer"]','[]','["weighted graph","shortest path"]','2026-01-22','2026-01-22'),
-('Q103','How would you find the kth largest element in a large dataset?','technical','medium','["DSA"]','["Software Engineer"]','[]','["heap","quickselect"]','2026-01-22','2026-01-22'),
-('Q104','What are the advantages of balanced trees over unbalanced trees?','technical','medium','["DSA"]','["Software Engineer"]','[]','["height","search efficiency"]','2026-01-22','2026-01-22'),
-('Q105','How does merge sort achieve O(n log n) complexity?','technical','medium','["DSA"]','["Software Engineer"]','[]','["divide and conquer","merging"]','2026-01-22','2026-01-22'),
-('Q106','What are the advantages and disadvantages of recursion?','technical','medium','["DSA"]','["Software Engineer"]','[]','["stack","readability","overhead"]','2026-01-22','2026-01-22'),
-('Q107','How would you determine whether a problem is suitable for dynamic programming?','technical','medium','["DSA"]','["Software Engineer"]','[]','["optimal substructure","overlapping subproblems"]','2026-01-22','2026-01-22'),
-('Q108','What is topological sorting and where is it used?','technical','medium','["DSA"]','["Software Engineer"]','[]','["DAG","dependency resolution"]','2026-01-22','2026-01-22'),
-('Q109','How do bloom filters improve performance in large-scale systems?','technical','medium','["DSA"]','["Software Engineer"]','[]','["probabilistic","membership testing"]','2026-01-22','2026-01-22'),
+-- Set 12: Quicksort Partitioning Architectures
+('Q34','Compare Lomuto partitioning with Hoare partitioning inside Quicksort. What are their core structural pointer assignment differences?','technical','medium','["DSA"]','["Software Engineer"]','[]','["single direction tracking index","converging dual edge bounds","pivot placement swapping mechanics"]','2026-06-27','2026-06-27'),
+('Q35','Why does an array filled with identical duplicate values cause standard Lomuto Quicksort pipelines to degrade into $O(n^2)$ performance levels?','technical','medium','["DSA"]','["Software Engineer"]','[]','["highly unbalanced interval splits","quadratic degradation loops","redundant boundary steps"]','2026-06-27','2026-06-27'),
+('Q36','How does 3-Way Partitioning (Dutch National Flag pattern) modify Quicksort mechanics to resolve duplicate key array datasets in true linear $O(n)$ time?','technical','hard','["DSA"]','["Software Engineer"]','[]','["three division splitting","pivot mid cluster isolation","linear identical sorting runtime"]','2026-06-27','2026-06-27'),
 
--- Technical (hard)
-('Q110','Compare Dijkstra’s and Bellman-Ford algorithms and explain when each should be used.','technical','hard','["DSA"]','["Software Engineer"]','[]','["shortest path","negative weights","complexity"]','2026-01-22','2026-01-22'),
-('Q111','How do segment trees improve range query performance?','technical','hard','["DSA"]','["Software Engineer"]','[]','["range query","log n","updates"]','2026-01-22','2026-01-22'),
-('Q112','Compare segment trees and Fenwick trees for dynamic queries.','technical','hard','["DSA"]','["Software Engineer"]','[]','["BIT","range updates","memory"]','2026-01-22','2026-01-22'),
-('Q113','Compare top-down and bottom-up dynamic programming approaches.','technical','hard','["DSA"]','["Software Engineer"]','[]','["tabulation","memoization"]','2026-01-22','2026-01-22'),
-('Q114','Compare Kruskal’s and Prim’s algorithms for minimum spanning trees.','technical','hard','["DSA"]','["Software Engineer"]','[]','["MST","greedy","graph"]','2026-01-22','2026-01-22'),
-('Q115','Compare AVL Trees and Red-Black Trees.','technical','hard','["DSA"]','["Software Engineer"]','[]','["balancing","rotations","performance"]','2026-01-22','2026-01-22'),
-('Q116','Compare suffix arrays and suffix trees for string processing problems.','technical','hard','["DSA"]','["Software Engineer"]','[]','["string matching","space complexity"]','2026-01-22','2026-01-22'),
+-- Set 13: Memory-Constrained & Space-Optimal Sorting
+('Q37','Explain Heap Sort. How does it leverage a binary heap array representation structure to achieve an in-place sort with $O(n \log n)$ worst-case time limits?','technical','medium','["DSA"]','["Software Engineer"]','[]','["max heap structural tracking","in place element swapping","heapify downward extraction"]','2026-06-27','2026-06-27'),
+('Q38','Why does Heap Sort suffer from significantly poorer real-world execution speeds than Quicksort despite having identical or better theoretical worst-case boundaries?','technical','medium','["DSA"]','["Software Engineer"]','[]','["poor CPU cache locality tracking","erratic non contiguous lookups","hardware memory stride cache misses"]','2026-06-27','2026-06-27'),
+('Q39','If you must sort a dataset in $O(n \log n)$ time with strict $O(1)$ auxiliary memory limits *and* maintain sorting stability, why do standard versions of Quick, Merge, and Heap sort all fail to meet these requirements?','technical','hard','["DSA"]','["Software Engineer"]','[]','["stability memory trade-offs","recursive stack tracking overhead","in place merge sort constraints"]','2026-06-27','2026-06-27'),
+
+-- Set 14: Non-Comparison Linear Sorts
+('Q40','Explain the core operations of Counting Sort. Why is it able to bypass the lower bound limit of $\Omega(n \log n)$ comparison-based sort runtimes?','technical','easy','["DSA"]','["Software Engineer"]','[]','["non comparison data processing","index frequency tracking mapping","integer key boundaries constraints"]','2026-06-27','2026-06-27'),
+('Q41','How do you ensure that Counting Sort preserves the structural stability of the elements being moved? Describe the prefix-sum index accumulation step.','technical','medium','["DSA"]','["Software Engineer"]','[]','["prefix frequency accumulation","reverse array generation parsing","stable coordinate shifting"]','2026-06-27','2026-06-27'),
+('Q42','How does Radix Sort use Counting Sort as an isolated sub-process engine to successfully handle multi-digit integer datasets in $O(d \cdot (n + k))$ time?','technical','medium','["DSA"]','["Software Engineer"]','[]','["least significant digit iteration","digit masking extractions","chained stable passes"]','2026-06-27','2026-06-27'),
+
+-- Set 15: External Memory Sorting
+('Q43','When a business dataset exceeds the available RAM capacity of a host machine (e.g., sorting a 500GB file on a 16GB RAM container), why do internal sorting algorithms fail?','technical','easy','["DSA"]','["Software Engineer"]','[]','["out of memory crash faults","virtual disk thrashing loops","ram limit constraints"]','2026-06-27','2026-06-27'),
+('Q44','Detail the architectural execution phases of the External Merge Sort algorithm used to solve this out-of-core sorting constraint.','technical','hard','["DSA"]','["Software Engineer"]','[]','["initial run creation sorting","k way merge streaming passes","chunked disk block staging"]','2026-06-27','2026-06-27'),
+('Q45','How can you optimize the multi-way merging stage of External Merge Sort using a Min-Heap priority queue framework to minimize expensive disk I/O seek costs?','technical','hard','["DSA"]','["Software Engineer"]','[]','["priority queue chunk lookups","k way block pointer updates","min heap buffer buffering"]','2026-06-27','2026-06-27'),
+
+-- Set 16: Sorting Stability & Practical Engineering
+('Q46','What defines a "stable" sorting algorithm, and what real-world multi-attribute sorting contexts make stability a core business system requirement?','technical','easy','["DSA"]','["Software Engineer"]','[]','["relative position preserving rules","multi tier table sort lookups","secondary index tracking stability"]','2026-06-27','2026-06-27'),
+('Q47','Review the structural architecture of Bubble Sort and Selection Sort. Which one is inherently stable, which one is unstable, and what specific code step alters this behavior?','technical','easy','["DSA"]','["Software Engineer"]','[]','["selection sort long distance swap","bubble sort adjacent comparison","unstable index adjustments"]','2026-06-27','2026-06-27'),
+('Q48','How can you transform an inherently unstable sorting algorithm (like Quicksort or Selection Sort) into a fully stable one without altering its underlying sorting loops?','technical','medium','["DSA"]','["Software Engineer"]','[]','["index key enhancement pooling","tuple pair tracking additions","element transformation mechanisms"]','2026-06-27','2026-06-27'),
+
+-- Set 17: Insertion Sort & Real-World Hybrid Engines
+('Q49','What is the exact time complexity of Insertion Sort when executed over an array dataset that is already nearly sorted or partially ordered?','technical','easy','["DSA"]','["Software Engineer"]','[]','["adaptive linear performance time","minimal element shifting operations","early exit break checks"]','2026-06-27','2026-06-27'),
+('Q50','How does the hybrid algorithm Timsort exploit this insertion sort adaptive property to optimize the performance of production programming runtimes (like Java or Python)?','technical','medium','["DSA"]','["Software Engineer"]','[]','["natural run detection parsing","insertion sort minimum thresholds","stable merge stack tracking"]','2026-06-27','2026-06-27'),
+('Q51','Explain the concept of "Galloping Mode" inside Timsort merging pipelines. How does it accelerate merge execution steps when one array run contains values that completely dominate another?','technical','hard','["DSA"]','["Software Engineer"]','[]','["exponential step lookahead jumps","galloping lookup search bounds","merge speed ratio optimizations"]','2026-06-27','2026-06-27'),
+
+-- Set 18: Bucket Sort & Fractional Computations
+('Q52','How does Bucket Sort organize data points, and what exact assumptions must be made about the input distribution pattern to achieve true linear $O(n)$ average performance?','technical','medium','["DSA"]','["Software Engineer"]','[]','["uniform data distribution assumptions","scatter gather list allocations","floating point fractional groupings"]','2026-06-27','2026-06-27'),
+('Q53','If the input elements exhibit an extreme clustering pattern into a single bucket rather than a uniform spread, what happens to the mathematical runtime tracking of Bucket Sort?','technical','medium','["DSA"]','["Software Engineer"]','[]','["sub sort loop degradation","worst case quadratic scaling","skewed cluster performance collapse"]','2026-06-27','2026-06-27'),
+('Q54','How do you protect a production Bucket Sort system pipeline from crashing or slowing down when encountering adversarial data feeds meant to break uniform distribution rules?','technical','hard','["DSA"]','["Software Engineer"]','[]','["fallback sort protection lines","dynamic bucket resizing rules","adversarial input data guards"]','2026-06-27','2026-06-27'),
+
+-- Set 19: Theoretical Lower Bounds & Comparison Limits
+('Q55','Using a decision-tree model framework, mathematically prove why no comparison-based sorting algorithm can achieve a worst-case time complexity better than $\Omega(n \log n)$.','technical','hard','["DSA"]','["Software Engineer"]','[]','["binary decision tree leaves count","factorial permutation leaf bounds","stirling approximation derivation"]','2026-06-27','2026-06-27'),
+('Q56','Does the existence of linear sorting algorithms like Counting Sort or Radix Sort mathematically violate this decision-tree lower bound proof? Explain why or why not.','technical','medium','["DSA"]','["Software Engineer"]','[]','["non comparison assumptions shift","array value constraint lookups","bypassing sorting comparisons trees"]','2026-06-27','2026-06-27'),
+('Q57','If you constrain a comparison sort decision tree to only process unique permutations of an input array where the total inversion count is bounded by a constant value $k$, how does the lower bound change?','technical','hard','["DSA"]','["Software Engineer"]','[]','["restricted permutation leaf subset","inversion bounded tree calculations","asymptotic lower bound adjustments"]','2026-06-27','2026-06-27'),
+
+-- Set 20: Specialized Linked List Sorting
+('Q58','Why is the classic array-based Quicksort partitioning method highly inefficient when applied directly to a single-linked list data structure?','technical','medium','["DSA"]','["Software Engineer"]','[]','["lack of random access indexing","backward link traversal pointer limits","lomuto pivot node tracking faults"]','2026-06-27','2026-06-27'),
+('Q59','How can you implement the Merge Sort algorithm over an unsorted Linked List data structure while fulfilling a strict $O(1)$ auxiliary space constraint?','technical','hard','["DSA"]','["Software Engineer"]','[]','["bottom up iterative list splitting","pointer stitching reassignment loops","constant memory list merge"]','2026-06-27','2026-06-27'),
+('Q60','Contrast the node structural updates performed during a Linked List Merge Sort run against an Array-based Merge Sort run. Why does the list variation completely avoid new element allocation buffers?','technical','hard','["DSA"]','["Software Engineer"]','[]','["in place reference manipulation","zero temporary array copying","pointer re-linking mechanics"]','2026-06-27','2026-06-27'),
+
 
 -- =====================================================
--- THREAD 3: OBJECT-ORIENTED PROGRAMMING (OOP) & DESIGN PATTERNS
+-- DATA STRUCTURES - LINKED LISTS (QUESTIONS 61 - 75)
 -- =====================================================
 
--- Technical (easy)
-('Q117','What are the four pillars of object-oriented programming?','technical','easy','["OOP"]','["Software Engineer"]','[]','["encapsulation","inheritance","polymorphism","abstraction"]','2026-01-22','2026-01-22'),
-('Q118','What is the difference between abstraction and encapsulation?','technical','easy','["OOP"]','["Software Engineer"]','[]','["data hiding","interface","implementation"]','2026-01-22','2026-01-22'),
-('Q119','What is method overloading and how is it different from overriding?','technical','easy','["OOP"]','["Software Engineer"]','[]','["compile time","runtime polymorphism"]','2026-01-22','2026-01-22'),
-('Q120','Why are interfaces useful in software design?','technical','easy','["OOP"]','["Software Engineer"]','[]','["contract","abstraction","flexibility"]','2026-01-22','2026-01-22'),
-('Q121','What is the purpose of constructors in object-oriented programming?','technical','easy','["OOP"]','["Software Engineer"]','[]','["initialization","objects"]','2026-01-22','2026-01-22'),
-('Q122','What is method overriding and why is it useful?','technical','easy','["OOP"]','["Software Engineer"]','[]','["runtime polymorphism","inheritance"]','2026-01-22','2026-01-22'),
-('Q123','Why is abstraction important in software development?','technical','easy','["OOP"]','["Software Engineer"]','[]','["complexity","interfaces"]','2026-01-22','2026-01-22'),
-('Q124','What is the purpose of access modifiers in object-oriented programming?','technical','easy','["OOP"]','["Software Engineer"]','[]','["public","private","protected"]','2026-01-22','2026-01-22'),
-('Q125','What is the purpose of inheritance in object-oriented programming?','technical','easy','["OOP"]','["Software Engineer"]','[]','["reuse","hierarchy"]','2026-01-22','2026-01-22'),
-('Q126','Why is encapsulation considered a fundamental OOP principle?','technical','easy','["OOP"]','["Software Engineer"]','[]','["data hiding","abstraction"]','2026-01-22','2026-01-22'),
-('Q127','What is the difference between a class and an object?','technical','easy','["OOP"]','["Software Engineer"]','[]','["blueprint","instance"]','2026-01-22','2026-01-22'),
-('Q128','Why are interfaces important in object-oriented design?','technical','easy','["OOP"]','["Software Engineer"]','[]','["contracts","abstraction"]','2026-01-22','2026-01-22'),
+-- Set 21: Fast/Slow Pointers & Middle Extraction
+('Q61','How do you use a two-pointer technique (fast and slow) to find the middle element of a singly linked list in a single traversal pass?','technical','easy','["DSA"]','["Software Engineer"]','[]','["slow and fast pointers","one pass traversal","tortoise and hare technique"]','2026-06-27','2026-06-27'),
+('Q62','How do you adjust the initialization or termination conditions of your fast and slow pointers to handle finding the first middle versus the second middle in an even-length list?','technical','medium','["DSA"]','["Software Engineer"]','[]','["even length array normalization","pointer terminal boundaries","null boundary offsets"]','2026-06-27','2026-06-27'),
+('Q63','If a cycle is present in the list, explain how Floyd''s Cycle Detection algorithm mathematically guarantees that the fast pointer will meet the slow pointer without looping infinitely.','technical','hard','["DSA"]','["Software Engineer"]','[]','["cycle detection proof","relative speed index","modular arithmetic meeting"]','2026-06-27','2026-06-27'),
 
--- Technical (medium)
-('Q129','When would composition be preferred over inheritance?','technical','medium','["OOP"]','["Software Engineer"]','[]','["loose coupling","flexibility"]','2026-01-22','2026-01-22'),
-('Q130','Explain runtime polymorphism with an example.','technical','medium','["OOP"]','["Software Engineer"]','[]','["overriding","dynamic dispatch"]','2026-01-22','2026-01-22'),
-('Q131','What problem does the Singleton design pattern solve?','technical','medium','["Design Patterns"]','["Software Engineer"]','[]','["single instance","global access"]','2026-01-22','2026-01-22'),
-('Q132','How would you apply SOLID principles when designing a payment system?','technical','medium','["Design Patterns"]','["Software Engineer"]','[]','["SRP","OCP","maintainability"]','2026-01-22','2026-01-22'),
-('Q133','Explain dependency injection and its benefits.','technical','medium','["Design Patterns"]','["Software Engineer"]','[]','["testability","loose coupling"]','2026-01-22','2026-01-22'),
-('Q134','What problem does the Factory Pattern solve?','technical','medium','["Design Patterns"]','["Software Engineer"]','[]','["object creation","encapsulation"]','2026-01-22','2026-01-22'),
-('Q135','How does the Strategy Pattern improve maintainability?','technical','medium','["Design Patterns"]','["Software Engineer"]','[]','["algorithms","extensibility"]','2026-01-22','2026-01-22'),
-('Q136','Explain the Observer Pattern using a real-world example.','technical','medium','["Design Patterns"]','["Software Engineer"]','[]','["publisher","subscriber","events"]','2026-01-22','2026-01-22'),
-('Q137','What is the Open-Closed Principle and why is it important?','technical','medium','["Design Patterns"]','["Software Engineer"]','[]','["extension","modification"]','2026-01-22','2026-01-22'),
-('Q138','How does inheritance promote code reuse?','technical','medium','["OOP"]','["Software Engineer"]','[]','["base class","derived class"]','2026-01-22','2026-01-22'),
-('Q139','What is the difference between aggregation and composition?','technical','medium','["OOP"]','["Software Engineer"]','[]','["ownership","lifecycle"]','2026-01-22','2026-01-22'),
-('Q140','How does encapsulation improve software maintainability?','technical','medium','["OOP"]','["Software Engineer"]','[]','["data hiding","modularity"]','2026-01-22','2026-01-22'),
-('Q141','What are abstract classes and when should they be used?','technical','medium','["OOP"]','["Software Engineer"]','[]','["partial implementation","abstraction"]','2026-01-22','2026-01-22'),
-('Q142','How would you implement extensibility in a plugin-based architecture?','technical','medium','["Software Design"]','["Software Engineer"]','[]','["interfaces","plugins"]','2026-01-22','2026-01-22'),
-('Q143','How does polymorphism improve extensibility in software systems?','technical','medium','["OOP"]','["Software Engineer"]','[]','["dynamic dispatch","flexibility"]','2026-01-22','2026-01-22'),
-('Q144','What are the benefits of using interfaces over concrete implementations?','technical','medium','["OOP"]','["Software Engineer"]','[]','["loose coupling","testability"]','2026-01-22','2026-01-22'),
-('Q145','How would you apply the Builder Pattern when creating complex objects?','technical','medium','["Design Patterns"]','["Software Engineer"]','[]','["construction","immutability"]','2026-01-22','2026-01-22'),
-('Q146','What problem does the Adapter Pattern solve?','technical','medium','["Design Patterns"]','["Software Engineer"]','[]','["compatibility","interfaces"]','2026-01-22','2026-01-22'),
-('Q147','How do design patterns improve maintainability in large codebases?','technical','medium','["Design Patterns"]','["Software Engineer"]','[]','["reusability","best practices"]','2026-01-22','2026-01-22'),
-('Q148','How does dependency inversion improve software architecture?','technical','medium','["Software Design"]','["Software Engineer"]','[]','["abstractions","loose coupling"]','2026-01-22','2026-01-22'),
-('Q149','What are the benefits of immutable objects?','technical','medium','["OOP"]','["Software Engineer"]','[]','["thread safety","predictability"]','2026-01-22','2026-01-22'),
-('Q150','How does the Decorator Pattern differ from inheritance?','technical','medium','["Design Patterns"]','["Software Engineer"]','[]','["composition","behavior extension"]','2026-01-22','2026-01-22'),
-('Q151','What problem does the Facade Pattern solve?','technical','medium','["Design Patterns"]','["Software Engineer"]','[]','["simplified interface","complex subsystem"]','2026-01-22','2026-01-22'),
-('Q152','How would you design software to support future feature expansion?','technical','medium','["Software Design"]','["Software Engineer"]','[]','["extensibility","modularity"]','2026-01-22','2026-01-22'),
-('Q153','How does loose coupling improve software maintainability?','technical','medium','["Software Design"]','["Software Engineer"]','[]','["dependencies","modularity"]','2026-01-22','2026-01-22'),
-('Q154','What are the advantages of dependency injection frameworks?','technical','medium','["Software Design"]','["Software Engineer"]','[]','["testability","inversion of control"]','2026-01-22','2026-01-22'),
-('Q155','How does the Command Pattern encapsulate requests?','technical','medium','["Design Patterns"]','["Software Engineer"]','[]','["actions","undo functionality"]','2026-01-22','2026-01-22'),
-('Q156','What problem does the Proxy Pattern solve?','technical','medium','["Design Patterns"]','["Software Engineer"]','[]','["access control","lazy loading"]','2026-01-22','2026-01-22'),
-('Q157','How would you design a reusable library for multiple teams?','technical','medium','["Software Design"]','["Software Engineer"]','[]','["abstraction","versioning"]','2026-01-22','2026-01-22'),
+-- Set 22: Structural Reversals
+('Q64','Explain the iterative process of reversing a singly linked list in-place by updating pointer references using three tracking variables.','technical','easy','["DSA"]','["Software Engineer"]','[]','["prev current next tracking","in-place pointer reassignment","head reference shifting"]','2026-06-27','2026-06-27'),
+('Q65','How do you implement the same singly linked list reversal recursively, and what are the corresponding space complexity implications for the program call stack?','technical','medium','["DSA"]','["Software Engineer"]','[]','["recursive base case","implicit call stack memory","tail node connection loops"]','2026-06-27','2026-06-27'),
+('Q66','How do you modify this logic to reverse a specific localized sub-segment of a linked list between node positions m and n while maintaining the outer boundary links?','technical','hard','["DSA"]','["Software Engineer"]','[]','["sub-segment pointer tracking","local boundary reconnection","in-place slice updates"]','2026-06-27','2026-06-27'),
 
--- Technical (hard)
-('Q158','How would you redesign a tightly coupled codebase to improve maintainability?','technical','hard','["OOP","Design Patterns"]','["Software Engineer"]','[]','["refactoring","abstraction","modularity"]','2026-01-22','2026-01-22'),
-('Q159','How would you identify design smells in a codebase?','technical','hard','["OOP"]','["Software Engineer"]','[]','["god class","duplication","coupling"]','2026-01-22','2026-01-22'),
-('Q160','Explain how Domain-Driven Design helps large applications.','technical','hard','["Software Design"]','["Software Engineer"]','[]','["bounded context","domain model"]','2026-01-22','2026-01-22'),
-('Q161','How would you refactor a large inheritance hierarchy that has become difficult to maintain?','technical','hard','["OOP","Design Patterns"]','["Software Engineer"]','[]','["composition","refactoring"]','2026-01-22','2026-01-22'),
-('Q162','How would you design a highly extensible plugin framework?','technical','hard','["Software Design"]','["Software Engineer"]','[]','["abstraction","dependency inversion"]','2026-01-22','2026-01-22'),
-('Q163','How would you architect a system to support dynamically loaded modules?','technical','hard','["Software Design"]','["Software Engineer"]','[]','["plugins","dependency management"]','2026-01-22','2026-01-22'),
-('Q164','How would you design an extensible workflow engine supporting custom tasks?','technical','hard','["Software Design"]','["Software Engineer"]','[]','["plugins","state machine","extensibility"]','2026-01-22','2026-01-22'),
+-- Set 23: Multi-Way List Merging
+('Q67','How do you efficiently merge two pre-sorted singly linked lists into a single sorted list using a dummy head node and pointer stitching?','technical','easy','["DSA"]','["Software Engineer"]','[]','["dummy head initialization","pointer stitching mechanics","two pointer merge loops"]','2026-06-27','2026-06-27'),
+('Q68','If you are given k sorted linked lists instead of two, what is the asymptotic time complexity of merging them sequentially, and why does this scale poorly?','technical','medium','["DSA"]','["Software Engineer"]','[]','["sequential aggregation scaling","quadratic total element comparisons","incremental list enlargement"]','2026-06-27','2026-06-27'),
+('Q69','How can you optimize the multi-way merge of k sorted linked lists to run in O(N log k) time using a Min-Heap priority queue framework?','technical','hard','["DSA"]','["Software Engineer"]','[]','["min heap priority queue structure","k way track balancing","node extraction optimization"]','2026-06-27','2026-06-27'),
+
+-- Set 24: Node Removals & Traversal Gaps
+('Q70','Explain how to delete a target node from a singly linked list in O(1) constant time if you are only given access to that specific node reference.','technical','easy','["DSA"]','["Software Engineer"]','[]','["value copying trick","structural bypass loop","next node values deletion"]','2026-06-27','2026-06-27'),
+('Q71','What are the edge case limitations of this constant-time node deletion approach, and why does it fail entirely if the target reference points to the tail node?','technical','medium','["DSA"]','["Software Engineer"]','[]','["tail pointer bounds crash","null node value copy validation","memory isolation limitations"]','2026-06-27','2026-06-27'),
+('Q72','How can you use a dual-pointer gap layout to find and eliminate the nth node from the very end of a linked list in a single traversal pass?','technical','medium','["DSA"]','["Software Engineer"]','[]','["pointer gap distance offsets","nth from end extraction","one pass node removal"]','2026-06-27','2026-06-27'),
+
+-- Set 25: Advanced Cache Memory Layouts
+('Q73','What is the Least Recently Used (LRU) eviction policy, and why does a standalone Hash Map or standard Array fail to implement it in O(1) time?','technical','easy','["DSA"]','["Software Engineer"]','[]','["cache displacement boundaries","lookup versus ordering constraints","linear lookup time barriers"]','2026-06-27','2026-06-27'),
+('Q74','How does combining a Doubly Linked List with a Hash Map fulfill the O(1) time requirement for both get and put operations inside an LRU cache?','technical','medium','["DSA"]','["Software Engineer"]','[]','["doubly linked list ordering","hash map tracking pointers","constant key relocation mechanics"]','2026-06-27','2026-06-27'),
+('Q75','How do you handle multi-threaded race conditions in a production LRU cache? Contrast simple global lock synchronization with lock-free fine-grained pointer swapping.','technical','hard','["DSA"]','["Software Engineer"]','[]','["concurrent map thread contentions","compare and swap atomic operations","fine grained mutator tracking"]','2026-06-27','2026-06-27'),
+
 
 -- =====================================================
--- THREAD 4: DATABASES & SQL
+-- DATA STRUCTURES - TREES (QUESTIONS 76 - 90)
 -- =====================================================
 
--- Technical (easy)
-('Q165','What is the difference between a primary key and a foreign key?','technical','easy','["DBMS"]','["Software Engineer"]','[]','["uniqueness","referential integrity"]','2026-01-22','2026-01-22'),
-('Q166','What are database indexes and why are they useful?','technical','easy','["DBMS"]','["Software Engineer"]','[]','["faster lookup","B-tree","performance"]','2026-01-22','2026-01-22'),
-('Q167','What is the purpose of database normalization?','technical','easy','["DBMS"]','["Software Engineer"]','[]','["redundancy","consistency"]','2026-01-22','2026-01-22'),
-('Q168','What is denormalization and when is it useful?','technical','easy','["DBMS"]','["Software Engineer"]','[]','["performance","redundancy"]','2026-01-22','2026-01-22'),
-('Q169','What is a candidate key in a relational database?','technical','easy','["DBMS"]','["Software Engineer"]','[]','["uniqueness","keys"]','2026-01-22','2026-01-22'),
-('Q170','Why are foreign keys important in database design?','technical','easy','["DBMS"]','["Software Engineer"]','[]','["relationships","integrity"]','2026-01-22','2026-01-22'),
-('Q171','What is the difference between DELETE, TRUNCATE, and DROP?','technical','easy','["SQL"]','["Software Engineer"]','[]','["data removal","DDL","DML"]','2026-01-22','2026-01-22'),
-('Q172','Why are indexes important for query performance?','technical','easy','["DBMS"]','["Software Engineer"]','[]','["lookup","search"]','2026-01-22','2026-01-22'),
-('Q173','What is the difference between a primary key and a unique key?','technical','easy','["DBMS"]','["Software Engineer"]','[]','["uniqueness","null values"]','2026-01-22','2026-01-22'),
-('Q174','Why is normalization used in relational databases?','technical','easy','["DBMS"]','["Software Engineer"]','[]','["redundancy","consistency"]','2026-01-22','2026-01-22'),
-('Q175','What is the purpose of a foreign key constraint?','technical','easy','["DBMS"]','["Software Engineer"]','[]','["referential integrity","relationships"]','2026-01-22','2026-01-22'),
-('Q176','What is the difference between SQL and NoSQL databases?','technical','easy','["DBMS"]','["Software Engineer"]','[]','["schema","scalability"]','2026-01-22','2026-01-22'),
-('Q177','What is normalization in databases?','technical','easy','["Database"]','["Software Engineer"]','[]','["normalization","redundancy"]','2026-01-22','2026-01-22'),
-('Q178','What is an index and how does it improve performance?','technical','easy','["Database"]','["Software Engineer"]','[]','["indexing","query optimization"]','2026-01-22','2026-01-22'),
-('Q179','What is the difference between clustered and non-clustered indexes?','technical','easy','["Database"]','["Software Engineer"]','[]','["indexing","database performance"]','2026-01-22','2026-01-22'),
-('Q180','What are ACID properties in databases?','technical','easy','["Database"]','["Software Engineer"]','[]','["ACID","transactions"]','2026-01-22','2026-01-22'),
+-- Set 26: Hierarchical Traversals
+('Q76','Explain the core structural concept of Level-Order Traversal in a binary tree. What data structure does it use to manage node visits?','technical','easy','["DSA"]','["Software Engineer"]','[]','["breadth first search expansion","queue node tracking arrays","level by level evaluation"]','2026-06-27','2026-06-27'),
+('Q77','How do you modify a standard Level-Order Traversal loop to explicitly group nodes into a 2D array representing distinct, separate tree levels?','technical','medium','["DSA"]','["Software Engineer"]','[]','["queue size tracking loops","level size snapshot boundaries","2D array node nesting"]','2026-06-27','2026-06-27'),
+('Q78','How can you adapt this queue-based approach to execute a structural Zigzag (or Spiral) level order traversal across alternative levels?','technical','medium','["DSA"]','["Software Engineer"]','[]','["deque bidirectional insertion","level flip boolean tracking","reverse array layer insertions"]','2026-06-27','2026-06-27'),
 
--- Technical (medium)
-('Q181','How do INNER JOIN and LEFT JOIN differ?','technical','medium','["SQL"]','["Software Engineer"]','[]','["join types","matching rows"]','2026-01-22','2026-01-22'),
-('Q182','What is normalization and why is it important?','technical','medium','["DBMS"]','["Software Engineer"]','[]','["redundancy","consistency"]','2026-01-22','2026-01-22'),
-('Q183','How would you identify a slow SQL query?','technical','medium','["SQL"]','["Software Engineer"]','[]','["execution plan","indexing"]','2026-01-22','2026-01-22'),
-('Q184','Explain ACID properties in database transactions.','technical','medium','["DBMS"]','["Software Engineer"]','[]','["atomicity","consistency","isolation","durability"]','2026-01-22','2026-01-22'),
-('Q185','What is the difference between clustered and non-clustered indexes?','technical','medium','["DBMS"]','["Software Engineer"]','[]','["storage","lookup"]','2026-01-22','2026-01-22'),
-('Q186','How does indexing improve query performance?','technical','medium','["SQL"]','["Software Engineer"]','[]','["search","B-tree"]','2026-01-22','2026-01-22'),
-('Q187','What are database transactions and why are they important?','technical','medium','["DBMS"]','["Software Engineer"]','[]','["ACID","consistency"]','2026-01-22','2026-01-22'),
-('Q188','How do optimistic and pessimistic locking differ?','technical','medium','["DBMS"]','["Software Engineer"]','[]','["concurrency","conflicts"]','2026-01-22','2026-01-22'),
-('Q189','How does GROUP BY work in SQL queries?','technical','medium','["SQL"]','["Software Engineer"]','[]','["aggregation","grouping"]','2026-01-22','2026-01-22'),
-('Q190','What is the difference between WHERE and HAVING clauses?','technical','medium','["SQL"]','["Software Engineer"]','[]','["filtering","aggregation"]','2026-01-22','2026-01-22'),
-('Q191','How do composite indexes improve query performance?','technical','medium','["DBMS"]','["Software Engineer"]','[]','["multiple columns","indexing"]','2026-01-22','2026-01-22'),
-('Q192','What factors should be considered when partitioning a database table?','technical','medium','["DBMS"]','["Software Engineer"]','[]','["partition key","scalability"]','2026-01-22','2026-01-22'),
-('Q193','What is a self-join and when is it useful?','technical','medium','["SQL"]','["Software Engineer"]','[]','["hierarchy","relationships"]','2026-01-22','2026-01-22'),
-('Q194','How do window functions differ from aggregate functions?','technical','medium','["SQL"]','["Software Engineer"]','[]','["ranking","partition"]','2026-01-22','2026-01-22'),
-('Q195','What factors influence query optimizer decisions?','technical','medium','["DBMS"]','["Software Engineer"]','[]','["statistics","execution plan"]','2026-01-22','2026-01-22'),
-('Q196','How do materialized views improve database performance?','technical','medium','["DBMS"]','["Software Engineer"]','[]','["precomputed","query optimization"]','2026-01-22','2026-01-22'),
-('Q197','What are common causes of slow database queries?','technical','medium','["DBMS"]','["Software Engineer"]','[]','["indexing","execution plan"]','2026-01-22','2026-01-22'),
-('Q198','How do covering indexes improve query performance?','technical','medium','["DBMS"]','["Software Engineer"]','[]','["index only scan","efficiency"]','2026-01-22','2026-01-22'),
-('Q199','What is the difference between OLTP and OLAP systems?','technical','medium','["DBMS"]','["Software Engineer"]','[]','["transactions","analytics"]','2026-01-22','2026-01-22'),
-('Q200','How would you choose a partition key for a large database table?','technical','medium','["DBMS"]','["Software Engineer"]','[]','["distribution","hotspots"]','2026-01-22','2026-01-22'),
-('Q201','How do database indexes speed up data retrieval?','technical','medium','["DBMS"]','["Software Engineer"]','[]','["B-tree","lookup"]','2026-01-22','2026-01-22'),
-('Q202','What is the purpose of database normalization forms?','technical','medium','["DBMS"]','["Software Engineer"]','[]','["redundancy","consistency"]','2026-01-22','2026-01-22'),
-('Q203','How does connection pooling improve database performance?','technical','medium','["DBMS"]','["Software Engineer"]','[]','["resource reuse","latency"]','2026-01-22','2026-01-22'),
-('Q204','What are the trade-offs between read replicas and sharding?','technical','medium','["DBMS"]','["Software Engineer"]','[]','["scaling","availability"]','2026-01-22','2026-01-22'),
-('Q205','When would you choose NoSQL over SQL databases?','technical','medium','["Database"]','["Software Engineer"]','[]','["NoSQL","scalability"]','2026-01-22','2026-01-22'),
-('Q206','How do you troubleshoot slow database queries?','technical','medium','["Database"]','["Software Engineer"]','[]','["query plan","optimization"]','2026-01-22','2026-01-22'),
-('Q207','How would you design a database schema for a large e-commerce platform?','technical','medium','["Database"]','["Software Engineer"]','[]','["schema design","normalization"]','2026-01-22','2026-01-22'),
-('Q208','How do you identify and resolve database deadlocks?','technical','medium','["Database"]','["Software Engineer"]','[]','["deadlock","transactions"]','2026-01-22','2026-01-22'),
+-- Set 27: Binary Search Tree Property Checks
+('Q79','What is the defining structural property of a Binary Search Tree (BST) relative to a standard Binary Tree?','technical','easy','["DSA"]','["Software Engineer"]','[]','["left child smaller constraint","right child larger constraint","monotonic data ordering"]','2026-06-27','2026-06-27'),
+('Q80','Why does checking only immediate parent-child local constraints across every node fail to definitively validate if a binary tree is a legitimate BST?','technical','medium','["DSA"]','["Software Engineer"]','[]','["sub-tree node range violations","false local evaluations","grandparent boundary leakages"]','2026-06-27','2026-06-27'),
+('Q81','How do you correctly validate a BST structure using range propagation parameters (low and high boundaries) passed down during recursive execution?','technical','hard','["DSA"]','["Software Engineer"]','[]','["range boundary propagation loops","integer min max limitations","recursive tracking constraints"]','2026-06-27','2026-06-27'),
 
--- Technical (hard)
-('Q209','What causes deadlocks in databases and how can they be prevented?','technical','hard','["DBMS"]','["Software Engineer"]','[]','["locking","resource ordering"]','2026-01-22','2026-01-22'),
-('Q210','Compare SQL and NoSQL databases for a large-scale application.','technical','hard','["DBMS"]','["Software Engineer"]','[]','["scalability","consistency","schema"]','2026-01-22','2026-01-22'),
-('Q211','How would you design a database schema for an e-commerce platform?','technical','hard','["DBMS"]','["Software Engineer"]','[]','["relationships","normalization"]','2026-01-22','2026-01-22'),
-('Q212','Explain database sharding and its trade-offs.','technical','hard','["DBMS"]','["Software Engineer"]','[]','["horizontal partitioning","scalability"]','2026-01-22','2026-01-22'),
-('Q213','How would you troubleshoot a database experiencing lock contention?','technical','hard','["DBMS"]','["Software Engineer"]','[]','["transactions","blocking"]','2026-01-22','2026-01-22'),
-('Q214','Compare replication and sharding as database scaling techniques.','technical','hard','["DBMS"]','["Software Engineer"]','[]','["availability","horizontal scaling"]','2026-01-22','2026-01-22'),
-('Q215','How would you design a database to support multi-tenancy?','technical','hard','["DBMS"]','["Software Engineer"]','[]','["tenant isolation","scalability"]','2026-01-22','2026-01-22'),
-('Q216','Explain how distributed transactions work across multiple databases.','technical','hard','["DBMS"]','["Software Engineer"]','[]','["two-phase commit","consistency"]','2026-01-22','2026-01-22'),
-('Q217','What challenges arise when scaling relational databases horizontally?','technical','hard','["DBMS"]','["Software Engineer"]','[]','["joins","consistency","sharding"]','2026-01-22','2026-01-22'),
-('Q218','Explain how consensus protocols are used in distributed databases.','technical','hard','["DBMS","Distributed Systems"]','["Software Engineer"]','[]','["raft","leader election","consistency"]','2026-01-22','2026-01-22'),
-('Q219','How would you design a database for storing time-series data efficiently?','technical','hard','["DBMS"]','["Software Engineer"]','[]','["partitioning","compression","retention"]','2026-01-22','2026-01-22'),
-('Q220','Explain how quorum-based replication improves consistency in distributed databases.','technical','hard','["DBMS","Distributed Systems"]','["Software Engineer"]','[]','["read quorum","write quorum"]','2026-01-22','2026-01-22'),
+-- Set 28: Structural Reconstructions
+('Q82','If you are given only the In-order traversal sequence of a unique binary tree, why is it mathematically impossible to reconstruct its exact original structure?','technical','easy','["DSA"]','["Software Engineer"]','[]','["structural shape permutations","root ambiguity gaps","missing structural dimensions"]','2026-06-27','2026-06-27'),
+('Q83','How can you use the combination of both Pre-order and In-order traversal data inputs to programmatically reconstruct a binary tree structure?','technical','medium','["DSA"]','["Software Engineer"]','[]','["preorder root identification","inorder array splitting indices","recursive subtree assembly"]','2026-06-27','2026-06-27'),
+('Q84','How do you optimize this structural reconstruction process to achieve O(n) linear time complexity by eliminating linear sub-array lookups?','technical','hard','["DSA"]','["Software Engineer"]','[]','["hash map index caching","preorder pointer step optimization","O(n) tree assembly tracking"]','2026-06-27','2026-06-27'),
+
+-- Set 29: Lowest Common Ancestor Lookups
+('Q85','Define the Lowest Common Ancestor (LCA) of two target nodes within an arbitrary binary tree hierarchy.','technical','easy','["DSA"]','["Software Engineer"]','[]','["deepest common structural split","ancestor tracking boundaries","node path intersections"]','2026-06-27','2026-06-27'),
+('Q86','How can you optimize the lookup of an LCA if the underlying structure is guaranteed to be a valid Binary Search Tree instead of a general binary tree?','technical','medium','["DSA"]','["Software Engineer"]','[]','["value range bifurcation points","bst property shortcut tracking","iterative path splitting lookups"]','2026-06-27','2026-06-27'),
+('Q87','Write the recursive structural logic to extract the LCA from a general binary tree where you cannot rely on any node ordering assumptions.','technical','hard','["DSA"]','["Software Engineer"]','[]','["post order node bubble tracking","dual path branch extraction","null reference split evaluations"]','2026-06-27','2026-06-27'),
+
+-- Set 30: Stack-Free Traversals
+('Q88','What are the practical memory costs of executing depth-first tree traversals (In-order/Pre-order) using recursive function layers or custom Stack objects?','technical','easy','["DSA"]','["Software Engineer"]','[]','["call stack depth limits","skewed tree memory overheads","O(h) space requirements"]','2026-06-27','2026-06-27'),
+('Q89','How does Morris Traversal execute an In-order tree traversal using O(1) auxiliary space without using recursion or an explicit stack?','technical','hard','["DSA"]','["Software Engineer"]','[]','["threaded binary tree mapping","temporary predecessor links","zero memory overhead traversals"]','2026-06-27','2026-06-27'),
+('Q90','During a Morris Traversal execution run, how do you track and verify if a temporary pointer loop link has already been built versus when it needs to be dismantled?','technical','hard','["DSA"]','["Software Engineer"]','[]','["predecessor right pointer null checks","re-visiting structural link updates","destructive thread restoration loops"]','2026-06-27','2026-06-27'),
+
 
 -- =====================================================
--- THREAD 5: OPERATING SYSTEMS & CONCURRENCY
+-- DATA STRUCTURES - GRAPHS (QUESTIONS 91 - 105)
 -- =====================================================
 
--- Technical (easy)
-('Q221','What is the purpose of an operating system?','technical','easy','["OS"]','["Software Engineer"]','[]','["resource management","processes"]','2026-01-22','2026-01-22'),
-('Q222','What is the difference between a process and a thread?','technical','easy','["OS"]','["Software Engineer"]','[]','["memory","execution"]','2026-01-22','2026-01-22'),
-('Q223','What is a system call and why is it needed?','technical','easy','["OS"]','["Software Engineer"]','[]','["kernel","user mode"]','2026-01-22','2026-01-22'),
-('Q224','What is paging in memory management?','technical','easy','["OS"]','["Software Engineer"]','[]','["virtual memory","pages"]','2026-01-22','2026-01-22'),
-('Q225','What is the difference between user mode and kernel mode?','technical','easy','["OS"]','["Software Engineer"]','[]','["privileges","protection"]','2026-01-22','2026-01-22'),
-('Q226','Why is process isolation important in modern operating systems?','technical','easy','["OS"]','["Software Engineer"]','[]','["security","stability"]','2026-01-22','2026-01-22'),
-('Q227','What is the role of the scheduler in an operating system?','technical','easy','["OS"]','["Software Engineer"]','[]','["process scheduling","CPU"]','2026-01-22','2026-01-22'),
-('Q228','Why is virtual memory useful?','technical','easy','["OS"]','["Software Engineer"]','[]','["paging","memory abstraction"]','2026-01-22','2026-01-22'),
-('Q229','What is the difference between multitasking and multiprocessing?','technical','easy','["OS"]','["Software Engineer"]','[]','["concurrency","parallelism"]','2026-01-22','2026-01-22'),
-('Q230','Why are interrupts important in operating systems?','technical','easy','["OS"]','["Software Engineer"]','[]','["hardware events","cpu"]','2026-01-22','2026-01-22'),
-('Q231','What is the role of device drivers in an operating system?','technical','easy','["OS"]','["Software Engineer"]','[]','["hardware abstraction","kernel"]','2026-01-22','2026-01-22'),
-('Q232','What is the difference between concurrency and parallelism?','technical','easy','["OS"]','["Software Engineer"]','[]','["simultaneous execution","threads"]','2026-01-22','2026-01-22'),
+-- Set 31: Graph Representation & Layouts
+('Q91','Contrast an Adjacency Matrix with an Adjacency List when representing a sparse graph. Which structural format optimizes memory overhead bounds?','technical','easy','["DSA"]','["Software Engineer"]','[]','["v squared matrix density","v plus e representation","sparse storage footprints"]','2026-06-27','2026-06-27'),
+('Q92','What are the time complexities for verifying if a specific edge exists between vertex u and vertex v in an Adjacency Matrix versus an Adjacency List?','technical','medium','["DSA"]','["Software Engineer"]','[]','["constant time matrix lookups","linear edge list scanning","vertex neighborhood search limits"]','2026-06-27','2026-06-27'),
+('Q93','How do you handle graph data transformations in an active system where edges are frequently added or deleted by concurrent threads? What are the synchronization trade-offs?','technical','hard','["DSA"]','["Software Engineer"]','[]','["concurrent list locks modification","vertex allocation scaling arrays","read write lock balancing"]','2026-06-27','2026-06-27'),
 
--- Technical (medium)
-('Q233','How does context switching work?','technical','medium','["OS"]','["Software Engineer"]','[]','["scheduler","CPU state"]','2026-01-22','2026-01-22'),
-('Q234','Explain virtual memory and its advantages.','technical','medium','["OS"]','["Software Engineer"]','[]','["paging","memory management"]','2026-01-22','2026-01-22'),
-('Q235','How does a CPU scheduling algorithm impact performance?','technical','medium','["OS"]','["Software Engineer"]','[]','["throughput","latency"]','2026-01-22','2026-01-22'),
-('Q236','What is starvation and how can it occur in scheduling?','technical','medium','["OS"]','["Software Engineer"]','[]','["priority scheduling","fairness"]','2026-01-22','2026-01-22'),
-('Q237','How do semaphores help synchronize concurrent programs?','technical','medium','["OS"]','["Software Engineer"]','[]','["critical section","synchronization"]','2026-01-22','2026-01-22'),
-('Q238','How does virtual memory allow programs to use more memory than physically available?','technical','medium','["OS"]','["Software Engineer"]','[]','["swap","paging"]','2026-01-22','2026-01-22'),
-('Q239','What causes race conditions in concurrent programs?','technical','medium','["OS"]','["Software Engineer"]','[]','["shared resources","synchronization"]','2026-01-22','2026-01-22'),
-('Q240','How do locks help prevent race conditions?','technical','medium','["OS"]','["Software Engineer"]','[]','["mutex","critical section"]','2026-01-22','2026-01-22'),
-('Q241','What is deadlock and what are its necessary conditions?','technical','medium','["OS"]','["Software Engineer"]','[]','["circular wait","hold and wait"]','2026-01-22','2026-01-22'),
-('Q242','How does demand paging improve memory utilization?','technical','medium','["OS"]','["Software Engineer"]','[]','["page faults","virtual memory"]','2026-01-22','2026-01-22'),
-('Q243','What happens during a context switch between processes?','technical','medium','["OS"]','["Software Engineer"]','[]','["scheduler","cpu state"]','2026-01-22','2026-01-22'),
-('Q244','How do producer-consumer systems coordinate access to shared resources?','technical','medium','["OS"]','["Software Engineer"]','[]','["buffer","synchronization"]','2026-01-22','2026-01-22'),
-('Q245','What is the difference between preemptive and non-preemptive scheduling?','technical','medium','["OS"]','["Software Engineer"]','[]','["cpu scheduling","fairness"]','2026-01-22','2026-01-22'),
-('Q246','How do operating systems prevent starvation in scheduling algorithms?','technical','medium','["OS"]','["Software Engineer"]','[]','["aging","fairness"]','2026-01-22','2026-01-22'),
-('Q247','What is thrashing and how does it affect performance?','technical','medium','["OS"]','["Software Engineer"]','[]','["page faults","memory"]','2026-01-22','2026-01-22'),
-('Q248','How does round-robin scheduling work?','technical','medium','["OS"]','["Software Engineer"]','[]','["time quantum","fairness"]','2026-01-22','2026-01-22'),
-('Q249','What is the producer-consumer problem and how is it solved?','technical','medium','["OS"]','["Software Engineer"]','[]','["buffer","semaphore"]','2026-01-22','2026-01-22'),
-('Q250','How do read-write locks differ from mutexes?','technical','medium','["OS"]','["Software Engineer"]','[]','["concurrency","synchronization"]','2026-01-22','2026-01-22'),
-('Q251','What are the advantages and disadvantages of multithreading?','technical','medium','["OS"]','["Software Engineer"]','[]','["parallelism","complexity"]','2026-01-22','2026-01-22'),
-('Q252','How does virtual memory isolate processes from one another?','technical','medium','["OS"]','["Software Engineer"]','[]','["address space","protection"]','2026-01-22','2026-01-22'),
-('Q253','What is a page fault and how is it handled?','technical','medium','["OS"]','["Software Engineer"]','[]','["memory","disk access"]','2026-01-22','2026-01-22'),
-('Q254','How do semaphores differ from mutexes?','technical','medium','["OS"]','["Software Engineer"]','[]','["synchronization","resource control"]','2026-01-22','2026-01-22'),
-('Q255','What factors influence CPU scheduling decisions?','technical','medium','["OS"]','["Software Engineer"]','[]','["throughput","response time"]','2026-01-22','2026-01-22'),
-('Q256','How does asynchronous I/O improve system performance?','technical','medium','["OS"]','["Software Engineer"]','[]','["non blocking","throughput"]','2026-01-22','2026-01-22'),
-('Q257','How does paging differ from segmentation?','technical','medium','["OS"]','["Software Engineer"]','[]','["memory management","address translation"]','2026-01-22','2026-01-22'),
-('Q258','What is priority inversion and how can it be mitigated?','technical','medium','["OS"]','["Software Engineer"]','[]','["scheduling","priority inheritance"]','2026-01-22','2026-01-22'),
-('Q259','How do condition variables help synchronize threads?','technical','medium','["OS"]','["Software Engineer"]','[]','["waiting","notification"]','2026-01-22','2026-01-22'),
-('Q260','What are the trade-offs between user-level and kernel-level threads?','technical','medium','["OS"]','["Software Engineer"]','[]','["performance","scheduling"]','2026-01-22','2026-01-22'),
-('Q261','How does memory-mapped I/O improve application performance?','technical','medium','["OS"]','["Software Engineer"]','[]','["file access","virtual memory"]','2026-01-22','2026-01-22'),
+-- Set 32: Cycle Detection Networks
+('Q94','Explain why a simple "visited" tracking set is sufficient to catch structural cycles in an undirected graph but fails when applied to a directed graph.','technical','easy','["DSA"]','["Software Engineer"]','[]','["undirected mutual edge loop","directed convergence points","false positive cycle detections"]','2026-06-27','2026-06-27'),
+('Q95','How do you use DFS recursion states to identify a cycle within a directed graph network? Explain the role of the active recursion stack array.','technical','medium','["DSA"]','["Software Engineer"]','[]','["back edge cycle detection","in-stack state tracking","ancestor loop intersection checks"]','2026-06-27','2026-06-27'),
+('Q96','How can you implement cycle detection inside a directed graph using an iterative, breadth-first approach like Kahn''s algorithm?','technical','hard','["DSA"]','["Software Engineer"]','[]','["indegree vertex array counting","processing queue dropouts","unvisited vertex node check counts"]','2026-06-27','2026-06-27'),
 
--- Technical (hard)
-('Q262','Compare mutexes, semaphores, and monitors.','technical','hard','["OS"]','["Software Engineer"]','[]','["synchronization","locking"]','2026-01-22','2026-01-22'),
-('Q263','How would you detect and recover from deadlocks in an operating system?','technical','hard','["OS"]','["Software Engineer"]','[]','["wait-for graph","recovery"]','2026-01-22','2026-01-22'),
-('Q264','Compare multithreading and multiprocessing in modern systems.','technical','hard','["OS"]','["Software Engineer"]','[]','["parallelism","memory isolation"]','2026-01-22','2026-01-22'),
-('Q265','Explain how copy-on-write improves process creation efficiency.','technical','hard','["OS"]','["Software Engineer"]','[]','["fork","memory optimization"]','2026-01-22','2026-01-22'),
-('Q266','How would you design a thread-safe in-memory cache?','technical','hard','["OS"]','["Software Engineer"]','[]','["locking","concurrency","cache"]','2026-01-22','2026-01-22'),
-('Q267','How would you design a lock-free concurrent data structure?','technical','hard','["OS","Concurrency"]','["Software Engineer"]','[]','["atomic operations","CAS"]','2026-01-22','2026-01-22'),
-('Q268','How would you design a high-performance thread pool for a server application?','technical','hard','["OS","Concurrency"]','["Software Engineer"]','[]','["work queue","resource management"]','2026-01-22','2026-01-22'),
+-- Set 33: Dependency Resolution
+('Q97','What is a Topological Sort, and why is it structurally impossible to calculate one over a graph layout that contains any cycles?','technical','easy','["DSA"]','["Software Engineer"]','[]','["directed acyclic graph constraint","partial task ordering arrays","circular dependency blocks"]','2026-06-27','2026-06-27'),
+('Q98','How can you use Depth-First Search (DFS) to build a topological sort list? Where exactly do you commit a node inside the final output sequence?','technical','medium','["DSA"]','["Software Engineer"]','[]','["post order collection sequences","stack trace list insertion","backtracking collection passes"]','2026-06-27','2026-06-27'),
+('Q99','Detail how Kahn''s Algorithm handles topological sorting dynamically using node in-degrees and a queue structure to resolve system package dependencies.','technical','medium','["DSA"]','["Software Engineer"]','[]','["zero in degree queue processing","in-degree subtraction metrics","automated task dependency processing"]','2026-06-27','2026-06-27'),
+
+-- Set 34: Optimal Path Finding Cost Engines
+('Q100','How does Dijkstra''s algorithm use a greedy approach to solve the single-source shortest path problem on a weighted graph?','technical','easy','["DSA"]','["Software Engineer"]','[]','["greedy minimum distance extraction","edge cost relaxation loops","shortest path coordinate mappings"]','2026-06-27','2026-06-27'),
+('Q101','Why does Dijkstra''s algorithm fail to compute paths correctly if the target graph layout includes even a single edge with a negative weight?','technical','medium','["DSA"]','["Software Engineer"]','[]','["greedy relaxation invalidations","negative edge weight loop crashes","premature path settling blocks"]','2026-06-27','2026-06-27'),
+('Q102','Explain how the Bellman-Ford algorithm resolves shortest paths in the presence of negative edge weights, and how it detects the existence of negative cost cycles.','technical','hard','["DSA"]','["Software Engineer"]','[]','["v minus one global iterations","negative cycle detection checks","arbitrary relaxation cost sweeps"]','2026-06-27','2026-06-27'),
+
+-- Set 35: Network Connectivity Component Splits
+('Q103','What are Strongly Connected Components (SCCs) in a directed graph network, and how do they differ from simple connected components in an undirected graph?','technical','easy','["DSA"]','["Software Engineer"]','[]','["maximal bidirectional subgraphs","directed path reciprocity boundaries","isolated vertex clusters"]','2026-06-27','2026-06-27'),
+('Q104','Explain the structural logic of Kosaraju''s algorithm for extracting SCCs. Why is running a second DFS sweep over a transposed graph required?','technical','hard','["DSA"]','["Software Engineer"]','[]','["graph transposition matrices","finish time stack processing","condensation tracking paths"]','2026-06-27','2026-06-27'),
+('Q105','Contrast Kosaraju''s algorithm with Tarjan''s algorithm for calculating SCCs. How does Tarjan accomplish this calculation using low-link tracking in a single DFS pass?','technical','hard','["DSA"]','["Software Engineer"]','[]','["low link index assignment array","dfs activation node numbering","single pass stack tracking loops"]','2026-06-27','2026-06-27'),
+
 
 -- =====================================================
--- THREAD 6: COMPUTER NETWORKS & WEB
+-- DATA STRUCTURES - STRINGS (QUESTIONS 106 - 120)
 -- =====================================================
 
--- Technical (easy)
-('Q269','What is the purpose of the TCP/IP model?','technical','easy','["CN"]','["Software Engineer"]','[]','["layers","communication"]','2026-01-22','2026-01-22'),
-('Q270','What is the difference between TCP and UDP?','technical','easy','["CN"]','["Software Engineer"]','[]','["reliability","connectionless"]','2026-01-22','2026-01-22'),
-('Q271','What is an IP address and why is it required?','technical','easy','["CN"]','["Software Engineer"]','[]','["addressing","routing"]','2026-01-22','2026-01-22'),
-('Q272','What is the purpose of a subnet mask?','technical','easy','["CN"]','["Software Engineer"]','[]','["network","host"]','2026-01-22','2026-01-22'),
-('Q273','What is the role of a gateway in a network?','technical','easy','["CN"]','["Software Engineer"]','[]','["routing","network communication"]','2026-01-22','2026-01-22'),
-('Q274','What is the difference between IPv4 and IPv6?','technical','easy','["CN"]','["Software Engineer"]','[]','["address space","networking"]','2026-01-22','2026-01-22'),
-('Q275','What is the role of DNS in web communication?','technical','easy','["CN"]','["Software Engineer"]','[]','["hostname","IP resolution"]','2026-01-22','2026-01-22'),
-('Q276','Why is HTTPS preferred over HTTP?','technical','easy','["CN"]','["Software Engineer"]','[]','["encryption","TLS"]','2026-01-22','2026-01-22'),
-('Q277','What is the purpose of the transport layer in networking?','technical','easy','["CN"]','["Software Engineer"]','[]','["tcp","udp","reliability"]','2026-01-22','2026-01-22'),
-('Q278','Why are ports used in TCP/IP communication?','technical','easy','["CN"]','["Software Engineer"]','[]','["application identification","sockets"]','2026-01-22','2026-01-22'),
-('Q279','What is the purpose of the DNS cache?','technical','easy','["CN"]','["Software Engineer"]','[]','["faster resolution","performance"]','2026-01-22','2026-01-22'),
-('Q280','Why are firewalls important in network security?','technical','easy','["Security"]','["Software Engineer"]','[]','["traffic filtering","protection"]','2026-01-22','2026-01-22'),
-('Q281','Why is HTTPS preferred over HTTP?','technical','easy','["Security"]','["Software Engineer"]','[]','["TLS","encryption"]','2026-01-22','2026-01-22'),
-('Q282','What is the principle of least privilege?','technical','easy','["Security"]','["Software Engineer"]','[]','["access control","security"]','2026-01-22','2026-01-22'),
-('Q283','What is multi-factor authentication (MFA)?','technical','easy','["Security"]','["Software Engineer"]','[]','["MFA","authentication"]','2026-01-22','2026-01-22'),
-('Q284','What is the difference between hashing and encryption?','technical','easy','["Security"]','["Software Engineer"]','[]','["hashing","encryption"]','2026-01-22','2026-01-22'),
+-- Set 36: Window Optimization Loops
+('Q106','How does the Sliding Window technique optimize target search loops over string sequences to achieve O(n) runtime efficiency compared to a brute-force approach?','technical','easy','["DSA"]','["Software Engineer"]','[]','["two pointer window boundaries","linear index traversal passes","brute force duplicate loop elimination"]','2026-06-27','2026-06-27'),
+('Q107','Apply this sliding window pattern to the "Longest Substring Without Repeating Characters" problem. How do you contract the window boundaries upon finding a duplicate character?','technical','medium','["DSA"]','["Software Engineer"]','[]','["left pointer conditional increments","character mapping coordinate updates","dynamic window boundary tracking"]','2026-06-27','2026-06-27'),
+('Q108','How do you extend this dynamic window tracking logic to solve the "Minimum Window Substring" challenge, where you must match a specific set of target characters?','technical','hard','["DSA"]','["Software Engineer"]','[]','["target frequency count validation","character fulfillment tracking counters","optimal substring index slicing"]','2026-06-27','2026-06-27'),
 
--- Technical (medium)
-('Q285','How does DNS work when opening a website?','technical','medium','["CN"]','["Software Engineer"]','[]','["name resolution","IP address"]','2026-01-22','2026-01-22'),
-('Q286','What happens during the TCP three-way handshake?','technical','medium','["CN"]','["Software Engineer"]','[]','["SYN","ACK","connection"]','2026-01-22','2026-01-22'),
-('Q287','How does HTTPS improve security compared to HTTP?','technical','medium','["CN"]','["Software Engineer"]','[]','["TLS","encryption","certificates"]','2026-01-22','2026-01-22'),
-('Q288','How would you troubleshoot high network latency in an application?','technical','medium','["CN"]','["Software Engineer"]','[]','["traceroute","packet loss"]','2026-01-22','2026-01-22'),
-('Q289','Explain the role of load balancers in distributed systems.','technical','medium','["CN"]','["Software Engineer"]','[]','["traffic distribution","availability"]','2026-01-22','2026-01-22'),
-('Q290','How does routing work across multiple networks?','technical','medium','["CN"]','["Software Engineer"]','[]','["routers","paths"]','2026-01-22','2026-01-22'),
-('Q291','What is NAT and why is it commonly used?','technical','medium','["CN"]','["Software Engineer"]','[]','["private IP","address translation"]','2026-01-22','2026-01-22'),
-('Q292','How does a browser render a webpage after receiving HTML?','technical','medium','["Web"]','["Software Engineer"]','[]','["DOM","CSSOM","render tree"]','2026-01-22','2026-01-22'),
-('Q293','What are cookies and how are they used in web applications?','technical','medium','["Web"]','["Software Engineer"]','[]','["sessions","state management"]','2026-01-22','2026-01-22'),
-('Q294','How does ARP resolve network addresses?','technical','medium','["CN"]','["Software Engineer"]','[]','["mac address","ip mapping"]','2026-01-22','2026-01-22'),
-('Q295','What happens when a browser encounters a cache miss?','technical','medium','["Web"]','["Software Engineer"]','[]','["network request","cache"]','2026-01-22','2026-01-22'),
-('Q296','How do REST APIs differ from SOAP APIs?','technical','medium','["Web"]','["Software Engineer"]','[]','["stateless","xml","json"]','2026-01-22','2026-01-22'),
-('Q297','What is CORS and why is it needed?','technical','medium','["Web"]','["Software Engineer"]','[]','["cross origin","browser security"]','2026-01-22','2026-01-22'),
-('Q298','How do WebSockets differ from traditional HTTP communication?','technical','medium','["Web"]','["Software Engineer"]','[]','["full duplex","persistent connection"]','2026-01-22','2026-01-22'),
-('Q299','What happens during DNS resolution?','technical','medium','["CN"]','["Software Engineer"]','[]','["resolver","authoritative server"]','2026-01-22','2026-01-22'),
-('Q300','How does connection pooling improve application performance?','technical','medium','["Web"]','["Software Engineer"]','[]','["resource reuse","latency"]','2026-01-22','2026-01-22'),
-('Q301','What is the difference between authentication and authorization?','technical','medium','["Web Security"]','["Software Engineer"]','[]','["identity","permissions"]','2026-01-22','2026-01-22'),
-('Q302','How do JWTs help manage authentication in distributed systems?','technical','medium','["Web Security"]','["Software Engineer"]','[]','["tokens","stateless"]','2026-01-22','2026-01-22'),
-('Q303','How do reverse proxies improve scalability and security?','technical','medium','["CN","Web"]','["Software Engineer"]','[]','["load balancing","routing"]','2026-01-22','2026-01-22'),
-('Q304','How does TCP ensure reliable data delivery?','technical','medium','["CN"]','["Software Engineer"]','[]','["acknowledgements","retransmissions"]','2026-01-22','2026-01-22'),
-('Q305','What is the difference between stateful and stateless protocols?','technical','medium','["CN"]','["Software Engineer"]','[]','["session","scalability"]','2026-01-22','2026-01-22'),
-('Q306','How does browser caching improve web performance?','technical','medium','["Web"]','["Software Engineer"]','[]','["latency","resource reuse"]','2026-01-22','2026-01-22'),
-('Q307','What is the purpose of a load balancer in a web application?','technical','medium','["Web","System Design"]','["Software Engineer"]','[]','["traffic distribution","availability"]','2026-01-22','2026-01-22'),
-('Q308','How do OAuth and JWT work together in modern applications?','technical','medium','["Web Security"]','["Software Engineer"]','[]','["authentication","authorization","tokens"]','2026-01-22','2026-01-22'),
-('Q309','How does TCP flow control prevent network congestion?','technical','medium','["CN"]','["Software Engineer"]','[]','["window size","throughput"]','2026-01-22','2026-01-22'),
-('Q310','What is the difference between symmetric and asymmetric encryption?','technical','medium','["Security"]','["Software Engineer"]','[]','["public key","private key"]','2026-01-22','2026-01-22'),
-('Q311','How do API rate limits protect backend systems?','technical','medium','["Web Security"]','["Software Engineer"]','[]','["throttling","abuse prevention"]','2026-01-22','2026-01-22'),
-('Q312','What are the security risks of storing passwords improperly?','technical','medium','["Security"]','["Software Engineer"]','[]','["hashing","breach"]','2026-01-22','2026-01-22'),
-('Q313','How does certificate pinning improve application security?','technical','medium','["Security"]','["Software Engineer"]','[]','["TLS","trust validation"]','2026-01-22','2026-01-22'),
-('Q314','How would you secure sensitive user data in an application?','technical','medium','["Security"]','["Software Engineer"]','[]','["encryption","access control"]','2026-01-22','2026-01-22'),
-('Q315','How would you secure APIs exposed to the internet?','technical','medium','["Security"]','["Software Engineer"]','[]','["authentication","rate limiting"]','2026-01-22','2026-01-22'),
-('Q316','What reliability metrics would you track for a critical service?','technical','medium','["Reliability"]','["Software Engineer"]','[]','["SLA","SLO","availability"]','2026-01-22','2026-01-22'),
+-- Set 37: Hashing & Rolling Code Matches
+('Q109','Explain how the Rabin-Karp algorithm uses rolling hashes to accelerate pattern matching over extended bodies of text.','technical','medium','["DSA"]','["Software Engineer"]','[]','["rolling hash fingerprint generation","polynomial value accumulation","linear time text matching checks"]','2026-06-27','2026-06-27'),
+('Q110','What is a "spurious hit" inside a Rabin-Karp execution run, and how do hash collisions impact the worst-case time complexity of the search engine?','technical','medium','["DSA"]','["Software Engineer"]','[]','["hash collision confirmation scans","quadratic worst case degradation","character validation checks"]','2026-06-27','2026-06-27'),
+('Q111','How do you implement a high-performance polynomial rolling hash system that minimizes collision probabilities while preventing integer overflow conditions?','technical','hard','["DSA"]','["Software Engineer"]','[]','["prime modulo math scaling","large base multipliers","modular subtraction alignment hooks"]','2026-06-27','2026-06-27'),
 
--- Technical (hard)
-('Q317','How do CDNs reduce latency for global users?','technical','hard','["CN"]','["Software Engineer"]','[]','["edge servers","caching"]','2026-01-22','2026-01-22'),
-('Q318','Explain how a distributed denial-of-service attack impacts system availability.','technical','hard','["CN"]','["Software Engineer"]','[]','["DDoS","availability","mitigation"]','2026-01-22','2026-01-22'),
-('Q319','How does TLS establish a secure communication channel?','technical','hard','["CN"]','["Software Engineer"]','[]','["handshake","certificates","encryption"]','2026-01-22','2026-01-22'),
-('Q320','Compare HTTP/1.1, HTTP/2, and HTTP/3.','technical','hard','["CN"]','["Software Engineer"]','[]','["multiplexing","QUIC","performance"]','2026-01-22','2026-01-22'),
-('Q321','How would you diagnose intermittent packet loss in a distributed application?','technical','hard','["CN"]','["Software Engineer"]','[]','["network diagnostics","latency"]','2026-01-22','2026-01-22'),
-('Q322','Explain how TLS certificates establish trust between clients and servers.','technical','hard','["CN","Security"]','["Software Engineer"]','[]','["certificate authority","public key"]','2026-01-22','2026-01-22'),
-('Q323','How would you secure communication between microservices across data centers?','technical','hard','["Security","CN"]','["Software Engineer"]','[]','["mTLS","certificates","encryption"]','2026-01-22','2026-01-22'),
-('Q324','How would you design a secure authentication system for millions of users?','technical','hard','["Security","System Design"]','["Software Engineer"]','[]','["MFA","token management","scalability"]','2026-01-22','2026-01-22'),
-('Q325','How do you improve the reliability of distributed systems?','technical','medium','["Reliability"]','["Software Engineer"]','[]','["redundancy","monitoring"]','2026-01-22','2026-01-22'),
-('Q326','How would you respond to a suspected security breach?','technical','hard','["Security"]','["Software Engineer"]','[]','["incident response","containment"]','2026-01-22','2026-01-22'),
-('Q327','How would you perform a root cause analysis after a major outage?','technical','hard','["Reliability"]','["Software Engineer"]','[]','["postmortem","root cause"]','2026-01-22','2026-01-22'),
+-- Set 38: Failure Function Pattern Scans
+('Q112','What structural optimization allows the Knuth-Morris-Pratt (KMP) algorithm to bypass redundant character comparisons during substring matching?','technical','hard','["DSA"]','["Software Engineer"]','[]','["non backtracking index shifts","partial pattern match arrays","failure function utilization loops"]','2026-06-27','2026-06-27'),
+('Q113','Detail the step-by-step mathematical logic used to construct the Longest Proper Prefix which is also a Suffix (LPS) array for the KMP algorithm.','technical','hard','["DSA"]','["Software Engineer"]','[]','["lps table construction patterns","prefix pointer backtracking checks","fallback index state machine calculations"]','2026-06-27','2026-06-27'),
+('Q114','Walk through an execution trace where a KMP search mismatched character index 5 against an input text stream. How does the LPS table calculate the new lookup index without backtracking the main pointer?','technical','hard','["DSA"]','["Software Engineer"]','[]','["mismatch tracking pointers redirection","lps index shift execution","state transitions history lookups"]','2026-06-27','2026-06-27'),
+
+-- Set 39: Linear Symmetric Expansion Checks
+('Q115','Explain the Center Expansion approach for identifying the longest palindromic substring within a text sequence. What is its time complexity?','technical','easy','["DSA"]','["Software Engineer"]','[]','["symmetric boundary stretching","odd even center checking","quadratic palindrome extraction bounds"]','2026-06-27','2026-06-27'),
+('Q116','What structural characteristics cause a Dynamic Programming (DP) solution for the Longest Palindromic Substring problem to require O(n^2) space overhead, and why does Center Expansion improve on this?','technical','medium','["DSA"]','["Software Engineer"]','[]','["boolean subproblem tracking matrix","quadratic state memory overhead","constant space expansion wins"]','2026-06-27','2026-06-27'),
+('Q117','How does Manacher''s Algorithm exploit geometric symmetry to reduce the extraction of the longest palindromic substring to absolute linear O(n) time?','technical','hard','["DSA"]','["Software Engineer"]','[]','["mirror center mapping radius","palindrome right boundary tracking","linear time complexity breakthroughs"]','2026-06-27','2026-06-27'),
+
+-- Set 40: Digital Prefix Tree Memory Tuning
+('Q118','How does a Trie (Prefix Tree) optimize multi-word prefix lookup operations compared to a standard Hash Map structure?','technical','easy','["DSA"]','["Software Engineer"]','[]','["shared character path tracking","prefix boundary lookups pruning","dictionary lookup scaling models"]','2026-06-27','2026-06-27'),
+('Q119','What are the primary memory overhead liabilities of a standard Trie node structure when storing strings across a large alphabet space (e.g., Unicode)?','technical','medium','["DSA"]','["Software Engineer"]','[]','["null child allocation footprints","sparse node pointer fragmentation","alphabet size scaling bottlenecks"]','2026-06-27','2026-06-27'),
+('Q120','How do compressed Trie structures, like Radix Trees (or Patricia Tries), optimize memory footprints by restructuring single-child node chains?','technical','hard','["DSA"]','["Software Engineer"]','[]','["node edge compression merges","single child path flattening","compact tree string packaging"]','2026-06-27','2026-06-27'),
+
 
 -- =====================================================
--- THREAD 7: SYSTEM DESIGN & SCALABILITY (including Cloud, DevOps, Backend)
+-- LARGE LANGUAGE MODELS (QUESTIONS 121 - 150)
 -- =====================================================
 
--- Technical (easy)
-('Q328','What is horizontal scaling and how does it differ from vertical scaling?','technical','easy','["System Design"]','["Software Engineer"]','[]','["scale out","scale up"]','2026-01-22','2026-01-22'),
-('Q329','Why are caches commonly used in large-scale systems?','technical','easy','["System Design"]','["Software Engineer"]','[]','["latency","database load"]','2026-01-22','2026-01-22'),
-('Q330','What is the purpose of a cache in a distributed system?','technical','easy','["System Design"]','["Software Engineer"]','[]','["latency","performance"]','2026-01-22','2026-01-22'),
-('Q331','What is eventual consistency in distributed databases?','technical','easy','["System Design"]','["Software Engineer"]','[]','["replication","consistency"]','2026-01-22','2026-01-22'),
-('Q332','What is containerization and why is it useful?','technical','easy','["DevOps"]','["Software Engineer"]','[]','["docker","isolation"]','2026-01-22','2026-01-22'),
-('Q333','How does virtualization differ from containerization?','technical','easy','["Cloud","DevOps"]','["Software Engineer"]','[]','["hypervisor","containers"]','2026-01-22','2026-01-22'),
-('Q334','What problem does container orchestration solve?','technical','easy','["DevOps"]','["Software Engineer"]','[]','["deployment","scaling","containers"]','2026-01-22','2026-01-22'),
-('Q335','What are the benefits of infrastructure as code?','technical','easy','["DevOps"]','["Software Engineer"]','[]','["automation","consistency"]','2026-01-22','2026-01-22'),
-('Q336','What are the benefits of using cloud infrastructure over on-premises servers?','technical','easy','["Cloud"]','["Software Engineer"]','[]','["scalability","cost efficiency"]','2026-01-22','2026-01-22'),
-('Q337','What is continuous integration and why is it useful?','technical','easy','["DevOps"]','["Software Engineer"]','[]','["automation","testing"]','2026-01-22','2026-01-22'),
-('Q338','What is the purpose of a load balancer in cloud environments?','technical','easy','["Cloud"]','["Software Engineer"]','[]','["traffic distribution","availability"]','2026-01-22','2026-01-22'),
-('Q339','What are the benefits of containerization in application deployment?','technical','easy','["DevOps"]','["Software Engineer"]','[]','["portability","isolation"]','2026-01-22','2026-01-22'),
-('Q340','What is horizontal scaling?','technical','easy','["System Design"]','["Software Engineer"]','[]','["scaling","distributed systems"]','2026-01-22','2026-01-22'),
-('Q341','What is caching and why is it useful?','technical','easy','["System Design"]','["Software Engineer"]','[]','["cache","performance","latency"]','2026-01-22','2026-01-22'),
-('Q342','What is REST and why is it widely used?','technical','easy','["Backend"]','["Software Engineer"]','[]','["REST","HTTP","API"]','2026-01-22','2026-01-22'),
-('Q343','What is the difference between authentication and authorization?','technical','easy','["Backend","Security"]','["Software Engineer"]','[]','["authentication","authorization"]','2026-01-22','2026-01-22'),
-('Q344','What are the advantages of cloud computing?','technical','easy','["Cloud"]','["Software Engineer"]','[]','["scalability","availability"]','2026-01-22','2026-01-22'),
-('Q345','What is containerization and why is Docker popular?','technical','easy','["Cloud","DevOps"]','["Software Engineer"]','[]','["docker","containers"]','2026-01-22','2026-01-22'),
-('Q346','What is load balancing and why is it needed?','technical','easy','["System Design"]','["Software Engineer"]','[]','["load balancer","availability"]','2026-01-22','2026-01-22'),
-('Q347','What is database replication?','technical','easy','["System Design","Database"]','["Software Engineer"]','[]','["replication","availability"]','2026-01-22','2026-01-22'),
-('Q348','What is middleware in web applications?','technical','easy','["Backend"]','["Software Engineer"]','[]','["middleware","request processing"]','2026-01-22','2026-01-22'),
-('Q349','What is the purpose of API gateways?','technical','easy','["Backend"]','["Software Engineer"]','[]','["API gateway","routing"]','2026-01-22','2026-01-22'),
-('Q350','What is Infrastructure as Code (IaC)?','technical','easy','["Cloud","DevOps"]','["Software Engineer"]','[]','["terraform","automation"]','2026-01-22','2026-01-22'),
-('Q351','What is auto-scaling in cloud environments?','technical','easy','["Cloud"]','["Software Engineer"]','[]','["auto scaling","elasticity"]','2026-01-22','2026-01-22'),
+-- Set 41: Attention Mechanics & Inner Workings
+('Q121','Explain the fundamental mathematical purpose of the self-attention mechanism in Transformers, and how it handles sequential dependencies differently than an RNN.','technical','easy','["AI","LLM"]','["Software Engineer"]','[]','["parallel execution","scaled dot product","global context matching"]','2026-06-27','2026-06-27'),
+('Q122','Deconstruct the matrix calculations inside Scaled Dot-Product Attention. How do the Queries, Keys, and Values matrices interact to yield a single output tensor?','technical','medium','["AI","LLM"]','["Software Engineer"]','[]','["softmax scaling factor","attention weight matrix","matrix multiplication sequence"]','2026-06-27','2026-06-27'),
+('Q123','Why must the dot-product attention calculation be explicitly scaled by the inverse square root of the key dimension size? What happens to the gradients if this scaling factor is missing?','technical','hard','["AI","LLM"]','["Software Engineer"]','[]','["softmax saturation prevention","vanishing gradients block","variance scaling logic"]','2026-06-27','2026-06-27'),
 
--- Technical (medium)
-('Q352','How would you design a URL shortening service?','technical','medium','["System Design"]','["Software Engineer"]','[]','["unique ids","database","scalability"]','2026-01-22','2026-01-22'),
-('Q353','What factors determine whether to use SQL or NoSQL in a new system?','technical','medium','["System Design"]','["Software Engineer"]','[]','["consistency","scale"]','2026-01-22','2026-01-22'),
-('Q354','How would you handle millions of concurrent users in a web application?','technical','medium','["System Design"]','["Software Engineer"]','[]','["load balancing","caching","scaling"]','2026-01-22','2026-01-22'),
-('Q355','What challenges arise when designing distributed systems?','technical','medium','["System Design"]','["Software Engineer"]','[]','["consistency","availability","partitions"]','2026-01-22','2026-01-22'),
-('Q356','How would you design a reliable notification delivery system?','technical','medium','["System Design"]','["Software Engineer"]','[]','["queues","retries","idempotency"]','2026-01-22','2026-01-22'),
-('Q357','How would you choose between synchronous and asynchronous communication?','technical','medium','["System Design"]','["Software Engineer"]','[]','["latency","coupling"]','2026-01-22','2026-01-22'),
-('Q358','What role do message queues play in scalable architectures?','technical','medium','["System Design"]','["Software Engineer"]','[]','["decoupling","buffering"]','2026-01-22','2026-01-22'),
-('Q359','How does replication improve availability in distributed systems?','technical','medium','["System Design"]','["Software Engineer"]','[]','["redundancy","failover"]','2026-01-22','2026-01-22'),
-('Q360','What factors influence API design in microservices?','technical','medium','["System Design"]','["Software Engineer"]','[]','["contracts","versioning","communication"]','2026-01-22','2026-01-22'),
-('Q361','How would you design a rate-limiting mechanism for a public API?','technical','medium','["System Design"]','["Software Engineer"]','[]','["token bucket","throttling"]','2026-01-22','2026-01-22'),
-('Q362','What are the benefits of using a content delivery network (CDN)?','technical','medium','["System Design"]','["Software Engineer"]','[]','["caching","latency"]','2026-01-22','2026-01-22'),
-('Q363','How would you design a health-check mechanism for microservices?','technical','medium','["System Design"]','["Software Engineer"]','[]','["availability","monitoring"]','2026-01-22','2026-01-22'),
-('Q364','What factors should be monitored in a production system?','technical','medium','["DevOps"]','["Software Engineer"]','[]','["cpu","memory","latency","errors"]','2026-01-22','2026-01-22'),
-('Q365','How do circuit breakers improve resilience in distributed systems?','technical','medium','["System Design"]','["Software Engineer"]','[]','["fault tolerance","fail fast"]','2026-01-22','2026-01-22'),
-('Q366','How would you design a distributed logging system?','technical','medium','["System Design"]','["Software Engineer"]','[]','["aggregation","searchability"]','2026-01-22','2026-01-22'),
-('Q367','How does auto-scaling help cloud applications?','technical','medium','["Cloud"]','["Software Engineer"]','[]','["elasticity","resource allocation"]','2026-01-22','2026-01-22'),
-('Q368','What is service discovery in a microservices architecture?','technical','medium','["System Design"]','["Software Engineer"]','[]','["dynamic routing","registry"]','2026-01-22','2026-01-22'),
-('Q369','How do API gateways simplify microservice management?','technical','medium','["System Design"]','["Software Engineer"]','[]','["routing","authentication"]','2026-01-22','2026-01-22'),
-('Q370','What are the trade-offs between monolithic and microservice architectures?','technical','medium','["System Design"]','["Software Engineer"]','[]','["deployment","complexity"]','2026-01-22','2026-01-22'),
-('Q371','How would you monitor a distributed application in production?','technical','medium','["DevOps"]','["Software Engineer"]','[]','["metrics","logging","tracing"]','2026-01-22','2026-01-22'),
-('Q372','How does blue-green deployment reduce release risk?','technical','medium','["DevOps"]','["Software Engineer"]','[]','["rollback","availability"]','2026-01-22','2026-01-22'),
-('Q373','What factors should be considered when designing APIs for public consumption?','technical','medium','["System Design"]','["Software Engineer"]','[]','["versioning","security","usability"]','2026-01-22','2026-01-22'),
-('Q374','How does event-driven architecture improve scalability?','technical','medium','["System Design"]','["Software Engineer"]','[]','["asynchronous","decoupling"]','2026-01-22','2026-01-22'),
-('Q375','What are the advantages and challenges of serverless computing?','technical','medium','["Cloud"]','["Software Engineer"]','[]','["scalability","cold start"]','2026-01-22','2026-01-22'),
-('Q376','How would you design a monitoring strategy for a large microservices platform?','technical','medium','["DevOps"]','["Software Engineer"]','[]','["metrics","logs","tracing"]','2026-01-22','2026-01-22'),
-('Q377','How does horizontal scaling differ from vertical scaling?','technical','medium','["System Design"]','["Software Engineer"]','[]','["scale out","scale up"]','2026-01-22','2026-01-22'),
-('Q378','What are the benefits of message queues in distributed systems?','technical','medium','["System Design"]','["Software Engineer"]','[]','["asynchronous","decoupling"]','2026-01-22','2026-01-22'),
-('Q379','How does service mesh improve microservice communication?','technical','medium','["System Design"]','["Software Engineer"]','[]','["observability","traffic management"]','2026-01-22','2026-01-22'),
-('Q380','What factors influence database selection in a distributed application?','technical','medium','["System Design"]','["Software Engineer"]','[]','["consistency","latency","scalability"]','2026-01-22','2026-01-22'),
-('Q381','How would you implement distributed tracing across microservices?','technical','medium','["DevOps"]','["Software Engineer"]','[]','["trace id","observability"]','2026-01-22','2026-01-22'),
-('Q382','How would you design a URL shortening service?','technical','medium','["System Design"]','["Software Engineer"]','[]','["scalability","database","API"]','2026-01-22','2026-01-22'),
-('Q383','How would you design a notification service for millions of users?','technical','medium','["System Design"]','["Software Engineer"]','[]','["queues","scaling","delivery"]','2026-01-22','2026-01-22'),
-('Q384','What factors influence database selection in system design?','technical','medium','["System Design","Database"]','["Software Engineer"]','[]','["SQL","NoSQL","requirements"]','2026-01-22','2026-01-22'),
-('Q385','How would you design versioning for APIs?','technical','medium','["Backend"]','["Software Engineer"]','[]','["API versioning","backward compatibility"]','2026-01-22','2026-01-22'),
-('Q386','How do you ensure idempotency in APIs?','technical','medium','["Backend"]','["Software Engineer"]','[]','["idempotency","retries","API design"]','2026-01-22','2026-01-22'),
-('Q387','What are common causes of API performance degradation?','technical','medium','["Backend"]','["Software Engineer"]','[]','["latency","database","profiling"]','2026-01-22','2026-01-22'),
-('Q388','How does CI/CD improve software delivery?','technical','medium','["DevOps"]','["Software Engineer"]','[]','["automation","deployment"]','2026-01-22','2026-01-22'),
-('Q389','How would you deploy a highly available web application in the cloud?','technical','medium','["Cloud"]','["Software Engineer"]','[]','["load balancer","availability zones"]','2026-01-22','2026-01-22'),
-('Q390','What are blue-green and canary deployments?','technical','medium','["DevOps"]','["Software Engineer"]','[]','["deployment","release strategy"]','2026-01-22','2026-01-22'),
-('Q391','How would you design a file-sharing service similar to Dropbox?','technical','medium','["System Design"]','["Software Engineer"]','[]','["storage","synchronization","scalability"]','2026-01-22','2026-01-22'),
-('Q392','How would you design a chat application supporting millions of users?','technical','medium','["System Design"]','["Software Engineer"]','[]','["websockets","messaging","scalability"]','2026-01-22','2026-01-22'),
-('Q393','What are the advantages and disadvantages of microservices?','technical','medium','["System Design"]','["Software Engineer"]','[]','["microservices","trade-offs"]','2026-01-22','2026-01-22'),
-('Q394','How would you handle retries in distributed systems?','technical','medium','["Backend"]','["Software Engineer"]','[]','["retry logic","resilience"]','2026-01-22','2026-01-22'),
-('Q395','What strategies can prevent duplicate processing of requests?','technical','medium','["Backend"]','["Software Engineer"]','[]','["idempotency","deduplication"]','2026-01-22','2026-01-22'),
-('Q396','How would you design an audit logging mechanism?','technical','medium','["Backend"]','["Software Engineer"]','[]','["audit trail","logging"]','2026-01-22','2026-01-22'),
-('Q397','How would you monitor a production application in the cloud?','technical','medium','["Cloud","DevOps"]','["Software Engineer"]','[]','["metrics","logging","alerts"]','2026-01-22','2026-01-22'),
-('Q398','How would you design a disaster recovery strategy for a cloud application?','technical','medium','["Cloud"]','["Software Engineer"]','[]','["backup","recovery","availability"]','2026-01-22','2026-01-22'),
-('Q399','What factors influence cloud cost optimization?','technical','medium','["Cloud"]','["Software Engineer"]','[]','["cost management","resource utilization"]','2026-01-22','2026-01-22'),
-('Q400','What is data lineage and why is it important?','technical','easy','["Data Engineering"]','["Software Engineer"]','[]','["lineage","traceability"]','2026-01-22','2026-01-22'),
-('Q401','What is schema evolution in data pipelines?','technical','easy','["Data Engineering"]','["Software Engineer"]','[]','["schema","compatibility"]','2026-01-22','2026-01-22'),
-('Q402','How would you design a real-time analytics pipeline?','technical','medium','["Data Engineering"]','["Software Engineer"]','[]','["streaming","analytics"]','2026-01-22','2026-01-22'),
-('Q403','How do you detect and handle data drift in production systems?','technical','medium','["Data Engineering","ML"]','["Software Engineer"]','[]','["data drift","monitoring"]','2026-01-22','2026-01-22'),
-('Q404','What is ETL and where is it used?','technical','easy','["Data Engineering"]','["Software Engineer"]','[]','["extract","transform","load"]','2026-01-22','2026-01-22'),
-('Q405','What is data partitioning?','technical','easy','["Data Engineering"]','["Software Engineer"]','[]','["partitioning","scalability"]','2026-01-22','2026-01-22'),
-('Q406','How would you design a pipeline to process streaming data?','technical','medium','["Data Engineering"]','["Software Engineer"]','[]','["streaming","Kafka","real time"]','2026-01-22','2026-01-22'),
-('Q407','How do you ensure data quality in large-scale pipelines?','technical','medium','["Data Engineering"]','["Software Engineer"]','[]','["validation","monitoring"]','2026-01-22','2026-01-22'),
+-- Set 42: Tokenization Patterns & Vocabulary Edges
+('Q124','What is subword tokenization, and how do algorithms like Byte-Pair Encoding (BPE) or WordPiece resolve out-of-vocabulary (OOV) terms?','technical','easy','["AI","LLM"]','["Software Engineer"]','[]','["token compression","merging frequency rules","vocabulary construction loops"]','2026-06-27','2026-06-27'),
+('Q125','How does an asymmetric discrepancy between tokenization vocabularies across distinct human languages or code syntax patterns impact an LLM''s computational cost and processing latency?','technical','medium','["AI","LLM"]','["Software Engineer"]','[]','["token to character ratio variations","context window inflation","unequal sequence lengths"]','2026-06-27','2026-06-27'),
+('Q126','Explain how a byte-fallback tokenization architecture safely handles completely unknown unicode sequence fragments, emoji vectors, or corrupted data payloads without throwing exceptions.','technical','hard','["AI","LLM"]','["Software Engineer"]','[]','["raw byte representations","vocabulary piece injection","graceful parsing fallback modes"]','2026-06-27','2026-06-27'),
 
--- Technical (hard)
-('Q408','Explain the CAP theorem and its implications.','technical','hard','["System Design"]','["Software Engineer"]','[]','["consistency","availability","partition tolerance"]','2026-01-22','2026-01-22'),
-('Q409','Design a globally distributed system that remains available during regional outages.','technical','hard','["System Design"]','["Software Engineer"]','[]','["multi-region","failover","replication"]','2026-01-22','2026-01-22'),
-('Q410','What challenges arise when migrating a monolith to microservices?','technical','hard','["System Design"]','["Software Engineer"]','[]','["decomposition","data consistency"]','2026-01-22','2026-01-22'),
-('Q411','Explain distributed consensus and why it is difficult to achieve.','technical','hard','["Distributed Systems"]','["Software Engineer"]','[]','["raft","paxos","fault tolerance"]','2026-01-22','2026-01-22'),
-('Q412','Design a globally scalable chat application supporting millions of concurrent users.','technical','hard','["System Design"]','["Software Engineer"]','[]','["websockets","sharding","load balancing"]','2026-01-22','2026-01-22'),
-('Q413','What challenges arise when ensuring consistency across microservices?','technical','hard','["Distributed Systems"]','["Software Engineer"]','[]','["distributed transactions","saga"]','2026-01-22','2026-01-22'),
-('Q414','How would you design a highly available file storage service?','technical','hard','["System Design"]','["Software Engineer"]','[]','["replication","durability","availability"]','2026-01-22','2026-01-22'),
-('Q415','Design a scalable video streaming platform capable of serving millions of users simultaneously.','technical','hard','["System Design"]','["Software Engineer"]','[]','["cdn","transcoding","load balancing","storage"]','2026-01-22','2026-01-22'),
-('Q416','How would you design a distributed rate-limiting service?','technical','hard','["System Design"]','["Software Engineer"]','[]','["token bucket","redis","consistency"]','2026-01-22','2026-01-22'),
-('Q417','Explain the trade-offs between strong consistency and high availability.','technical','hard','["Distributed Systems"]','["Software Engineer"]','[]','["CAP theorem","replication"]','2026-01-22','2026-01-22'),
-('Q418','Design a scalable real-time ride-sharing platform capable of matching drivers and riders efficiently.','technical','hard','["System Design"]','["Software Engineer"]','[]','["geospatial indexing","matching","scalability"]','2026-01-22','2026-01-22'),
-('Q419','How would you design a globally distributed cache with low latency?','technical','hard','["System Design"]','["Software Engineer"]','[]','["replication","consistency","edge"]','2026-01-22','2026-01-22'),
-('Q420','Explain the challenges of maintaining consistency in an event-driven distributed system.','technical','hard','["Distributed Systems"]','["Software Engineer"]','[]','["eventual consistency","ordering","idempotency"]','2026-01-22','2026-01-22'),
-('Q421','Design a scalable collaborative document editing platform supporting real-time updates for millions of users.','technical','hard','["System Design"]','["Software Engineer"]','[]','["operational transform","CRDT","scalability","synchronization"]','2026-01-22','2026-01-22'),
-('Q422','How would you design a globally distributed notification delivery system?','technical','hard','["System Design"]','["Software Engineer"]','[]','["queues","regional failover","latency"]','2026-01-22','2026-01-22'),
-('Q423','Explain the challenges of achieving exactly-once message delivery in distributed systems.','technical','hard','["Distributed Systems"]','["Software Engineer"]','[]','["idempotency","duplicates","consensus"]','2026-01-22','2026-01-22'),
-('Q424','Design a scalable social media feed generation system capable of serving hundreds of millions of users.','technical','hard','["System Design"]','["Software Engineer"]','[]','["fan out","caching","ranking","scalability"]','2026-01-22','2026-01-22'),
-('Q425','Explain consistency, availability, and partition tolerance in distributed systems.','technical','hard','["System Design"]','["Software Engineer"]','[]','["CAP theorem","distributed systems"]','2026-01-22','2026-01-22'),
-('Q426','How would you design a globally distributed web application?','technical','hard','["System Design"]','["Software Engineer"]','[]','["CDN","replication","latency"]','2026-01-22','2026-01-22'),
-('Q427','How would you handle database bottlenecks in a high-traffic application?','technical','hard','["System Design","Database"]','["Software Engineer"]','[]','["sharding","replication","optimization"]','2026-01-22','2026-01-22'),
-('Q428','How would you design a rate-limiting mechanism?','technical','hard','["Backend"]','["Software Engineer"]','[]','["rate limiting","token bucket"]','2026-01-22','2026-01-22'),
-('Q429','Explain the trade-offs between synchronous and asynchronous processing.','technical','hard','["Backend"]','["Software Engineer"]','[]','["queues","latency","throughput"]','2026-01-22','2026-01-22'),
-('Q430','How would you build a fault-tolerant microservice architecture?','technical','hard','["Backend","System Design"]','["Software Engineer"]','[]','["resilience","circuit breaker","retries"]','2026-01-22','2026-01-22'),
-('Q431','How would you design a highly available payment processing system?','technical','hard','["System Design"]','["Software Engineer"]','[]','["fault tolerance","transactions","availability"]','2026-01-22','2026-01-22'),
-('Q432','How would you design a distributed logging system?','technical','hard','["System Design"]','["Software Engineer"]','[]','["observability","aggregation","scaling"]','2026-01-22','2026-01-22'),
-('Q433','How would you ensure data consistency across distributed services?','technical','hard','["System Design"]','["Software Engineer"]','[]','["distributed transactions","consistency"]','2026-01-22','2026-01-22'),
-('Q434','How would you design a distributed job scheduling system?','technical','hard','["Backend"]','["Software Engineer"]','[]','["scheduling","fault tolerance"]','2026-01-22','2026-01-22'),
-('Q435','How would you troubleshoot intermittent failures in microservices?','technical','hard','["Backend"]','["Software Engineer"]','[]','["observability","debugging"]','2026-01-22','2026-01-22'),
-('Q436','Explain eventual consistency with a real-world example.','technical','hard','["Backend","System Design"]','["Software Engineer"]','[]','["eventual consistency","distributed systems"]','2026-01-22','2026-01-22'),
+-- Set 43: Model Alignment & Preference Mapping
+('Q127','What is the structural difference between a baseline pretrained LLM and an instruction-tuned model variant? What training phases separate them?','technical','easy','["AI","LLM"]','["Software Engineer"]','[]','["supervised fine tuning SFT","text completion vs compliance","conversational formatting patterns"]','2026-06-27','2026-06-27'),
+('Q128','Detail the standard pipeline steps of Reinforcement Learning from Human Feedback (RLHF). How does the standalone reward model score and guide policy generation?','technical','medium','["AI","LLM"]','["Software Engineer"]','[]','["proximal policy optimization PPO","kl divergence regularization penalty","scalar reward evaluation scores"]','2026-06-27','2026-06-27'),
+('Q129','How does Direct Preference Optimization (DPO) simplify model alignment? Write out how it eliminates the requirement for maintaining an active reward model runtime container.','technical','hard','["AI","LLM"]','["Software Engineer"]','[]','["implicit reward formulation","binary cross entropy loss optimization","policy log likelihood substitution"]','2026-06-27','2026-06-27'),
+
+-- Set 44: Parameter-Efficient Adaptation Tuning
+('Q130','Explain the concept of Parameter-Efficient Fine-Tuning (PEFT). Why is it preferred over full-parameter fine-tuning for enterprise scale model operations?','technical','easy','["AI","LLM"]','["Software Engineer"]','[]','["frozen base weights","reduced memory footprints","catastrophic forgetting prevention"]','2026-06-27','2026-06-27'),
+('Q131','How does Low-Rank Adaptation (LoRA) freeze base weight matrices while injecting rank decomposition matrices into the transformer layers?','technical','medium','["AI","LLM"]','["Software Engineer"]','[]','["intrinsic rank abstraction","matrix factorization products","adapter tuning weight matrices"]','2026-06-27','2026-06-27'),
+('Q132','Deconstruct the architectural mechanics of QLoRA. How do NormalFloat4 (NF4) quantization formats, Double Quantization steps, and Paged Optimizers combine to preserve performance bounds on limited hardware?','technical','hard','["AI","LLM"]','["Software Engineer"]','[]','["4-bit quantization compression","quantized quantization constants","gpu memory spike page mapping"]','2026-06-27','2026-06-27'),
+
+-- Set 45: Decoding Space Configurations
+('Q133','How do decoding strategies like Greedy Search and Beam Search select subsequent text tokens, and what are their respective limitations regarding repetition?','technical','easy','["AI","LLM"]','["Software Engineer"]','[]','["local maxima trapping","combinatorial path generation tracking","repetitive sequence loop bugs"]','2026-06-27','2026-06-27'),
+('Q134','Contrast Top-K sampling with Top-P (nucleus) sampling. How does Top-P dynamically scale the selection vocabulary bounds across varying output generation phases?','technical','medium','["AI","LLM"]','["Software Engineer"]','[]','["cumulative probability distribution mass","dynamic vocabulary subset sizing","token distribution flat configurations"]','2026-06-27','2026-06-27'),
+('Q135','What is the exact mathematical effect of the Temperature parameter on logit arrays prior to passing them through the Softmax layer? Detail the extreme boundaries of zero and infinity.','technical','medium','["AI","LLM"]','["Software Engineer"]','[]','["logit division scaling formulas","entropy distribution flattening profiles","sharp probability distribution peaks"]','2026-06-27','2026-06-27'),
+
+-- Set 46: Inference Performance Tuning
+('Q136','What is the purpose of a KV Cache during autoregressive inference generation loop runs, and what specific resource bottleneck does it mitigate?','technical','easy','["AI","LLM"]','["Software Engineer"]','[]','["redundant attention recomputation avoidance","time-per-token acceleration","quadratic token lookup reduction"]','2026-06-27','2026-06-27'),
+('Q137','How do structural variations like Multi-Query Attention (MQA) and Grouped-Query Attention (GQA) reduce the memory scale requirements of the KV Cache?','technical','medium','["AI","LLM"]','["Software Engineer"]','[]','["shared key value heads","grouped attention tracking matrices","memory bandwidth traffic optimization"]','2026-06-27','2026-06-27'),
+('Q138','Explain the PagedAttention memory management architecture. How does allocating KV Cache slices as non-contiguous virtual blocks prevent memory fragmentation overheads?','technical','hard','["AI","LLM"]','["Software Engineer"]','[]','["virtual memory page mappings","vllm runtime system mechanics","dynamic chunk block allocation slots"]','2026-06-27','2026-06-27'),
+
+-- Set 47: Context Extension Architectures
+('Q139','Why do absolute positional encodings fail when an LLM is prompted with sequences longer than its native training context window size?','technical','easy','["AI","LLM"]','["Software Engineer"]','[]','["out of range index breakdowns","sinusoidal extrapolation failures","sequence position degradation loops"]','2026-06-27','2026-06-27'),
+('Q140','Explain the operational mechanics of Rotary Position Embeddings (RoPE). How does it embed relative positional dependencies into token vectors using rotation matrices?','technical','medium','["AI","LLM"]','["Software Engineer"]','[]','["inner product orientation angles","complex 2D space coordinate rotations","relative sequence distance tracking"]','2026-06-27','2026-06-27'),
+('Q141','How do dynamic context scaling methods like RoPE linear interpolation or NTK-aware scaling allow length extensions without requiring deep, full-parameter model retraining passes?','technical','hard','["AI","LLM"]','["Software Engineer"]','[]','["frequency scaling multipliers","high frequency component preservation","context length scaling factors"]','2026-06-27','2026-06-27'),
+
+-- Set 48: Memory Optimization At Scale
+('Q142','What is FlashAttention? How does it accelerate transformer execution times without altering the final mathematical attention weight matrix output?','technical','hard','["AI","LLM"]','["Software Engineer"]','[]','["sram tile block data transfers","hbm memory access bottleneck avoidance","online softmax reduction loops"]','2026-06-27','2026-06-27'),
+('Q143','Detail how FlashAttention-2 further optimizes GPU utilization by altering the tiling execution blocks and shifting the softmax reduction coordination loops.','technical','hard','["AI","LLM"]','["Software Engineer"]','[]','["warp level parallel scheduling allocations","register level accumulation streams","gpu compute engine alignment"]','2026-06-27','2026-06-27'),
+('Q144','Contrast the computational mechanics of Tensor Parallelism (e.g., Megatron-LM) with Pipeline Parallelism when running foundational models across clusters containing thousands of distinct GPUs.','technical','hard','["AI","LLM"]','["Software Engineer"]','[]','["intra layer matrix multiplication splits","inter layer sequential pipeline bubbles","all reduce network communication primitives"]','2026-06-27','2026-06-27'),
+
+-- Set 49: Sparsity & Conditional Compute
+('Q145','What is a Mixture-of-Experts (MoE) LLM architecture, and how does it separate total parameters from active inference compute parameters?','technical','medium','["AI","LLM"]','["Software Engineer"]','[]','["sparse activation layer layouts","conditional routing gate architectures","sub-network specialization blocks"]','2026-06-27','2026-06-27'),
+('Q146','Explain how a Gating (or Router) Network inside a MoE architecture routes incoming tokens to specific experts. What mathematical function enforces balanced workloads?','technical','medium','["AI","LLM"]','["Software Engineer"]','[]','["noisy top k gating formulas","expert load balancing auxiliary loss","softmax assignment distribution arrays"]','2026-06-27','2026-06-27'),
+('Q147','What are the core operational layout liabilities of MoE models in distributed inference clusters regarding communication overhead and GPU memory usage?','technical','hard','["AI","LLM"]','["Software Engineer"]','[]','["all to all network routing patterns","expert capacity token drop thresholds","model parameter weight replication bounds"]','2026-06-27','2026-06-27'),
+
+-- Set 50: Advanced Inference Speedup Layouts
+('Q148','Explain the optimization concept of Speculative Decoding. How does compiling targets using a small draft model accelerate massive target model execution paths?','technical','hard','["AI","LLM"]','["Software Engineer"]','[]','["parallel confirmation token checks","rejection sampling validation steps","asymmetric compute generation speedup"]','2026-06-27','2026-06-27'),
+('Q149','How does Medusa-style multi-head speculative decoding accelerate token generation without maintaining a separate, distinct draft model system container?','technical','hard','["AI","LLM"]','["Software Engineer"]','[]','["multiple parallel logit verification heads","base model internal representation outputs","tree structured validation path arrays"]','2026-06-27','2026-06-27'),
+('Q150','What is a Model Distillation pipeline layout? How do you transfer the stylistic tone, reasoning token trace formats, or accuracy profile of a proprietary model down to an open-weights model?','technical','hard','["AI","LLM"]','["Software Engineer"]','[]','["kl divergence soft target alignment","synthetic trajectory dataset distillation","student teacher logit optimization loops"]','2026-06-27','2026-06-27'),
+
 
 -- =====================================================
--- THREAD 8: TEAMWORK & COLLABORATION (Behavioral & Situational)
+-- RETRIEVAL-AUGMENTED GENERATION (QUESTIONS 151 - 180)
 -- =====================================================
 
--- Behavioral (easy)
-('Q437','Tell me about a time you worked closely with a team to achieve a challenging goal.','behavioral','easy','["Teamwork"]','["Software Engineer"]','[]','["collaboration","communication","goal"]','2026-01-22','2026-01-22'),
-('Q438','Describe a situation where you helped a teammate who was struggling with a task.','behavioral','easy','["Teamwork"]','["Software Engineer"]','[]','["support","mentorship","cooperation"]','2026-01-22','2026-01-22'),
-('Q439','Tell me about a time you worked with someone whose working style was very different from yours.','behavioral','easy','["Teamwork"]','["Software Engineer"]','[]','["adaptability","collaboration","communication"]','2026-01-22','2026-01-22'),
-('Q440','Describe a situation where you contributed to a team success beyond your assigned responsibilities.','behavioral','easy','["Teamwork"]','["Software Engineer"]','[]','["initiative","ownership","teamwork"]','2026-01-22','2026-01-22'),
-('Q441','Tell me about a time when you had to work with a difficult teammate.','behavioral','easy','["Teamwork"]','["Software Engineer"]','[]','["collaboration","conflict resolution","communication"]','2026-01-22','2026-01-22'),
-('Q442','Describe a situation where your contribution helped a team achieve its objective.','behavioral','easy','["Teamwork"]','["Software Engineer"]','[]','["teamwork","impact","ownership"]','2026-01-22','2026-01-22'),
-('Q443','A teammate is stuck on a task and the deadline is approaching. What would you do?','situational','easy','["Teamwork"]','["Software Engineer"]','[]','["support","collaboration","prioritization"]','2026-01-22','2026-01-22'),
-('Q444','A new team member is struggling to understand the project. How would you help them?','situational','easy','["Teamwork"]','["Software Engineer"]','[]','["mentorship","knowledge sharing"]','2026-01-22','2026-01-22'),
+-- Set 51: Grounding & The Knowledge Gap
+('Q151','What fundamental information limitations of standard autoregressive language models does Retrieval-Augmented Generation (RAG) resolve, and how does it achieve this?','technical','easy','["AI","RAG"]','["Software Engineer"]','[]','["knowledge cutoff boundary constraints","parametric hallucination mitigation paths","external data context grounding inputs"]','2026-06-27','2026-06-27'),
+('Q152','Explain the practical cost, latency, and context degradation trade-offs of using a RAG architectural pattern versus fine-tuning an LLM on domain-specific manuals.','technical','medium','["AI","RAG"]','["Software Engineer"]','[]','["parametric vs non parametric knowledge structures","data ingestion updating agility","token runtime footprint cost matrices"]','2026-06-27','2026-06-27'),
+('Q153','Explain the "Lost in the Middle" attention phenomenon in long-context models. How does it dictate your prompt data serialization order when assembling a final RAG payload?','technical','medium','["AI","RAG"]','["Software Engineer"]','[]','["u-shaped attention distribution curves","context center information decay","highest relevance extreme boundary placement"]','2026-06-27','2026-06-27'),
 
--- Behavioral (medium)
-('Q445','Tell me about a time when you had to coordinate work across multiple team members.','behavioral','medium','["Teamwork"]','["Software Engineer"]','[]','["coordination","planning","communication"]','2026-01-22','2026-01-22'),
-('Q446','Describe a situation where there was a misunderstanding within your team. How did you resolve it?','behavioral','medium','["Teamwork"]','["Software Engineer"]','[]','["conflict resolution","communication"]','2026-01-22','2026-01-22'),
-('Q447','Tell me about a project where teamwork was critical to success.','behavioral','medium','["Teamwork"]','["Software Engineer"]','[]','["collaboration","shared responsibility"]','2026-01-22','2026-01-22'),
-('Q448','Describe a time when you had to adapt your working style to fit a team.','behavioral','medium','["Teamwork"]','["Software Engineer"]','[]','["adaptability","collaboration"]','2026-01-22','2026-01-22'),
-('Q449','Tell me about a time you received constructive feedback from a teammate.','behavioral','medium','["Teamwork"]','["Software Engineer"]','[]','["feedback","improvement"]','2026-01-22','2026-01-22'),
-('Q450','Tell me about a time you had to build trust with a new team quickly.','behavioral','medium','["Teamwork"]','["Software Engineer"]','[]','["trust","relationship building","communication"]','2026-01-22','2026-01-22'),
-('Q451','Describe a situation where a teammate was not meeting expectations. How did you respond?','behavioral','medium','["Teamwork"]','["Software Engineer"]','[]','["feedback","accountability","support"]','2026-01-22','2026-01-22'),
-('Q452','Tell me about a time when collaboration helped solve a difficult challenge.','behavioral','medium','["Teamwork"]','["Software Engineer"]','[]','["teamwork","problem solving"]','2026-01-22','2026-01-22'),
-('Q453','Describe a situation where you had to align team members with conflicting priorities.','behavioral','medium','["Teamwork"]','["Software Engineer"]','[]','["alignment","communication","prioritization"]','2026-01-22','2026-01-22'),
-('Q454','Tell me about a time you helped improve team morale.','behavioral','medium','["Teamwork"]','["Software Engineer"]','[]','["motivation","leadership","support"]','2026-01-22','2026-01-22'),
-('Q455','Tell me about a time you had to coordinate efforts across different departments or groups.','behavioral','medium','["Teamwork"]','["Software Engineer"]','[]','["coordination","communication","stakeholders"]','2026-01-22','2026-01-22'),
-('Q456','Describe a situation where you had to compromise for the benefit of the team.','behavioral','medium','["Teamwork"]','["Software Engineer"]','[]','["collaboration","flexibility"]','2026-01-22','2026-01-22'),
-('Q457','Tell me about a time you supported a teammate during a challenging situation.','behavioral','medium','["Teamwork"]','["Software Engineer"]','[]','["empathy","support","teamwork"]','2026-01-22','2026-01-22'),
-('Q458','Describe a situation where you helped improve collaboration within a team.','behavioral','medium','["Teamwork"]','["Software Engineer"]','[]','["process improvement","communication"]','2026-01-22','2026-01-22'),
-('Q459','Tell me about a time when you had to resolve competing priorities among team members.','behavioral','medium','["Teamwork"]','["Software Engineer"]','[]','["prioritization","alignment"]','2026-01-22','2026-01-22'),
-('Q460','Two teammates strongly disagree on a technical approach. How would you handle the situation?','situational','medium','["Teamwork"]','["Software Engineer"]','[]','["conflict resolution","evidence","communication"]','2026-01-22','2026-01-22'),
-('Q461','You are assigned to a cross-functional team with conflicting priorities. What would you do?','situational','medium','["Teamwork"]','["Software Engineer"]','[]','["alignment","stakeholder management"]','2026-01-22','2026-01-22'),
-('Q462','A teammate consistently misses commitments, impacting project progress. How would you respond?','situational','medium','["Teamwork"]','["Software Engineer"]','[]','["accountability","communication"]','2026-01-22','2026-01-22'),
-('Q463','Your team is underperforming due to poor communication. What steps would you take?','situational','medium','["Teamwork"]','["Software Engineer"]','[]','["communication","coordination"]','2026-01-22','2026-01-22'),
-('Q464','A key team member unexpectedly leaves during a critical project phase. How would you adapt?','situational','medium','["Teamwork"]','["Software Engineer"]','[]','["adaptability","risk mitigation"]','2026-01-22','2026-01-22'),
+-- Set 52: Vector Embedding Mathematics
+('Q154','What is a Dense Vector Embedding, and how does it mathematically capture semantic relationships compared to a sparse lexical footprint?','technical','easy','["AI","RAG"]','["Software Engineer"]','[]','["high dimensional latent space mapping","continuous float coordinate dimensions","synonym abstraction tracking advantages"]','2026-06-27','2026-06-27'),
+('Q155','Deconstruct the geometric formulas for Cosine Similarity and Dot Product vector comparison steps. When must you use Cosine Similarity over raw Dot Product calculations?','technical','medium','["AI","RAG"]','["Software Engineer"]','[]','["vector length magnitude normalization","directional orientation angular mapping","un-normalized vector length distortions"]','2026-06-27','2026-06-27'),
+('Q156','Explain the operational mechanics of contrastive learning pipelines (such as InfoNCE or Triplet Loss configurations) used to optimize a custom domain embedding model framework.','technical','hard','["AI","RAG"]','["Software Engineer"]','[]','["anchor positive negative tracking data","embedding space minimization alignments","similarity distance matrix optimization"]','2026-06-27','2026-06-27'),
 
--- Behavioral (hard)
-('Q465','Describe a situation where you had to resolve a conflict between multiple stakeholders.','behavioral','hard','["Teamwork"]','["Software Engineer"]','[]','["negotiation","stakeholder management"]','2026-01-22','2026-01-22'),
-('Q466','Describe the most challenging team conflict you have faced and how it was resolved.','behavioral','hard','["Teamwork"]','["Software Engineer"]','[]','["conflict resolution","negotiation","leadership"]','2026-01-22','2026-01-22'),
-('Q467','Describe a situation where team dynamics threatened project success and how you handled it.','behavioral','hard','["Teamwork"]','["Software Engineer"]','[]','["leadership","conflict management"]','2026-01-22','2026-01-22'),
-('Q468','Multiple teams blame each other for a production issue. How would you help resolve it?','situational','hard','["Teamwork"]','["Software Engineer"]','[]','["ownership","root cause analysis","leadership"]','2026-01-22','2026-01-22'),
+-- Set 53: Text Chunking Architecture Layouts
+('Q157','What is text chunking, and why is passing unsegmented document files directly into an embedding engine considered a poor system implementation pattern?','technical','easy','["AI","RAG"]','["Software Engineer"]','[]','["semantic resolution dilute blocks","context length constraint barriers","retrieval granularity adjustments"]','2026-06-27','2026-06-27'),
+('Q158','Contrast character-count fixed chunking with recursive semantic splitting methods. How do overlap parameters preserve sentence boundary logic across edge splits?','technical','medium','["DSA","RAG"]','["Software Engineer"]','[]','["sliding window separator hierarchy loops","context continuation preservation steps","token limit boundary tracking metrics"]','2026-06-27','2026-06-27'),
+('Q159','Explain the Parent-Child document chunking pattern. Why does decoupling the text chunks used for embedding vector matching from the context blocks sent to the generator improve system accuracy?','technical','medium','["AI","RAG"]','["Software Engineer"]','[]','["granular small vector searches","expanded context window context blocks","hierarchical data node tracking links"]','2026-06-27','2026-06-27'),
 
--- =====================================================
--- THREAD 9: LEADERSHIP & OWNERSHIP
--- =====================================================
+-- Set 54: High-Dimensional Graph Search Indices
+('Q160','What is a Vector Database, and how does its internal indexing layout structurally differ from a traditional relational database (RDBMS)?','technical','easy','["AI","RAG"]','["Software Engineer"]','[]','["approximate nearest neighbor graph indices","non deterministic similarity matches","high dimensional search indexes"]','2026-06-27','2026-06-27'),
+('Q161','Explain how the Hierarchical Navigable Small World (HNSW) algorithm structures multi-layer graphs to achieve sub-linear Approximate Nearest Neighbor (ANN) search times.','technical','medium','["AI","RAG"]','["Software Engineer"]','[]','["skip list probability layer distribution","proximity link clustering search routines","graph entry point long distance steps"]','2026-06-27','2026-06-27'),
+('Q162','Contrast HNSW index types with Inverted File Indexing (IVF). How does cluster-based partitioning inside IVF trade search latency against global query recall accuracy?','technical','medium','["AI","RAG"]','["Software Engineer"]','[]','["voronoi cell space partitioning centroids","quantization compression tracking arrays","inverted index probe limit constants"]','2026-06-27','2026-06-27'),
 
--- Behavioral (easy)
-('Q469','Tell me about a time you took ownership of a task without being asked.','behavioral','easy','["Leadership"]','["Software Engineer"]','[]','["initiative","ownership"]','2026-01-22','2026-01-22'),
-('Q470','Describe a situation where you motivated others to complete a project.','behavioral','easy','["Leadership"]','["Software Engineer"]','[]','["motivation","team influence"]','2026-01-22','2026-01-22'),
-('Q471','Tell me about a time you volunteered to lead an initiative.','behavioral','easy','["Leadership"]','["Software Engineer"]','[]','["initiative","leadership"]','2026-01-22','2026-01-22'),
-('Q472','Describe a situation where you set an example for others through your actions.','behavioral','easy','["Leadership"]','["Software Engineer"]','[]','["role model","ownership"]','2026-01-22','2026-01-22'),
-('Q473','Tell me about a time you took initiative to solve a problem before being asked.','behavioral','easy','["Leadership"]','["Software Engineer"]','[]','["initiative","ownership"]','2026-01-22','2026-01-22'),
-('Q474','Describe a situation where you stepped up when leadership was needed.','behavioral','easy','["Leadership"]','["Software Engineer"]','[]','["leadership","responsibility"]','2026-01-22','2026-01-22'),
-('Q475','You notice a problem that no one else seems concerned about. What would you do?','situational','easy','["Leadership"]','["Software Engineer"]','[]','["initiative","ownership"]','2026-01-22','2026-01-22'),
-('Q476','A project lacks clear ownership. How would you handle it?','situational','easy','["Leadership"]','["Software Engineer"]','[]','["initiative","leadership"]','2026-01-22','2026-01-22'),
+-- Set 55: Index Compression Strategies
+('Q163','What is Scalar Quantization (SQ) in vector storage processing? How does reducing 32-bit floats down to 8-bit integers impact RAM consumption and search recall accuracy?','technical','medium','["AI","RAG"]','["Software Engineer"]','[]','["linear float scale mapping integer conversions","75 percent ram footprint footprint drops","precision degradation boundary losses"]','2026-06-27','2026-06-27'),
+('Q164','Deconstruct the algorithmic steps of Product Quantization (PQ). How does sub-space decomposition allow terabyte-scale embedding arrays to fit inside compressed RAM spaces?','technical','hard','["AI","RAG"]','["Software Engineer"]','[]','["vector dimension slicing segments","centroid codebook matrix allocations","asymmetric distance estimation arrays"]','2026-06-27','2026-06-27'),
+('Q165','How can you set up an inverted index fallback layer combined with custom scalar quantization bounds to guarantee predictable search performance metrics over an enterprise cluster?','technical','hard','["AI","RAG"]','["Software Engineer"]','[]','["hybrid vector indexing adjustments","quantized space coordinate error boundaries","dynamic rerank candidate pools extraction"]','2026-06-27','2026-06-27'),
 
--- Behavioral (medium)
-('Q477','Tell me about a time you had to make a difficult decision with limited information.','behavioral','medium','["Leadership"]','["Software Engineer"]','[]','["judgment","decision making"]','2026-01-22','2026-01-22'),
-('Q478','Describe a project where you acted as an informal leader.','behavioral','medium','["Leadership"]','["Software Engineer"]','[]','["initiative","guidance"]','2026-01-22','2026-01-22'),
-('Q479','Tell me about a time when you delegated responsibilities effectively.','behavioral','medium','["Leadership"]','["Software Engineer"]','[]','["delegation","trust"]','2026-01-22','2026-01-22'),
-('Q480','Describe a situation where you had to balance leadership with hands-on execution.','behavioral','medium','["Leadership"]','["Software Engineer"]','[]','["prioritization","ownership"]','2026-01-22','2026-01-22'),
-('Q481','Tell me about a time you influenced a decision without having formal authority.','behavioral','medium','["Leadership"]','["Software Engineer"]','[]','["persuasion","communication"]','2026-01-22','2026-01-22'),
-('Q482','Tell me about a time you had to influence people who disagreed with you.','behavioral','medium','["Leadership"]','["Software Engineer"]','[]','["persuasion","communication"]','2026-01-22','2026-01-22'),
-('Q483','Describe a situation where you had to make an unpopular decision.','behavioral','medium','["Leadership"]','["Software Engineer"]','[]','["decision making","accountability"]','2026-01-22','2026-01-22'),
-('Q484','Tell me about a time you inspired others to adopt a new idea or process.','behavioral','medium','["Leadership"]','["Software Engineer"]','[]','["change management","influence"]','2026-01-22','2026-01-22'),
-('Q485','Describe a situation where you took responsibility for a team failure.','behavioral','medium','["Leadership"]','["Software Engineer"]','[]','["accountability","ownership"]','2026-01-22','2026-01-22'),
-('Q486','Tell me about a time you had to balance short-term results with long-term goals.','behavioral','medium','["Leadership"]','["Software Engineer"]','[]','["strategy","prioritization"]','2026-01-22','2026-01-22'),
-('Q487','Tell me about a time you had to influence a decision without direct authority.','behavioral','medium','["Leadership"]','["Software Engineer"]','[]','["persuasion","stakeholder management"]','2026-01-22','2026-01-22'),
-('Q488','Describe a situation where you identified an opportunity and drove it forward.','behavioral','medium','["Leadership"]','["Software Engineer"]','[]','["initiative","execution"]','2026-01-22','2026-01-22'),
-('Q489','Tell me about a time you had to make a difficult trade-off as a leader.','behavioral','medium','["Leadership"]','["Software Engineer"]','[]','["decision making","prioritization"]','2026-01-22','2026-01-22'),
-('Q490','Describe a situation where you mentored or guided someone to success.','behavioral','medium','["Leadership"]','["Software Engineer"]','[]','["mentorship","coaching"]','2026-01-22','2026-01-22'),
-('Q491','Tell me about a time when you championed a change that faced resistance.','behavioral','medium','["Leadership"]','["Software Engineer"]','[]','["change management","influence"]','2026-01-22','2026-01-22'),
-('Q492','Your manager is unavailable and a critical decision must be made. What would you do?','situational','medium','["Leadership"]','["Software Engineer"]','[]','["judgment","decision making"]','2026-01-22','2026-01-22'),
-('Q493','You believe your team is focusing on the wrong priorities. How would you address it?','situational','medium','["Leadership"]','["Software Engineer"]','[]','["communication","influence"]','2026-01-22','2026-01-22'),
-('Q494','A junior colleague seeks guidance on a task you are busy with. What would you do?','situational','medium','["Leadership"]','["Software Engineer"]','[]','["mentorship","time management"]','2026-01-22','2026-01-22'),
-('Q495','You disagree with a leadership decision but must execute it. How would you proceed?','situational','medium','["Leadership"]','["Software Engineer"]','[]','["professionalism","communication"]','2026-01-22','2026-01-22'),
-('Q496','A process used by your team is clearly inefficient. How would you drive change?','situational','medium','["Leadership"]','["Software Engineer"]','[]','["process improvement","influence"]','2026-01-22','2026-01-22'),
+-- Set 56: Multi-Path Retrieval Orchestration
+('Q166','What is Hybrid Search, and why does combining dense semantic vector lookups with sparse keyword matches (such as BM25) improve system robustness?','technical','easy','["AI","RAG"]','["Software Engineer"]','[]','["lexical exact query matching compliance","out of domain vocabulary retrieval handling","dual extraction route consolidations"]','2026-06-27','2026-06-27'),
+('Q167','Explain how Reciprocal Rank Fusion (RRF) scores and normalizes distinct rank results across dense and sparse search routes without requiring calibrated probability scores.','technical','medium','["AI","RAG"]','["Software Engineer"]','[]','["rank position constant penalty denominators","interleaved consensus rank listings","score independent merging routines"]','2026-06-27','2026-06-27'),
+('Q168','Once candidates are isolated via vector search, how does a Cross-Encoder Reranker model restructure candidate document sorting order? Contrast its accuracy against standard Bi-Encoder setups.','technical','medium','["AI","RAG"]','["Software Engineer"]','[]','["joint query document attention matrix","deep semantic relevance validation scoring","high compute latency cross comparisons"]','2026-06-27','2026-06-27'),
 
--- Behavioral (hard)
-('Q497','Describe the most challenging leadership situation you have faced and how you handled it.','behavioral','hard','["Leadership"]','["Software Engineer"]','[]','["resilience","leadership","problem solving"]','2026-01-22','2026-01-22'),
-('Q498','Describe a leadership challenge where there was no obvious right answer.','behavioral','hard','["Leadership"]','["Software Engineer"]','[]','["judgment","ambiguity","decision making"]','2026-01-22','2026-01-22'),
-('Q499','Describe the most demanding leadership responsibility you have undertaken.','behavioral','hard','["Leadership"]','["Software Engineer"]','[]','["ownership","accountability","results"]','2026-01-22','2026-01-22'),
-('Q500','You inherit a project with low morale, unclear goals, and missed deadlines. What would you do first?','situational','hard','["Leadership"]','["Software Engineer"]','[]','["assessment","leadership","recovery plan"]','2026-01-22','2026-01-22'),
+-- Set 57: Query Refactoring Architecture Patterns
+('Q169','What is the asymmetric query-to-document tracking problem in RAG pipelines, and how does it degrade semantic embedding matches?','technical','easy','["AI","RAG"]','["Software Engineer"]','[]','["short user queries mapping dense documents","linguistic structure length imbalances","semantic mapping vector distortion errors"]','2026-06-27','2026-06-27'),
+('Q170','Explain the hypothetical Document Embeddings (HyDE) technique. How does leveraging an LLM to generate pseudo-documents help overcome asymmetric vector lookups?','technical','medium','["AI","RAG"]','["Software Engineer"]','[]','["zero shot fantasy text generation","document to document vector matching","hallucinated pattern alignment lookups"]','2026-06-27','2026-06-27'),
+('Q171','How does a Query Transformation layer use history log state maps to rewrite open conversational statements into standalone search directives?','technical','medium','["AI","RAG"]','["Software Engineer"]','[]','["co-reference resolution query transformations","pronoun expansion context injections","isolated intent string filtering loops"]','2026-06-27','2026-06-27'),
+
+-- Set 58: Structured Synthesis & Graph Nets
+('Q172','Under what document layout conditions do classic linear text vector RAG architectures completely fail to discover deep entity connections or summary lines?','technical','medium','["AI","RAG"]','["Software Engineer"]','[]','["cross document relationship fragmentation","global synthesis summary failures","isolated segment blind spots"]','2026-06-27','2026-06-27'),
+('Q173','Explain the architectural execution steps of GraphRAG. How do Entity-Relation extraction routines and Knowledge Graph abstractions capture connections across data boundaries?','technical','hard','["AI","RAG"]','["Software Engineer"]','[]','["llm extracted triple listings parsing","unstructured graph network compilation","structured entity relation index logs"]','2026-06-27','2026-06-27'),
+('Q174','Detail how GraphRAG structures hierarchical communities over knowledge graphs to deliver global topic synthesis queries in response to open user questions.','technical','hard','["AI","RAG"]','["Software Engineer"]','[]','["leiden graph clustering partitions","community summary report parsing generation","parallel map reduce context generation chunks"]','2026-06-27','2026-06-27'),
+
+-- Set 59: Dynamic Self-Correction Frameworks
+('Q175','What is Self-RAG, and how does adaptive retrieval differ from traditional rigid static search pipelines?','technical','hard','["AI","RAG"]','["Software Engineer"]','[]','["active generation state evaluation loops","on demand context retrieval triggers","non linear execution route tracking"]','2026-06-27','2026-06-27'),
+('Q176','Deconstruct the usage of internal reflection or critique tokens in active self-correction generative loops. How does the model self-evaluate its answers?','technical','hard','["AI","LLM","RAG"]','["Software Engineer"]','[]','["special attribute logit extraction tokens","faithfulness rating score calibrations","automated response rewriting validation steps"]','2026-06-27','2026-06-27'),
+('Q177','How do you structure an end-to-end corrective RAG system (CRAG) that evaluates retrieval confidence scores and forks into web search engines upon finding low relevance metrics?','technical','hard','["AI","RAG"]','["Software Engineer"]','[]','["fallback threshold evaluation gates","external api search routing steps","document filter parsing layers"]','2026-06-27','2026-06-27'),
+
+-- Set 60: Real-Time Enterprise Pipelines
+('Q178','How can you implement a Change Data Capture (CDC) pipeline to dynamically sync vector database indices with high-frequency CRUD changes in an external PostgreSQL engine?','technical','hard','["AI","RAG"]','["Software Engineer"]','[]','["wal log streaming replication lines","debezium message event message lines","idempotent vector store upsert loops"]','2026-06-27','2026-06-27'),
+('Q179','Explain how to architect a multi-tenant vector authorization model that guarantees no downstream data leakages occur across disparate security clearance groups.','technical','hard','["AI","RAG"]','["Software Engineer"]','[]','["metadata attribute pre-filtering constraints","isolated tenant namespace spaces","cryptographic data access confirmation layers"]','2026-06-27','2026-06-27'),
+('Q180','How can you configure automated components to continuously monitor production RAG quality metrics like Faithfulness, Context Recall, and Answer Relevance using LLM-as-a-Judge configurations?','technical','medium','["AI","RAG"]','["Software Engineer"]','[]','["ragas benchmarking platform metrics","synthetic test data set comparison charts","ground truth mismatch checking loops"]','2026-06-27','2026-06-27'),
+
 
 -- =====================================================
--- THREAD 10: PROBLEM SOLVING & DECISION MAKING
+-- AUTONOMOUS AGENTS (QUESTIONS 181 - 210)
 -- =====================================================
 
--- Behavioral (easy)
-('Q501','Tell me about a time you solved a difficult problem under pressure.','behavioral','easy','["Problem Solving"]','["Software Engineer"]','[]','["pressure","solution","results"]','2026-01-22','2026-01-22'),
-('Q502','Describe a situation where you identified a problem before others noticed it.','behavioral','easy','["Problem Solving"]','["Software Engineer"]','[]','["proactive","initiative"]','2026-01-22','2026-01-22'),
-('Q503','Tell me about a time you encountered an unexpected obstacle and overcame it.','behavioral','easy','["Problem Solving"]','["Software Engineer"]','[]','["adaptability","solution"]','2026-01-22','2026-01-22'),
-('Q504','Describe a situation where you improved something that was not broken but could be better.','behavioral','easy','["Problem Solving"]','["Software Engineer"]','[]','["initiative","continuous improvement"]','2026-01-22','2026-01-22'),
-('Q505','Tell me about a time when you identified a more efficient way of doing something.','behavioral','easy','["Problem Solving"]','["Software Engineer"]','[]','["optimization","initiative"]','2026-01-22','2026-01-22'),
-('Q506','Describe a situation where quick thinking helped avoid a larger problem.','behavioral','easy','["Problem Solving"]','["Software Engineer"]','[]','["judgment","problem solving"]','2026-01-22','2026-01-22'),
-('Q507','A task turns out to be much harder than expected. How would you react?','situational','easy','["Problem Solving"]','["Software Engineer"]','[]','["adaptability","planning"]','2026-01-22','2026-01-22'),
-('Q508','You discover a minor issue that could become serious later. What would you do?','situational','easy','["Problem Solving"]','["Software Engineer"]','[]','["proactive","risk management"]','2026-01-22','2026-01-22'),
+-- Set 61: Agency Paradigms vs Static Pipelines
+('Q181','What core structural capabilities separate an autonomous AI Agent framework from a standard linear chat prompt or basic chain pipeline?','technical','easy','["AI","Agents"]','["Software Engineer"]','[]','["sense plan act cycle loops","dynamic route decision divergence","closed loop environmental adaptation"]','2026-06-27','2026-06-27'),
+('Q182','Detail the step-by-step loop of the ReAct (Reason + Action) structural framework. How does an LLM alternate between tracking internal thoughts and executing external actions?','technical','easy','["AI","Agents"]','["Software Engineer"]','[]','["thought action observation sequence","scratchpad prompt logging history","api output parser parsing interceptors"]','2026-06-27','2026-06-27'),
+('Q183','Explain how an agent framework detects and stops an "infinite feedback loop" failure state from draining operational API resource budgets.','technical','easy','["AI","Agents"]','["Software Engineer"]','[]','["max iteration tracking limits","repetitive call fingerprint matching hash","forced fallback state execution loops"]','2026-06-27','2026-06-27'),
 
--- Behavioral (medium)
-('Q509','Tell me about a time you had multiple competing priorities. How did you decide what to do first?','behavioral','medium','["Problem Solving"]','["Software Engineer"]','[]','["prioritization","decision making"]','2026-01-22','2026-01-22'),
-('Q510','Describe a situation where your first solution failed. What did you do next?','behavioral','medium','["Problem Solving"]','["Software Engineer"]','[]','["adaptability","iteration"]','2026-01-22','2026-01-22'),
-('Q511','Tell me about a time you used data or evidence to make a decision.','behavioral','medium','["Problem Solving"]','["Software Engineer"]','[]','["analysis","evidence based"]','2026-01-22','2026-01-22'),
-('Q512','Describe a situation where you had to solve a problem outside your area of expertise.','behavioral','medium','["Problem Solving"]','["Software Engineer"]','[]','["learning","resourcefulness"]','2026-01-22','2026-01-22'),
-('Q513','Tell me about a time when you improved an existing process.','behavioral','medium','["Problem Solving"]','["Software Engineer"]','[]','["optimization","efficiency"]','2026-01-22','2026-01-22'),
-('Q514','Tell me about a time you had to make a decision under significant time pressure.','behavioral','medium','["Problem Solving"]','["Software Engineer"]','[]','["prioritization","decision making"]','2026-01-22','2026-01-22'),
-('Q515','Describe a situation where you had incomplete information but still had to act.','behavioral','medium','["Problem Solving"]','["Software Engineer"]','[]','["ambiguity","judgment"]','2026-01-22','2026-01-22'),
-('Q516','Tell me about a time when persistence helped you achieve a difficult goal.','behavioral','medium','["Problem Solving"]','["Software Engineer"]','[]','["perseverance","determination"]','2026-01-22','2026-01-22'),
-('Q517','Describe a situation where you had to evaluate multiple solutions before choosing one.','behavioral','medium','["Problem Solving"]','["Software Engineer"]','[]','["analysis","trade-offs"]','2026-01-22','2026-01-22'),
-('Q518','Tell me about a time when you solved a recurring issue permanently.','behavioral','medium','["Problem Solving"]','["Software Engineer"]','[]','["root cause","process improvement"]','2026-01-22','2026-01-22'),
-('Q519','Tell me about a time you had to choose between multiple good options.','behavioral','medium','["Problem Solving"]','["Software Engineer"]','[]','["trade-offs","analysis"]','2026-01-22','2026-01-22'),
-('Q520','Describe a situation where you had to solve a problem with limited resources.','behavioral','medium','["Problem Solving"]','["Software Engineer"]','[]','["resourcefulness","creativity"]','2026-01-22','2026-01-22'),
-('Q521','Tell me about a time when your analytical skills helped resolve an issue.','behavioral','medium','["Problem Solving"]','["Software Engineer"]','[]','["analysis","decision making"]','2026-01-22','2026-01-22'),
-('Q522','Describe a situation where you had to balance risks and rewards before acting.','behavioral','medium','["Problem Solving"]','["Software Engineer"]','[]','["risk assessment","judgment"]','2026-01-22','2026-01-22'),
-('Q523','Tell me about a time when you solved a problem that others thought was impossible.','behavioral','medium','["Problem Solving"]','["Software Engineer"]','[]','["innovation","persistence"]','2026-01-22','2026-01-22'),
-('Q524','You have two important deadlines on the same day. How would you prioritize?','situational','medium','["Problem Solving"]','["Software Engineer"]','[]','["prioritization","trade-offs"]','2026-01-22','2026-01-22'),
-('Q525','A solution you proposed is not producing the expected results. What would you do next?','situational','medium','["Problem Solving"]','["Software Engineer"]','[]','["iteration","analysis"]','2026-01-22','2026-01-22'),
-('Q526','You must choose between a quick fix and a long-term solution. How would you decide?','situational','medium','["Problem Solving"]','["Software Engineer"]','[]','["trade-offs","risk assessment"]','2026-01-22','2026-01-22'),
-('Q527','You receive conflicting information from different stakeholders. What would you do?','situational','medium','["Problem Solving"]','["Software Engineer"]','[]','["clarification","decision making"]','2026-01-22','2026-01-22'),
-('Q528','A recurring issue keeps resurfacing despite previous fixes. How would you approach it?','situational','medium','["Problem Solving"]','["Software Engineer"]','[]','["root cause analysis","continuous improvement"]','2026-01-22','2026-01-22'),
+-- Set 62: Tool Calling & Schema Binding
+('Q184','What is Tool Calling (or Function Calling), and how does an LLM model declare intent to run external code routines?','technical','easy','["AI","Agents"]','["Software Engineer"]','[]','["json schema tool function declarations","structured text output interceptors","stop token execution control blocks"]','2026-06-27','2026-06-27'),
+('Q185','How do parser layers (like Pydantic or Instructor) use grammar-constrained decoding configurations to guarantee that an LLM outputs syntactically valid JSON arguments?','technical','medium','["AI","Agents"]','["Software Engineer"]','[]','["logit bias character constraint masking","regex token path validation layers","schema enforcement tracking loops"]','2026-06-27','2026-06-27'),
+('Q186','How do you structure a self-correction tool routine when an external execution block returns an active stack trace error back to the agent engine container?','technical','medium','["AI","Agents"]','["Software Engineer"]','[]','["error trace prompt forwarding blocks","automated retry re-planning cycles","try catch feedback logic loops"]','2026-06-27','2026-06-27'),
 
--- Behavioral (hard)
-('Q529','Describe the most complex problem you have solved and how you approached it.','behavioral','hard','["Problem Solving"]','["Software Engineer"]','[]','["analysis","breakdown","execution"]','2026-01-22','2026-01-22'),
-('Q530','Describe the toughest setback you have experienced and how you recovered from it.','behavioral','hard','["Problem Solving"]','["Software Engineer"]','[]','["resilience","learning","growth"]','2026-01-22','2026-01-22'),
-('Q531','Describe the most ambiguous problem you have faced and how you approached it.','behavioral','hard','["Problem Solving"]','["Software Engineer"]','[]','["ambiguity","structured thinking"]','2026-01-22','2026-01-22'),
-('Q532','A critical production system fails during peak business hours. How would you manage the situation?','situational','hard','["Problem Solving"]','["Software Engineer"]','[]','["incident response","communication","recovery"]','2026-01-22','2026-01-22'),
+-- Set 63: Memory Architectures & Lifecycle Storage
+('Q187','Contrast the operational scope and access mechanisms of Short-Term Semantic Conversation Memory with Long-Term Episodic Agent Memory.','technical','medium','["AI","Agents"]','["Software Engineer"]','[]','["sliding chat sequence context queues","vector indexing historical trajectory stores","state variable dictionary serialization"]','2026-06-27','2026-06-27'),
+('Q188','Explain how an agent uses semantic memory recall vectors during high-turn execution runs to dynamically inject historical context into its active planning window.','technical','medium','["AI","Agents"]','["Software Engineer"]','[]','["retrieval matched interaction trace clips","context compaction summarization steps","relevant state map retrieval loops"]','2026-06-27','2026-06-27'),
+('Q189','What are the architectural challenges of synchronizing non-deterministic agent internal states with relational persistent state tables across millions of active user sessions?','technical','hard','["AI","Agents"]','["Software Engineer"]','[]','["session state snapshot serialization maps","idempotent tracking database locks","concurrency race status adjustments"]','2026-06-27','2026-06-27'),
 
--- =====================================================
--- THREAD 11: COMMUNICATION & STAKEHOLDER MANAGEMENT
--- =====================================================
+-- Set 64: Advanced Planning & Graph Exploration
+('Q190','How does the Plan-and-Solve prompt configuration style minimize error propagation issues that are common in simple linear sequential chain layouts?','technical','medium','["AI","Agents"]','["Software Engineer"]','[]','["macro plan sub task task breakdowns","dynamic goal progress monitoring charts","independent task execution nodes"]','2026-06-27','2026-06-27'),
+('Q191','Explain the optimization mechanics of the Tree-of-Thoughts (ToT) algorithm when adapted into an autonomous agent framework for searching complex logical spaces.','technical','hard','["AI","Agents"]','["Software Engineer"]','[]','["bfs dfs branch space generation","heuristic trace scoring evaluation metrics","backtracking state rollback steps"]','2026-06-27','2026-06-27'),
+('Q192','How can you combine an explicit state machine graph layout (like LangGraph) with LLM routing calls to enforce deterministic business rule boundaries over an autonomous agent workflow?','technical','hard','["AI","Agents"]','["Software Engineer"]','[]','["controlled edge node configuration structures","conditional router function switches","deterministic business policy guardrails"]','2026-06-27','2026-06-27'),
 
--- Behavioral (easy)
-('Q533','Tell me about a time you had to explain a technical concept to a non-technical person.','behavioral','easy','["Communication"]','["Software Engineer"]','[]','["simplification","clarity"]','2026-01-22','2026-01-22'),
-('Q534','Describe a situation where effective communication helped avoid a problem.','behavioral','easy','["Communication"]','["Software Engineer"]','[]','["clarity","proactive communication"]','2026-01-22','2026-01-22'),
-('Q535','Tell me about a time you successfully communicated a complex idea.','behavioral','easy','["Communication"]','["Software Engineer"]','[]','["clarity","presentation"]','2026-01-22','2026-01-22'),
-('Q536','Describe a situation where effective communication prevented a misunderstanding.','behavioral','easy','["Communication"]','["Software Engineer"]','[]','["clarification","proactive communication"]','2026-01-22','2026-01-22'),
-('Q537','Tell me about a time you had to explain a mistake you made.','behavioral','easy','["Communication"]','["Software Engineer"]','[]','["accountability","transparency"]','2026-01-22','2026-01-22'),
-('Q538','Describe a situation where clear communication improved project outcomes.','behavioral','easy','["Communication"]','["Software Engineer"]','[]','["clarity","coordination"]','2026-01-22','2026-01-22'),
-('Q539','A stakeholder asks for an update and you have limited progress to report. What would you do?','situational','easy','["Communication"]','["Software Engineer"]','[]','["transparency","communication"]','2026-01-22','2026-01-22'),
-('Q540','You need to explain a technical issue to a non-technical audience. How would you approach it?','situational','easy','["Communication"]','["Software Engineer"]','[]','["clarity","simplification"]','2026-01-22','2026-01-22'),
+-- Set 65: Multi-Agent Coordination Topology
+('Q193','Contrast the structural coordination lines of an Orchestrator-Workers multi-agent layout against a Choreography-based peer-to-peer messaging layout.','technical','medium','["AI","Agents"]','["Software Engineer"]','[]','["central supervisor routing command lines","distributed event message broker topics","isolated sub task state encapsulation"]','2026-06-27','2026-06-27'),
+('Q194','How does a Supervisor Agent judge state context conditions to orchestrate conditional skill transitions and task handoffs to specialized downstream sub-agents?','technical','medium','["AI","Agents"]','["Software Engineer"]','[]','["state schema validation transformations","sub-agent lifecycle instantiation parameters","routing logic condition decision loops"]','2026-06-27','2026-06-27'),
+('Q195','Explain how Claude Code manages structural instruction parity across sub-agent handoffs if a foundational workspace configuration (e.g., SKILL.md) is altered mid-task.','technical','hard','["AI","Agents"]','["Software Engineer"]','[]','["fresh context hydration cycles","parent session state propagation","dynamic delta instruction compilation"]','2026-06-27','2026-06-27'),
 
--- Behavioral (medium)
-('Q541','Tell me about a time when you had to present your work to leadership.','behavioral','medium','["Communication"]','["Software Engineer"]','[]','["presentation","stakeholders"]','2026-01-22','2026-01-22'),
-('Q542','Describe a situation where you had to communicate bad news to a stakeholder.','behavioral','medium','["Communication"]','["Software Engineer"]','[]','["transparency","expectation management"]','2026-01-22','2026-01-22'),
-('Q543','Tell me about a time when you disagreed with a manager or stakeholder.','behavioral','medium','["Communication"]','["Software Engineer"]','[]','["respectful disagreement","evidence"]','2026-01-22','2026-01-22'),
-('Q544','Describe a situation where active listening helped you solve a problem.','behavioral','medium','["Communication"]','["Software Engineer"]','[]','["listening","understanding"]','2026-01-22','2026-01-22'),
-('Q545','Tell me about a time you had to gain buy-in for an idea.','behavioral','medium','["Communication"]','["Software Engineer"]','[]','["influence","persuasion"]','2026-01-22','2026-01-22'),
-('Q546','Tell me about a time you had to adjust your communication style for a specific audience.','behavioral','medium','["Communication"]','["Software Engineer"]','[]','["adaptability","audience awareness"]','2026-01-22','2026-01-22'),
-('Q547','Describe a situation where you received criticism and how you responded.','behavioral','medium','["Communication"]','["Software Engineer"]','[]','["feedback","growth mindset"]','2026-01-22','2026-01-22'),
-('Q548','Tell me about a time when you had to negotiate with someone to achieve a goal.','behavioral','medium','["Communication"]','["Software Engineer"]','[]','["negotiation","stakeholder management"]','2026-01-22','2026-01-22'),
-('Q549','Describe a situation where active listening significantly improved an outcome.','behavioral','medium','["Communication"]','["Software Engineer"]','[]','["listening","understanding"]','2026-01-22','2026-01-22'),
-('Q550','Tell me about a time you had to communicate project risks or delays.','behavioral','medium','["Communication"]','["Software Engineer"]','[]','["transparency","expectation management"]','2026-01-22','2026-01-22'),
-('Q551','Tell me about a time when you had to persuade others to support your idea.','behavioral','medium','["Communication"]','["Software Engineer"]','[]','["influence","communication"]','2026-01-22','2026-01-22'),
-('Q552','Describe a situation where you had to manage expectations of multiple stakeholders.','behavioral','medium','["Communication"]','["Software Engineer"]','[]','["stakeholder management","alignment"]','2026-01-22','2026-01-22'),
-('Q553','Tell me about a time when communication challenges delayed progress.','behavioral','medium','["Communication"]','["Software Engineer"]','[]','["communication","problem solving"]','2026-01-22','2026-01-22'),
-('Q554','Describe a situation where you had to deliver feedback to someone.','behavioral','medium','["Communication"]','["Software Engineer"]','[]','["feedback","professionalism"]','2026-01-22','2026-01-22'),
-('Q555','Tell me about a time when you successfully negotiated a better outcome.','behavioral','medium','["Communication"]','["Software Engineer"]','[]','["negotiation","stakeholders"]','2026-01-22','2026-01-22'),
-('Q556','A stakeholder requests a feature that is not feasible within the timeline. How would you respond?','situational','medium','["Communication"]','["Software Engineer"]','[]','["expectation management","negotiation"]','2026-01-22','2026-01-22'),
-('Q557','You realize that a project will miss its deadline. How would you communicate it?','situational','medium','["Communication"]','["Software Engineer"]','[]','["transparency","risk communication"]','2026-01-22','2026-01-22'),
-('Q558','A customer is unhappy with a product decision you support. What would you do?','situational','medium','["Communication"]','["Software Engineer"]','[]','["empathy","stakeholder management"]','2026-01-22','2026-01-22'),
-('Q559','You receive harsh criticism about your work. How would you respond?','situational','medium','["Communication"]','["Software Engineer"]','[]','["feedback","professionalism"]','2026-01-22','2026-01-22'),
-('Q560','Several stakeholders have competing expectations for a project. How would you manage them?','situational','medium','["Communication"]','["Software Engineer"]','[]','["alignment","prioritization"]','2026-01-22','2026-01-22'),
+-- Set 66: High-Risk Authorization Gateways
+('Q196','What is the Human-in-the-Loop (HITL) gateway design pattern inside agent architectures, and what specific operational risks does it mitigate?','technical','easy','["AI","Agents"]','["Software Engineer"]','[]','["destructive tool permission barriers","financial confirmation approval check steps","asymmetric authorization verification layers"]','2026-06-27','2026-06-27'),
+('Q197','How do you implement transaction state pauses and async resume signals inside a stateless asynchronous worker cluster when an agent triggers a restricted high-risk tool call?','technical','hard','["AI","Agents"]','["Software Engineer"]','[]','["durable workflow execution breakpoints","message queue state parking lines","callback event webhook signature validations"]','2026-06-27','2026-06-27'),
+('Q198','How can you configure secure, deterministic callback confirmation pipelines that prevent an agent from bypassing or altering human approval data arguments during response resume loops?','technical','hard','["AI","Agents"]','["Software Engineer"]','[]','["immutable parameter hash checks","signed authorization cryptographic payload keys","state validation gate enforcement steps"]','2026-06-27','2026-06-27'),
 
--- Behavioral (hard)
-('Q561','Describe a situation where communication breakdown caused a major challenge.','behavioral','hard','["Communication"]','["Software Engineer"]','[]','["root cause","resolution"]','2026-01-22','2026-01-22'),
-('Q562','Describe a communication challenge involving multiple stakeholders and how you handled it.','behavioral','hard','["Communication"]','["Software Engineer"]','[]','["stakeholder management","alignment"]','2026-01-22','2026-01-22'),
-('Q563','Describe a communication challenge that required significant diplomacy and tact.','behavioral','hard','["Communication"]','["Software Engineer"]','[]','["diplomacy","conflict resolution"]','2026-01-22','2026-01-22'),
-('Q564','A senior executive challenges your recommendation in a meeting. How would you react?','situational','hard','["Communication"]','["Software Engineer"]','[]','["confidence","data driven communication"]','2026-01-22','2026-01-22'),
+-- Set 67: Security Sandboxing & Runtime Shields
+('Q199','What specific security vector is introduced when an agent framework is given access to file system tools or terminal bash execution blocks?','technical','easy','["AI","Agents"]','["Software Engineer"]','[]','["remote code execution system compromises","uncontrolled file mutation errors","privilege escalation security gaps"]','2026-06-27','2026-06-27'),
+('Q200','How do you implement runtime security sandboxing to insulate host network files from agent execution tasks? Contrast Docker containers with microVM setups like Firecracker or gVisor.','technical','medium','["AI","Agents"]','["Software Engineer"]','[]','["kernel system call interception filters","ephemeral guest isolation context","resource threshold restriction lines"]','2026-06-27','2026-06-27'),
+('Q201','How can you configure a secure network proxy shield to block an autonomous browser agent from hitting restricted intranet IP spaces or internal database endpoints during document scraping sweeps?','technical','hard','["AI","Agents"]','["Software Engineer"]','[]','["egress traffic routing security controls","private ip block tracking filters","dns lookup interception protection layers"]','2026-06-27','2026-06-27'),
+
+-- Set 68: Distributed Transaction Consensuses
+('Q202','Why do standard transactional commit architectures fail when an autonomous agent execution path errors out halfway through running a multi-system API tool sequence?','technical','medium','["AI","Agents"]','["Software Engineer"]','[]','["stateless api mutation side effects","distributed state fragmentation boundaries","lack of unified database transaction blocks"]','2026-06-27','2026-06-27'),
+('Q203','How do you implement the Saga Orchestration Pattern within an agent runtime framework to manage multi-step distributed rollbacks safely?','technical','hard','["AI","Agents"]','["Software Engineer"]','[]','["compensating action endpoint orchestration","idempotent reverse transaction executions","workflow trace event reconciliation logs"]','2026-06-27','2026-06-27'),
+('Q204','How do you handle reconciliation states when an agent''s compensating rollback action fails or times out due to downstream third-party network outages?','technical','hard','["AI","Agents"]','["Software Engineer"]','[]','["dead letter queue routing exceptions","state machine retry exponential backups","manual intervention alert flagging hooks"]','2026-06-27','2026-06-27'),
+
+-- Set 69: Adversarial Data Injections
+('Q205','What is an Indirect Prompt Injection vulnerability inside autonomous agent runtimes, and how does it manifest during automated task completions?','technical','medium','["AI","Agents"]','["Software Engineer"]','[]','["untrusted data payload instruction hijackings","system prompt containment breaches","hidden malicious text command payloads"]','2026-06-27','2026-06-27'),
+('Q206','Explain how an agent that processes untrusted inbound emails can be manipulated into executing unauthorized data exfiltration tool calls using indirect injections.','technical','medium','["AI","Agents"]','["Software Engineer"]','[]','["context hijacking execution overrides","unauthorized API token delivery transfers","malicious tool arguments extraction blocks"]','2026-06-27','2026-06-27'),
+('Q207','How do you implement a privileged data zoning model and architectural instruction delimiters to protect agent execution loops from processing malicious payloads as system code?','technical','hard','["AI","Agents"]','["Software Engineer"]','[]','["isolated observation data text parsing","dual model validator verification routes","instruction vs payload parameter segregation"]','2026-06-27','2026-06-27'),
+
+-- Set 70: Massive Multi-Agent Fabric Scaling
+('Q208','What infrastructure resource bottlenecks emerge when scaling an active multi-agent message fabric to support millions of simultaneous live user loops?','technical','hard','["AI","Agents"]','["Software Engineer"]','[]','["network connection threshold saturations","state serialization processing overhead spikes","event message delivery queue contentions"]','2026-06-27','2026-06-27'),
+('Q209','How does adopting an Actor Model architectural runtime (such as Ray or Orleans) simplify state preservation and scaling inside distributed agent platforms?','technical','hard','["AI","Agents"]','["Software Engineer"]','[]','["single threaded virtual actor locations","stateless worker scaling topologies","in memory localized tracking registers"]','2026-06-27','2026-06-27'),
+('Q210','Design an asynchronous streaming agent pipeline backed by Redis Streams and a cluster of worker nodes capable of tracking non-deterministic trajectories with sub-second task routing updates.','technical','hard','["AI","Agents"]','["Software Engineer"]','[]','["distributed message group consumption loops","ephemeral state lock synchronization tables","stateless execution routing node structures"]','2026-06-27','2026-06-27'),
+
 
 -- =====================================================
--- THREAD 12: LEARNING & ADAPTABILITY
+-- MACHINE LEARNING - SUPERVISED LEARNING (QUESTIONS 211 - 225)
 -- =====================================================
 
--- Behavioral (easy)
-('Q565','Tell me about a time you had to learn a new skill quickly.','behavioral','easy','["Learning"]','["Software Engineer"]','[]','["adaptability","learning"]','2026-01-22','2026-01-22'),
-('Q566','Describe a situation where you successfully adapted to a significant change.','behavioral','easy','["Learning"]','["Software Engineer"]','[]','["flexibility","adaptation"]','2026-01-22','2026-01-22'),
-('Q567','Tell me about a time you learned a new tool or technology on your own.','behavioral','easy','["Learning"]','["Software Engineer"]','[]','["self learning","initiative"]','2026-01-22','2026-01-22'),
-('Q568','Describe a situation where you had to quickly adapt to a new environment.','behavioral','easy','["Learning"]','["Software Engineer"]','[]','["adaptability","learning"]','2026-01-22','2026-01-22'),
-('Q569','Tell me about a time when you quickly adapted to a new process or workflow.','behavioral','easy','["Learning"]','["Software Engineer"]','[]','["adaptability","learning"]','2026-01-22','2026-01-22'),
-('Q570','Describe a situation where you learned from someone with more experience than you.','behavioral','easy','["Learning"]','["Software Engineer"]','[]','["mentorship","growth"]','2026-01-22','2026-01-22'),
-('Q571','You are assigned a task involving a technology you have never used before. What would you do?','situational','easy','["Learning"]','["Software Engineer"]','[]','["self learning","adaptability"]','2026-01-22','2026-01-22'),
-('Q572','A major organizational change affects your work. How would you adapt?','situational','easy','["Learning"]','["Software Engineer"]','[]','["adaptability","resilience"]','2026-01-22','2026-01-22'),
+-- Set 71: Objective Functions & Target Paradigms
+('Q211','What is the defining structural requirement of Supervised Learning compared to Unsupervised Learning, and how does it shape the loss optimization loop?','technical','easy','["ML"]','["Software Engineer"]','[]','["ground truth targets","labeled data inputs","error gradient minimization"]','2026-06-27','2026-06-27'),
+('Q212','How do you mathematically determine if a predictive modeling problem requires a Classification approach versus a Regression approach based on the target domain space?','technical','easy','["ML"]','["Software Engineer"]','[]','["discrete class boundaries","continuous numeric space","probability mapping distribution"]','2026-06-27','2026-06-27'),
+('Q213','Contrast Mean Squared Error (MSE) with Mean Absolute Error (MAE) regarding their mathematical sensitivity to out-of-distribution outlier points during training splits.','technical','medium','["ML"]','["Software Engineer"]','[]','["squared error penalties","absolute delta scaling","gradient saturation behavior"]','2026-06-27','2026-06-27'),
 
--- Behavioral (medium)
-('Q573','Tell me about a time you worked on a project with unfamiliar technology.','behavioral','medium','["Learning"]','["Software Engineer"]','[]','["self learning","growth"]','2026-01-22','2026-01-22'),
-('Q574','Describe a situation where you had to change your approach after receiving feedback.','behavioral','medium','["Learning"]','["Software Engineer"]','[]','["feedback","improvement"]','2026-01-22','2026-01-22'),
-('Q575','Tell me about a time when you stepped outside your comfort zone.','behavioral','medium','["Learning"]','["Software Engineer"]','[]','["growth","challenge"]','2026-01-22','2026-01-22'),
-('Q576','Describe a situation where you had to learn from failure.','behavioral','medium','["Learning"]','["Software Engineer"]','[]','["reflection","improvement"]','2026-01-22','2026-01-22'),
-('Q577','Tell me about a time you proactively learned something that later benefited your team.','behavioral','medium','["Learning"]','["Software Engineer"]','[]','["initiative","knowledge sharing"]','2026-01-22','2026-01-22'),
-('Q578','Tell me about a time you identified a gap in your skills and addressed it.','behavioral','medium','["Learning"]','["Software Engineer"]','[]','["self awareness","development"]','2026-01-22','2026-01-22'),
-('Q579','Describe a situation where feedback significantly improved your performance.','behavioral','medium','["Learning"]','["Software Engineer"]','[]','["feedback","growth"]','2026-01-22','2026-01-22'),
-('Q580','Tell me about a time when curiosity led you to discover a better solution.','behavioral','medium','["Learning"]','["Software Engineer"]','[]','["innovation","initiative"]','2026-01-22','2026-01-22'),
-('Q581','Describe a situation where you had to unlearn an old habit or approach.','behavioral','medium','["Learning"]','["Software Engineer"]','[]','["adaptability","continuous improvement"]','2026-01-22','2026-01-22'),
-('Q582','Tell me about a time you shared newly acquired knowledge with others.','behavioral','medium','["Learning"]','["Software Engineer"]','[]','["knowledge sharing","mentorship"]','2026-01-22','2026-01-22'),
-('Q583','Tell me about a time you had to learn something completely unfamiliar.','behavioral','medium','["Learning"]','["Software Engineer"]','[]','["self learning","adaptability"]','2026-01-22','2026-01-22'),
-('Q584','Describe a situation where feedback changed your perspective.','behavioral','medium','["Learning"]','["Software Engineer"]','[]','["feedback","growth mindset"]','2026-01-22','2026-01-22'),
-('Q585','Tell me about a time when continuous learning helped you succeed.','behavioral','medium','["Learning"]','["Software Engineer"]','[]','["improvement","initiative"]','2026-01-22','2026-01-22'),
-('Q586','Describe a situation where you had to adapt to changing priorities.','behavioral','medium','["Learning"]','["Software Engineer"]','[]','["flexibility","adaptability"]','2026-01-22','2026-01-22'),
-('Q587','Tell me about a time you applied a lesson learned from one project to another.','behavioral','medium','["Learning"]','["Software Engineer"]','[]','["knowledge transfer","growth"]','2026-01-22','2026-01-22'),
-('Q588','You receive feedback that challenges your current approach. What would you do?','situational','medium','["Learning"]','["Software Engineer"]','[]','["growth mindset","feedback"]','2026-01-22','2026-01-22'),
-('Q589','A project requires knowledge outside your expertise. How would you prepare?','situational','medium','["Learning"]','["Software Engineer"]','[]','["learning","resourcefulness"]','2026-01-22','2026-01-22'),
-('Q590','Your role suddenly expands with additional responsibilities. How would you handle it?','situational','medium','["Learning"]','["Software Engineer"]','[]','["adaptability","prioritization"]','2026-01-22','2026-01-22'),
-('Q591','A tool or framework your team relies on becomes obsolete. What would you do?','situational','medium','["Learning"]','["Software Engineer"]','[]','["upskilling","transition planning"]','2026-01-22','2026-01-22'),
-('Q592','You realize a skill gap is slowing your progress. How would you address it?','situational','medium','["Learning"]','["Software Engineer"]','[]','["self improvement","learning plan"]','2026-01-22','2026-01-22'),
+-- Set 72: Linear Optimization Limits
+('Q214','Explain the structural purpose of the Sigmoid activation function inside Logistic Regression frameworks. How does it map linear predictions into valid probabilities?','technical','easy','["ML"]','["Software Engineer"]','[]','["logistic curve bounds","odds ratio transformations","probability range normalization"]','2026-06-27','2026-06-27'),
+('Q215','Why can simple linear models like Logistic Regression easily capture linearly separable boundaries but fail completely when confronted with complex non-linear structures like an XOR gate?','technical','medium','["ML"]','["Software Engineer"]','[]','["linear combination limitations","hyperplane partition assumptions","non-linear feature space mappings"]','2026-06-27','2026-06-27'),
+('Q216','How does applying polynomial feature transformations or utilizing explicit non-linear kernels (e.g., RBF) bypass this linear architectural limitation without shifting to deep neural networks?','technical','hard','["ML"]','["Software Engineer"]','[]','["high dimensional space projections","kernel trick transformations","inner product computations mapping"]','2026-06-27','2026-06-27'),
 
--- Behavioral (hard)
-('Q593','Describe the most challenging learning experience in your career or education.','behavioral','hard','["Learning"]','["Software Engineer"]','[]','["perseverance","adaptability"]','2026-01-22','2026-01-22'),
-('Q594','Describe the most significant professional lesson you have learned so far.','behavioral','hard','["Learning"]','["Software Engineer"]','[]','["reflection","growth"]','2026-01-22','2026-01-22'),
-('Q595','Describe the biggest professional challenge that accelerated your growth.','behavioral','hard','["Learning"]','["Software Engineer"]','[]','["development","resilience"]','2026-01-22','2026-01-22'),
-('Q596','A major project fails despite significant effort. How would you use the experience moving forward?','situational','hard','["Learning"]','["Software Engineer"]','[]','["reflection","continuous improvement"]','2026-01-22','2026-01-22'),
+-- Set 73: Tree-Based Splitting Dynamics
+('Q217','How do Decision Trees choose their feature division thresholds using optimization metrics like Gini Impurity or Information Gain?','technical','easy','["ML"]','["Software Engineer"]','[]','["sub-population homogeneity maximizing","entropy reduction metrics","greedy boundary selection splits"]','2026-06-27','2026-06-27'),
+('Q218','Why are single standalone Decision Trees highly sensitive to minor structural alterations in the baseline training data layout? What mathematical property dictates this behavior?','technical','medium','["ML"]','["Software Engineer"]','[]','["high estimator variance traits","hierarchical division path dependency","unstable split propagation loops"]','2026-06-27','2026-06-27'),
+('Q219','Deconstruct the architectural differences between how Random Forests build independent parallel trees versus how Gradient Boosted Decision Trees (GBDTs) compile sequential trees.','technical','hard','["ML"]','["Software Engineer"]','[]','["bootstrap aggregating parallel structures","gradient residue loss tracking","additive weak learner sequences"]','2026-06-27','2026-06-27'),
+
+-- Set 74: Gradient Optimization Loops
+('Q220','Explain how the Stochastic Gradient Descent (SGD) algorithm iteratively modifies model weight parameters to minimize a supervised cost architecture.','technical','medium','["ML"]','["Software Engineer"]','[]','["cost surface loss slopes","negative gradient step adjustments","learning rate multiplier updates"]','2026-06-27','2026-06-27'),
+('Q221','How can selecting an excessively large learning rate parameter disrupt the optimization loop of Gradient Descent algorithms? What happens to the loss values?','technical','medium','["ML"]','["Software Engineer"]','[]','["divergent oscillation behavior","cost space step overshooting","loss value explosion errors"]','2026-06-27','2026-06-27'),
+('Q222','Detail the mathematical root causes of the Exploding Gradient problem in deep multi-layer neural network structures. How do weight matrix products cause this issue over long backpropagation paths?','technical','hard','["ML"]','["Software Engineer"]','[]','["recurrent matrix factor products","eigenvalue thresholds scaling expansion","gradient clipping stabilization loops"]','2026-06-27','2026-06-27'),
+
+-- Set 75: Advanced Classification Boundaries
+('Q223','How do Support Vector Machines (SVM) optimize for the "Maximum Margin Hyperplane" to structurally separate two distinct linear patterns?','technical','medium','["ML"]','["Software Engineer"]','[]','["support vector boundary coordinates","margin width maximization formulas","geometric classification separation lines"]','2026-06-27','2026-06-27'),
+('Q224','Explain how the Soft Margin SVM adaptation utilizes slack variables to handle noisy datasets that are not fully linearly separable.','technical','hard','["ML"]','["Software Engineer"]','[]','["hinge loss optimization penalties","classification boundary violation trade-offs","regularization hyperparameter tuning"]','2026-06-27','2026-06-27'),
+('Q225','Deconstruct how Multi-Class Support Vector Machines use One-vs-Rest (OvR) and One-vs-One (OvO) reduction strategies to manage multi-category classification spaces.','technical','hard','["ML"]','["Software Engineer"]','[]','["binary classifier array pools","max probability score consensus","combinatorial classification partitions"]','2026-06-27','2026-06-27'),
+
 
 -- =====================================================
--- THREAD 13: PROJECT EXECUTION & DELIVERY
+-- MACHINE LEARNING - UNSUPERVISED LEARNING (QUESTIONS 226 - 240)
 -- =====================================================
 
--- Behavioral (easy)
-('Q597','Tell me about a project you are particularly proud of.','behavioral','easy','["Project Management"]','["Software Engineer"]','[]','["achievement","impact"]','2026-01-22','2026-01-22'),
-('Q598','Describe a time when you delivered a project under a tight deadline.','behavioral','easy','["Project Management"]','["Software Engineer"]','[]','["time management","execution"]','2026-01-22','2026-01-22'),
-('Q599','Tell me about a project where you exceeded expectations.','behavioral','easy','["Project Management"]','["Software Engineer"]','[]','["achievement","impact"]','2026-01-22','2026-01-22'),
-('Q600','Describe a situation where you successfully managed a tight deadline.','behavioral','easy','["Project Management"]','["Software Engineer"]','[]','["time management","execution"]','2026-01-22','2026-01-22'),
-('Q601','Tell me about a project where you exceeded your original goals.','behavioral','easy','["Project Management"]','["Software Engineer"]','[]','["achievement","impact"]','2026-01-22','2026-01-22'),
-('Q602','Describe a situation where careful planning contributed to success.','behavioral','easy','["Project Management"]','["Software Engineer"]','[]','["planning","execution"]','2026-01-22','2026-01-22'),
-('Q603','A project deadline is moved forward unexpectedly. What would you do?','situational','easy','["Project Management"]','["Software Engineer"]','[]','["planning","prioritization"]','2026-01-22','2026-01-22'),
-('Q604','A critical dependency is delayed by another team. How would you respond?','situational','easy','["Project Management"]','["Software Engineer"]','[]','["coordination","risk mitigation"]','2026-01-22','2026-01-22'),
-('Q605','A production deployment causes unexpected issues. What would you do first?','situational','easy','["Incident Management"]','["Software Engineer"]','[]','["rollback","assessment"]','2026-01-22','2026-01-22'),
+-- Set 76: Iterative Spatial Clustering
+('Q226','Explain the iterative execution steps of the K-Means Clustering algorithm. How does it distribute data coordinates into k distinct groups?','technical','easy','["ML"]','["Software Engineer"]','[]','["centroid coordinate mean re-alignment","euclidean distance index optimization","lloyds optimization algorithm steps"]','2026-06-27','2026-06-27'),
+('Q227','Why can random centroid initialization configurations cause K-Means clustering routines to converge into suboptimal local minima instead of global cluster alignments?','technical','medium','["ML"]','["Software Engineer"]','[]','["initial point coordinate dependency","false convergence stability traps","k-means plus plus spacing modifications"]','2026-06-27','2026-06-27'),
+('Q228','How do you evaluate the structural accuracy of a K-Means clustering outcome when your dataset lacks any external ground truth target labels? Contrast the Elbow Method with Silhouette Analysis.','technical','medium','["ML"]','["Software Engineer"]','[]','["within cluster sum of squares metric","inter-cluster spacing silhouette scores","optimal elbow inflection points"]','2026-06-27','2026-06-27'),
 
--- Behavioral (medium)
-('Q606','Tell me about a project that did not go as planned.','behavioral','medium','["Project Management"]','["Software Engineer"]','[]','["challenges","lessons learned"]','2026-01-22','2026-01-22'),
-('Q607','Describe a situation where you had to manage scope changes during a project.','behavioral','medium','["Project Management"]','["Software Engineer"]','[]','["adaptability","stakeholder management"]','2026-01-22','2026-01-22'),
-('Q608','Tell me about a time you balanced quality and delivery speed.','behavioral','medium','["Project Management"]','["Software Engineer"]','[]','["trade-offs","prioritization"]','2026-01-22','2026-01-22'),
-('Q609','Describe a situation where you identified and mitigated project risks early.','behavioral','medium','["Project Management"]','["Software Engineer"]','[]','["risk management","planning"]','2026-01-22','2026-01-22'),
-('Q610','Tell me about a time you improved project outcomes through better planning.','behavioral','medium','["Project Management"]','["Software Engineer"]','[]','["organization","execution"]','2026-01-22','2026-01-22'),
-('Q611','Tell me about a project where requirements changed significantly.','behavioral','medium','["Project Management"]','["Software Engineer"]','[]','["adaptability","stakeholder management"]','2026-01-22','2026-01-22'),
-('Q612','Describe a situation where you had to balance quality, scope, and time constraints.','behavioral','medium','["Project Management"]','["Software Engineer"]','[]','["trade-offs","prioritization"]','2026-01-22','2026-01-22'),
-('Q613','Tell me about a project where you identified and mitigated a major risk.','behavioral','medium','["Project Management"]','["Software Engineer"]','[]','["risk management","planning"]','2026-01-22','2026-01-22'),
-('Q614','Describe a situation where you had to coordinate across multiple teams to deliver a project.','behavioral','medium','["Project Management"]','["Software Engineer"]','[]','["cross-functional collaboration","execution"]','2026-01-22','2026-01-22'),
-('Q615','Tell me about a project where you had to make trade-offs to ensure successful delivery.','behavioral','medium','["Project Management"]','["Software Engineer"]','[]','["decision making","prioritization"]','2026-01-22','2026-01-22'),
-('Q616','Tell me about a project where you faced significant constraints.','behavioral','medium','["Project Management"]','["Software Engineer"]','[]','["constraints","problem solving"]','2026-01-22','2026-01-22'),
-('Q617','Describe a situation where you had to manage competing deadlines.','behavioral','medium','["Project Management"]','["Software Engineer"]','[]','["prioritization","time management"]','2026-01-22','2026-01-22'),
-('Q618','Tell me about a project where you identified a major risk early.','behavioral','medium','["Project Management"]','["Software Engineer"]','[]','["risk management","planning"]','2026-01-22','2026-01-22'),
-('Q619','Describe a situation where project requirements changed unexpectedly.','behavioral','medium','["Project Management"]','["Software Engineer"]','[]','["adaptability","stakeholder management"]','2026-01-22','2026-01-22'),
-('Q620','Tell me about a project where you had to make difficult compromises to succeed.','behavioral','medium','["Project Management"]','["Software Engineer"]','[]','["trade-offs","decision making"]','2026-01-22','2026-01-22'),
-('Q621','Project requirements change halfway through development. How would you handle it?','situational','medium','["Project Management"]','["Software Engineer"]','[]','["adaptability","scope management"]','2026-01-22','2026-01-22'),
-('Q622','You are managing multiple projects with overlapping deadlines. What is your approach?','situational','medium','["Project Management"]','["Software Engineer"]','[]','["time management","prioritization"]','2026-01-22','2026-01-22'),
-('Q623','A project is behind schedule due to unforeseen challenges. What actions would you take?','situational','medium','["Project Management"]','["Software Engineer"]','[]','["replanning","risk management"]','2026-01-22','2026-01-22'),
-('Q624','A key requirement is unclear but development must begin soon. How would you proceed?','situational','medium','["Project Management"]','["Software Engineer"]','[]','["clarification","incremental planning"]','2026-01-22','2026-01-22'),
-('Q625','A stakeholder requests significant changes late in the project lifecycle. How would you respond?','situational','medium','["Project Management"]','["Software Engineer"]','[]','["scope control","negotiation"]','2026-01-22','2026-01-22'),
-('Q626','Your team is asked to deliver a major feature in half the planned time. How would you respond?','situational','medium','["Project Management"]','["Software Engineer"]','[]','["scope reduction","prioritization"]','2026-01-22','2026-01-22'),
+-- Set 77: Non-Spherical Spatial Topology
+('Q229','Why does the K-Means clustering algorithm struggle to correctly isolate complex, non-spherical data configurations or interleaved geometric structures?','technical','medium','["ML"]','["Software Engineer"]','[]','["spherical distance assumption bounds","isotropic coordinate space biases","variance scale breakdown errors"]','2026-06-27','2026-06-27'),
+('Q230','How does a density-based clustering algorithm like DBSCAN resolve these non-spherical geometry limitations? Detail the purpose of epsilon and min-samples parameters.','technical','hard','["ML"]','["Software Engineer"]','[]','["epsilon radius reachability spans","core border noise node classifications","arbitrary density cluster tracing"]','2026-06-27','2026-06-27'),
+('Q231','Explain how DBSCAN handles outlier detection out of the box. Why is this structurally superior to K-Means, which forces every point into a cluster?','technical','hard','["ML"]','["Software Engineer"]','[]','["noise point isolation bins","unmapped density sparse regions","adverse data injection filtration"]','2026-06-27','2026-06-27'),
 
--- Behavioral (hard)
-('Q627','Describe the most challenging project you have delivered successfully.','behavioral','hard','["Project Management"]','["Software Engineer"]','[]','["leadership","execution","impact"]','2026-01-22','2026-01-22'),
-('Q628','Tell me about a project where unexpected obstacles forced significant changes to your plan.','behavioral','hard','["Project Management"]','["Software Engineer"]','[]','["adaptability","problem solving","resilience"]','2026-01-22','2026-01-22'),
-('Q629','Describe a project where your contribution had a measurable impact on business or team outcomes.','behavioral','hard','["Project Management"]','["Software Engineer"]','[]','["impact","ownership","results"]','2026-01-22','2026-01-22'),
-('Q630','Describe the most challenging project deadline you have faced and how you met it.','behavioral','hard','["Project Management"]','["Software Engineer"]','[]','["planning","execution","resilience"]','2026-01-22','2026-01-22'),
-('Q631','Tell me about a project that failed to meet its goals and what you learned from it.','behavioral','hard','["Project Management"]','["Software Engineer"]','[]','["failure","reflection","improvement"]','2026-01-22','2026-01-22'),
-('Q632','Describe a project where your actions directly contributed to measurable business or organizational success.','behavioral','hard','["Project Management"]','["Software Engineer"]','[]','["impact","ownership","results"]','2026-01-22','2026-01-22'),
-('Q633','Describe the most complex project you have successfully delivered.','behavioral','hard','["Project Management"]','["Software Engineer"]','[]','["execution","leadership","impact"]','2026-01-22','2026-01-22'),
-('Q634','Tell me about a project failure that taught you an important lesson.','behavioral','hard','["Project Management"]','["Software Engineer"]','[]','["failure","learning","reflection"]','2026-01-22','2026-01-22'),
-('Q635','Describe a project where your efforts directly resulted in measurable business, academic, or organizational impact.','behavioral','hard','["Project Management"]','["Software Engineer"]','[]','["results","ownership","impact"]','2026-01-22','2026-01-22'),
-('Q636','Your project is at risk of failure due to budget, schedule, and resource constraints. What would you do?','situational','hard','["Project Management"]','["Software Engineer"]','[]','["risk mitigation","stakeholder communication"]','2026-01-22','2026-01-22'),
-('Q637','A mission-critical release introduces severe issues in production. How would you handle the aftermath?','situational','hard','["Project Management"]','["Software Engineer"]','[]','["rollback","incident management","lessons learned"]','2026-01-22','2026-01-22'),
-('Q638','A high-visibility project has failed to meet business objectives after launch. What steps would you take next?','situational','hard','["Project Management"]','["Software Engineer"]','[]','["postmortem","recovery strategy","stakeholder management"]','2026-01-22','2026-01-22');
+-- Set 78: Linear Dimensionality Subspaces
+('Q232','What is the primary architectural purpose of Principal Component Analysis (PCA) when applied to high-dimensional engineering datasets?','technical','easy','["ML"]','["Software Engineer"]','[]','["orthogonal subspace transformations","variance maximization projections","dimensionality footprint compaction runs"]','2026-06-27','2026-06-27'),
+('Q233','Deconstruct the mathematical sequence of PCA. How do the covariance matrix calculation and eigenvector decomposition isolate the core directions of data variance?','technical','hard','["ML"]','["Software Engineer"]','[]','["feature covariance variance arrays","eigenvalue magnitude ordering sequences","singular value decomposition matrices"]','2026-06-27','2026-06-27'),
+('Q234','Why must features be explicitly standardized to zero mean and unit variance before running a PCA pipeline? What distortions occur if this step is skipped?','technical','medium','["ML"]','["Software Engineer"]','[]','["scale variance magnitude dominance","axis stretching projection errors","unstandardized data transformation biases"]','2026-06-27','2026-06-27'),
+
+-- Set 79: Non-Linear Coordinate Projections
+('Q235','Contrast the structural objectives of linear dimensionality reduction methods like PCA against non-linear manifold learning architectures like t-SNE.','technical','medium','["ML"]','["Software Engineer"]','[]','["global variance projection models","local neighborhood distance conservation","high dimensional manifold flattening mapping"]','2026-06-27','2026-06-27'),
+('Q236','How does t-SNE use conditional probabilities under normal and Student-t distributions to construct mapping scales across high and low-dimensional spaces?','technical','hard','["ML"]','["Software Engineer"]','[]','["gaussian similarity neighborhood probability","heavy-tailed t-distribution mapping matches","crowding problem resolution scaling"]','2026-06-27','2026-06-27'),
+('Q237','Why is t-SNE considered purely a data visualization tool rather than a standard feature engineering pre-processing layer? Contrast this with the reproducible out-of-sample projection capability of PCA.','technical','hard','["ML"]','["Software Engineer"]','[]','["non-invertible projection mappings","lack of out of sample transformation equations","stochastic non deterministic generation runs"]','2026-06-27','2026-06-27'),
+
+-- Set 80: Probabilistic Soft Assignments
+('Q238','What is a Gaussian Mixture Model (GMM), and how does it implement "soft clustering" assignments compared to the "hard clustering" assignments of K-Means?','technical','medium','["ML"]','["Software Engineer"]','[]','["probabilistic mixture distribution components","continuous membership score matrices","multivariate normal density overlapping contours"]','2026-06-27','2026-06-27'),
+('Q239','Detail the execution phases of the Expectation-Maximization (EM) optimization framework used to tune parameter weights inside a GMM cluster setup.','technical','hard','["ML"]','["Software Engineer"]','[]','["expectation step cluster responsibility calculations","maximization step parameter updates","log likelihood maximization loops"]','2026-06-27','2026-06-27'),
+('Q240','How does adjusting the covariance matrix constraint parameter (e.g., spherical vs. diagonal vs. full) alter the geometric degrees of freedom available to individual GMM cluster components?','technical','hard','["ML"]','["Software Engineer"]','[]','["ellipsoidal contour alignment permissions","independent variance orientation limits","parameter count complexity constraints"]','2026-06-27','2026-06-27'),
+
+
+-- =====================================================
+-- MACHINE LEARNING - MODEL BIAS (QUESTIONS 241 - 255)
+-- =====================================================
+
+-- Set 81: Systemic Mathematical Underfitting
+('Q241','What does "Bias" mathematically represent in the context of machine learning model predictions, and why is high bias synonymous with underfitting?','technical','easy','["ML"]','["Software Engineer"]','[]','["simplistic baseline assumptions","expected error target discrepancies","systemic model capacity failures"]','2026-06-27','2026-06-27'),
+('Q242','If a predictive model yields high, nearly identical error rates across both its training validation split and its test data partition, what does this indicate about its bias state?','technical','easy','["ML"]','["Software Engineer"]','[]','["high operational bias validation","poor pattern extraction capacity","failure to learn training distribution data"]','2026-06-27','2026-06-27'),
+('Q243','What explicit model engineering adjustments can you execute to systematically reduce structural bias when a baseline architecture lacks the capacity to capture patterns?','technical','medium','["ML"]','["Software Engineer"]','[]','["increasing model capacity parameter bounds","polynomial feature interaction additions","removing restrictive regularization penalties"]','2026-06-27','2026-06-27'),
+
+-- Set 82: Boosting Deflation Paths
+('Q244','Explain how ensemble learning techniques like Boosting (e.g., AdaBoost) are structurally optimized to reduce the bias of weak base learners.','technical','medium','["ML"]','["Software Engineer"]','[]','["sequential instance re-weighting updates","misclassified sample selection prioritization","weak learner error correction arrays"]','2026-06-27','2026-06-27'),
+('Q245','How does Gradient Boosting (e.g., XGBoost) iteratively minimize overall model bias using loss function gradient optimizations?','technical','medium','["ML"]','["Software Engineer"]','[]','["pseudo residual target mapping steps","additive loss function optimization","sequential correction model passes"]','2026-06-27','2026-06-27'),
+('Q246','Why does a boosting model sequence eventually hit a point of diminishing returns where continuing training iterations transitions from reducing bias to exploding variance?','technical','hard','["ML"]','["Software Engineer"]','[]','["training noise capture over-indexing","overfitting sequence thresholds","validation error divergence splits"]','2026-06-27','2026-06-27'),
+
+-- Set 83: Data Representation Bottlenecks
+('Q247','How can collecting data that exhibits heavy selection bias cause a model to manifest systemic mathematical bias during real-world inference runs?','technical','medium','["ML"]','["Software Engineer"]','[]','["skewed population sample pools","unrepresented demographic data fields","training vs production distribution mismatches"]','2026-06-27','2026-06-27'),
+('Q248','Explain how class imbalance inside a raw training dataset causes classification algorithms to manifest high bias toward the majority class population.','technical','medium','["ML"]','["Software Engineer"]','[]','["majority class objective function dominance","minority signal error minimization erasure","skewed probability score optimizations"]','2026-06-27','2026-06-27'),
+('Q249','How can you programmatically detect and mitigate demographic or subgroup bias inside a trained model using fairness evaluation frameworks?','technical','hard','["ML"]','["Software Engineer"]','[]','["demographic parity index monitoring","disparate impact ratio tracking","equalized odds threshold calibration"]','2026-06-27','2026-06-27'),
+
+-- Set 84: Regularization Interaction Curves
+('Q250','How does adding an L1 (Lasso) or L2 (Ridge) penalty parameter onto a linear regression objective function alter the overall bias profile of the estimator?','technical','medium','["ML"]','["Software Engineer"]','[]','["deliberate bias injection trade-offs","coefficient magnitude restriction boundaries","model capacity intentional constraints"]','2026-06-27','2026-06-27'),
+('Q251','What is the structural difference between how L1 regularization and L2 regularization modify the weight coefficients? Explain why L1 generates structural sparsity.','technical','medium','["ML"]','["Software Engineer"]','[]','["absolute weight sum penalties","squared weight sum restrictions","diamond vs spherical coordinate intersection vertices"]','2026-06-27','2026-06-27'),
+('Q252','How can you programmatically determine the optimal regularization penalty weight ($\lambda$) to minimize model bias while keeping variance under strict limits?','technical','hard','["ML"]','["Software Engineer"]','[]','["k-fold cross validation grid search","validation error curve tracking charts","validation hyperparameter optimization runs"]','2026-06-27','2026-06-27'),
+
+-- Set 85: Deep Learning Over-Pruning Errors
+('Q253','How does executing aggressive network model pruning or parameter quantization steps on a deep neural network layer layout risk introducing high structural bias?','technical','hard','["ML"]','["Software Engineer"]','[]','["representational capacity extraction drops","fine pattern recognition network erasures","quantization noise precision floor limits"]','2026-06-27','2026-06-27'),
+('Q254','What is under-parameterization in deep learning networks? Why do models with parameter counts significantly below data dimensions manifest persistent high bias?','technical','hard','["ML"]','["Software Engineer"]','[]','["manifold dimensionality mapping bottlenecks","unresolvable training error floors","loss surface optimization blockades"]','2026-06-27','2026-06-27'),
+('Q255','How do skip connections (like those in ResNet structures) preserve gradient paths to prevent deep networks from locking into high-bias underfitting states?','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["identity mapping information highways","vanishing gradient block solutions","direct residual error propagation paths"]','2026-06-27','2026-06-27'),
+
+
+-- =====================================================
+-- MACHINE LEARNING - MODEL VARIANCE (QUESTIONS 256 - 270)
+-- =====================================================
+
+-- Set 86: Overfitting & Noise Sensitivity
+('Q256','What does "Variance" mathematically measure in a machine learning context, and how does high variance impact a model''s generalization capacity?','technical','easy','["ML"]','["Software Engineer"]','[]','["training dataset noise memorization","generalization gap extension errors","out of sample evaluation performance drops"]','2026-06-27','2026-06-27'),
+('Q257','What explicit divergence pattern visible on a training learning curve graph indicates that a model has transitioned into a high-variance domain?','technical','easy','["ML"]','["Software Engineer"]','[]','["widening validation error gap boundaries","plunging training loss curve tracks","diverging evaluation score metrics"]','2026-06-27','2026-06-27'),
+('Q258','What architectural characteristics make non-parametric models like K-Nearest Neighbors (KNN) or deep Decision Trees prone to high-variance overfitting out of the box?','technical','medium','["ML"]','["Software Engineer"]','[]','["highly complex localized classification borders","lack of global structural assumptions","overly granular instance level partitioning"]','2026-06-27','2026-06-27'),
+
+-- Set 87: Bagging & Variance Stabilization
+('Q259','Explain how the concept of Bootstrap Aggregating (Bagging) structurally reduces model variance without altering overall model bias bounds.','technical','medium','["ML"]','["Software Engineer"]','[]','["independent estimator parallel sampling","prediction average variance reduction","unsupervised bagging data generation splits"]','2026-06-27','2026-06-27'),
+('Q260','How does a Random Forest improve on standard Bagging variance reduction by incorporating random feature subspace selection at every tree node split?','technical','medium','["ML"]','["Software Engineer"]','[]','["inter-tree prediction de-correlation rules","subspace feature random masking","ensemble statistical average stabilization"]','2026-06-27','2026-06-27'),
+('Q261','Why is Bagging highly effective at reducing variance for high-variance base learners (like deep decision trees) but offers minimal performance value for low-variance base learners (like linear models)?','technical','hard','["ML"]','["Software Engineer"]','[]','["stable estimator transformation resistance","averaging identical prediction models","lack of diversity variance reduction wins"]','2026-06-27','2026-06-27'),
+
+-- Set 88: Network Regularization Shields
+('Q262','How does the Dropout regularization technique mitigate variance tracking inside deep neural network layer setups during active training epochs?','technical','medium','["AI","ML"]','["Software Engineer"]','[]','["random node activation masking drops","co-adaptation weight pattern preventions","pseudo ensemble sub-network integration loops"]','2026-06-27','2026-06-27'),
+('Q263','What adjustments must be performed on node weight parameters during the inference validation pass of a model that utilized Dropout during training?','technical','medium','["AI","ML"]','["Software Engineer"]','[]','["weight multiplier scale modifications","dropout probability inverse calibrations","deterministic evaluation layer routing"]','2026-06-27','2026-06-27'),
+('Q264','Explain how Early Stopping uses validation set error trends to intercept a model pipeline before variance tracking starts memorizing dataset noise.','technical','easy','["ML"]','["Software Engineer"]','[]','["validation loss divergence check gates","optimization loop cutoff thresholds","generalization score peak isolation sets"]','2026-06-27','2026-06-27'),
+
+-- Set 89: Expected Loss Deconstructions
+('Q265','Deconstruct the Bias-Variance Trade-off equation for expected prediction error. What are the three mathematical components that comprise total expected loss?','technical','hard','["ML"]','["Software Engineer"]','[]','["squared bias systemic error errors","variance model instability matrices","irreducible data noise constants"]','2026-06-27','2026-06-27'),
+('Q266','What is Irreducible Error, and why is it mathematically impossible to eliminate this error component from your model regardless of optimization depth?','technical','hard','["ML"]','["Software Engineer"]','[]','["inherent data observation noise floors","missing feature latent variables tracking","stochastic system boundary constraints"]','2026-06-27','2026-06-27'),
+('Q267','Explain how the optimal model selection point represents a Pareto Frontier balancing act between structural bias error and variance model breakdown limits.','technical','hard','["ML"]','["Software Engineer"]','[]','["total error curve minimum valleys","complexity score boundary balancing acts","underfitting vs overfitting turning points"]','2026-06-27','2026-06-27'),
+
+-- Set 90: Deep Double Descent Paradoxes
+('Q268','What is the Double Descent phenomenon in deep learning models? How does it challenge classic statistical bias-variance trade-off tracking models?','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["interpolation threshold performance transitions","over-parameterization second descent curves","test error reductions post peak complexity"]','2026-06-27','2026-06-27'),
+('Q269','What happens to model variance when parameter count crosses the interpolation threshold boundary where the network can perfectly memorize all training data points?','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["loss surface inductive bias optimizations","smooth function path alignment shifts","over-parameterized weight configuration constraints"]','2026-06-27','2026-06-27'),
+('Q270','How do optimization choices like stochastic initialization and implicit gradient descent regularization help prevent over-parameterized models from exploding into high-variance validation failures?','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["minimum norm weight solution preferences","flat cost surface minimum lookups","implicit optimization loop path constraints"]','2026-06-27','2026-06-27'),
+
+
+-- =====================================================
+-- MACHINE LEARNING MODELS - REGRESSION PATHWAYS (QUESTIONS 271 - 285)
+-- =====================================================
+
+-- Set 91: Ordinary Least Squares Assumptions & Violations
+('Q271','Explain the foundational mathematical assumptions required for Ordinary Least Squares (OLS) Linear Regression to be the Best Linear Unbiased Estimator (BLUE).','technical','medium','["ML"]','["Software Engineer"]','[]','["gauss-markov theorem","linearity in parameters","homoscedastic error profiles"]','2026-06-27','2026-06-27'),
+('Q272','What is Multicollinearity in a regression dataset, and how does it structurally degrade the stability of OLS coefficient weight matrices?','technical','medium','["ML"]','["Software Engineer"]','[]','["variance inflation factor VIF","matrix inversion singularity errors","inflated standard error weights"]','2026-06-27','2026-06-27'),
+('Q273','How does Heteroscedasticity break OLS inference metrics, and how can you modify your regression pipeline to correct for non-constant error variance tracking?','technical','hard','["ML"]','["Software Engineer"]','[]','["weighted least squares transformations","residual plot variance checking","robust standard error matrices"]','2026-06-27','2026-06-27'),
+
+-- Set 92: Logistic Classification Matrix Boundaries
+('Q274','Deconstruct the Maximum Likelihood Estimation (MLE) optimization function used to determine optimal coefficients in Logistic Regression models.','technical','hard','["ML"]','["Software Engineer"]','[]','["log likelihood function maximizing","bernoulli trial probability distributions","cost curve gradient optimizations"]','2026-06-27','2026-06-27'),
+('Q275','Why can you not use standard OLS closed-form equations to solve for Logistic Regression parameters directly? Explain the role of the link function.','technical','medium','["ML"]','["Software Engineer"]','[]','["non linear logit transformations","absence of analytical solutions","iteratively reweighted least squares"]','2026-06-27','2026-06-27'),
+('Q276','What is the purpose of the Multinomial Softmax extension in Logistic Regression, and how does it expand binary classification boundaries into mutually exclusive multi-class spaces?','technical','medium','["ML"]','["Software Engineer"]','[]','["softmax exponential scaling formulas","cross entropy multi class categorization","relative log odds mapping"]','2026-06-27','2026-06-27'),
+
+-- Set 93: Regularized Regularization Elastic Frameworks
+('Q277','Explain the primary geometric difference between Lasso (L1) and Ridge (L2) regularization constraints. Why does L1 drive coefficients to absolute zero?','technical','medium','["ML"]','["Software Engineer"]','[]','["sharp coordinate intersection diamond vertices","smooth quadratic perimeter weight circles","sparse feature subset selections"]','2026-06-27','2026-06-27'),
+('Q278','What is Elastic Net Regularization? Under what specific dataset conditions is Elastic Net structurally superior to standalone Lasso or Ridge methods?','technical','medium','["ML"]','["Software Engineer"]','[]','["convex combination penalty weights","highly correlated feature groups preservation","l1 l2 hybrid cost optimizations"]','2026-06-27','2026-06-27'),
+('Q279','How does tuning the mixing hyperparameter ($\alpha$) inside an Elastic Net pipeline structurally shift the optimization landscape from pure L2 to pure L1 boundaries?','technical','hard','["ML"]','["Software Engineer"]','[]','["alpha interpolation trajectory mapping","penalty function geometric adjustments","grid search hyperparameter sweeps"]','2026-06-27','2026-06-27'),
+
+-- Set 94: Generalized Linear Model Topology
+('Q280','What defines a Generalized Linear Model (GLM)? Identify the three core components that comprise any GLM framework.','technical','hard','["ML"]','["Software Engineer"]','[]','["exponential family error distribution","linear predictor combinations","monotonic structural link functions"]','2026-06-27','2026-06-27'),
+('Q281','When modeling count data (e.g., website clicks per hour), why do standard Linear Regression models fail, and how does Poisson Regression address these limitations?','technical','medium','["ML"]','["Software Engineer"]','[]','["non negative target constraints","log link function enforcement","discrete count event modeling"]','2026-06-27','2026-06-27'),
+('Q282','What is the Overdispersion phenomenon in Poisson GLM applications, and how do you swap the baseline model for a Negative Binomial regression framework to correct it?','technical','hard','["ML"]','["Software Engineer"]','[]','["variance exceeding statistical mean counts","dispersion parameter coefficient updates","variance scaling quadratic relaxations"]','2026-06-27','2026-06-27'),
+
+-- Set 95: Non-Parametric Local Estimations
+('Q283','Explain the algorithmic mechanism of Locally Weighted Linear Regression (LOWESS). How does it generate predictions without fitting a global parameter model?','technical','medium','["ML"]','["Software Engineer"]','[]','["local neighborhood kernel smoothers","distance metric instance re weighting","lazy training data memory lookup"]','2026-06-27','2026-06-27'),
+('Q284','How do you tune the bandwidth parameter ($\tau$) inside a LOWESS estimation framework? Detail the extreme consequences of setting $\tau$ too low versus too high.','technical','hard','["ML"]','["Software Engineer"]','[]','["bandwidth smoothing range thresholds","local overfitting variance spikes","global underfitting bias degradation"]','2026-06-27','2026-06-27'),
+('Q285','What are the core engineering scalability liabilities of utilizing lazy, non-parametric regression methods like LOWESS inside real-time high-throughput web service layers?','technical','hard','["ML"]','["Software Engineer"]','[]','["o(n) test time computation bottlenecks","raw data persistence ram storage","inference latency infrastructure cost surges"]','2026-06-27','2026-06-27'),
+
+
+-- =====================================================
+-- MACHINE LEARNING MODELS - TREE ENGINE EXTREMES (QUESTIONS 286 - 300)
+-- =====================================================
+
+-- Set 96: Decision Splitting Architecture Trees
+('Q286','Explain the mathematical mechanics of variance reduction splits inside Decision Tree Regressors. How does it isolate node evaluation outputs?','technical','easy','["ML"]','["Software Engineer"]','[]','["mean squared error split reductions","sub population regional node mean updates","squared deviation reduction targets"]','2026-06-27','2026-06-27'),
+('Q287','What is Cost-Complexity Pruning inside Decision Tree pipelines? Detail how the tuning parameter ($\alpha$) mathematically regulates leaf expansion depth.','technical','medium','["ML"]','["Software Engineer"]','[]','["subtree total error cost balancing","leaf node validation penalty equations","weakest link tree pruning passes"]','2026-06-27','2026-06-27'),
+('Q288','Why do unpruned Decision Trees exhibit structurally structural instability when facing data variations? Explain the downstream impact of hierarchical top-level split mutations.','technical','medium','["ML"]','["Software Engineer"]','[]','["error propagation down path branches","high variance estimator structural shifts","unstable split decision cascade loops"]','2026-06-27','2026-06-27'),
+
+-- Set 97: Ensemble Bagging Framework Pools
+('Q289','How does a Random Forest model determine its final predictive output for classification tasks versus regression tasks? Describe the underlying consensus tracking.','technical','easy','["ML"]','["Software Engineer"]','[]','["majority vote argmax aggregation loops","continuous leaf node average pooling","ensemble committee consensus tracks"]','2026-06-27','2026-06-27'),
+('Q290','What is Out-of-Bag (OOB) Error estimation inside Random Forest pipelines, and how does it serve as an embedded validation metric without separate cross-validation splits?','technical','medium','["ML"]','["Software Engineer"]','[]','["unsampled bootstrap dataset validations","built in validation testing checks","unseen training instance error maps"]','2026-06-27','2026-06-27'),
+('Q291','Mathematically demonstrate how the total variance of a Random Forest ensemble is controlled by both individual tree variance and the pairwise cross-correlation coefficient between distinct trees.','technical','hard','["ML"]','["Software Engineer"]','[]','["tree de correlation variance drops","subspace random feature fraction masks","statistical variance average limits"]','2026-06-27','2026-06-27'),
+
+-- Set 98: Gradient Tree Boosting Mechanics
+('Q292','Deconstruct how Gradient Boosted Decision Trees (GBDT) incorporate regularized learning rates (shrinkage factors) to stabilize sequential tree compilation.','technical','medium','["ML"]','["Software Engineer"]','[]','["additive model step scaling factors","pseudo residual correction dampening","overfitting deceleration optimization tracking"]','2026-06-27','2026-06-27'),
+('Q293','Write out the general objective function optimization loop of XGBoost. How does it incorporate first-order and second-order Taylor expansion gradients into its node-splitting metric?','technical','hard','["ML"]','["Software Engineer"]','[]','["gi hi gradient hessian parameters","taylor series objective function approximation","structural loss score maximization splits"]','2026-06-27','2026-06-27'),
+('Q294','How does the LightGBM architecture use Gradient-Based One-Side Sampling (GOSS) and Exclusive Feature Bundling (EFB) to outperform traditional XGBoost setups on sparse datasets?','technical','hard','["ML"]','["Software Engineer"]','[]','["large gradient data point retentions","sparse feature matrix dimensional bundling","leaf wise tree growth acceleration"]','2026-06-27','2026-06-27'),
+
+-- Set 99: Isolated Anomalous Forest Splits
+('Q295','Explain the operational mechanism of an Isolation Forest model. How does it structurally detect anomalous instances without modeling normal data distributions?','technical','easy','["ML"]','["Software Engineer"]','[]','["random partition branch length measures","isolation path depth anomaly scoring","sparse outlier rapid segmentation"]','2026-06-27','2026-06-27'),
+('Q296','Why do anomalous instances require significantly fewer recursive feature splits to isolate inside an Isolation Forest tree node compared to standard instances?','technical','medium','["ML"]','["Software Engineer"]','[]','["outlier coordinate space isolation profiles","shallow tree branch terminal leaf ends","unusual value extreme outer distributions"]','2026-06-27','2026-06-27'),
+('Q297','How do you mathematically normalize the raw path length metrics extracted from an Isolation Forest run to scale anomaly scores uniformly between a zero-to-one range bound?','technical','hard','["ML"]','["Software Engineer"]','[]','["average binary search tree depth formulas","harmonic number sequence normalizations","probability scaled anomaly score assignments"]','2026-06-27','2026-06-27'),
+
+-- Set 100: Multi-Model Stacking Orchestrations
+('Q298','What is Stacked Generalization (Stacking)? How does it structurally combine heterogeneous base learners using a standalone meta-model framework?','technical','medium','["ML"]','["Software Engineer"]','[]','["multi tier model pooling frameworks","meta regressor prediction input arrays","heterogeneous base learner combination lines"]','2026-06-27','2026-06-27'),
+('Q299','Why does training a meta-model directly on the raw training set predictions of its base models introduce critical data leakage and severe overfitting vulnerabilities?','technical','medium','["ML"]','["Software Engineer"]','[]','["base model training memorization artifacts","inflated meta model prediction accuracy","target variable data leak validation traps"]','2026-06-27','2026-06-27'),
+('Q300','Detail how an out-of-fold cross-validation generation pipeline creates unbiased prediction matrices for training the meta-model safely.','technical','hard','["ML"]','["Software Engineer"]','[]','["k fold cross validation partition blocks","out of fold prediction matrix assembly","leak free meta model training pipelines"]','2026-06-27','2026-06-27'),
+
+
+-- =====================================================
+-- MACHINE LEARNING MODELS - DIMENSIONAL & PROBABILISTIC (QUESTIONS 301 - 315)
+-- =====================================================
+
+-- Set 101: Support Vector Boundary Optimization
+('Q301','Deconstruct the Lagrange Dual formulation used to compute Support Vector Machine classification hyperplanes. What role do the Lagrange multipliers ($\alpha_i$) perform?','technical','hard','["ML"]','["Software Engineer"]','[]','["lagrangian dual optimization maximization","karush-kuhn-tucker KKT alignment conditions","support vector coefficient identification arrays"]','2026-06-27','2026-06-27'),
+('Q302','Explain the operational mechanism of the Kernel Trick in SVM applications. How does it execute inner product evaluations across infinite-dimensional Hilbert spaces without calculating raw coordinate positions?','technical','hard','["ML"]','["Software Engineer"]','[]','["mercer theorem compliance kernels","high dimensional projection inner products","radial basis function non linear mappings"]','2026-06-27','2026-06-27'),
+('Q303','What are the engineering scalability limitations of training standard dual-form SVM configurations on contemporary big data platforms containing millions of unique observation files?','technical','hard','["ML"]','["Software Engineer"]','[]','["quadratic to cubic training sample scaling","dense kernel cache matrix tracking bottlenecks","sequential minimal optimization memory drains"]','2026-06-27','2026-06-27'),
+
+-- Set 102: Conditional Probabilistic Independence
+('Q304','What is the fundamental conditional independence assumption underpinning the Naive Bayes classification model framework?','technical','easy','["ML"]','["Software Engineer"]','[]','["pairwise class conditional independence rules","joint distribution multiplicative expansion maps","feature attribute relationship neglect flaws"]','2026-06-27','2026-06-27'),
+('Q305','How does encountering a completely novel category token inside a production inference validation query cause a baseline Naive Bayes conditional probability chain to zero out completely?','technical','easy','["ML"]','["Software Engineer"]','[]','["zero frequency multiplicative erasure faults","missing token category distribution dropouts","unseen feature category scoring crashes"]','2026-06-27','2026-06-27'),
+('Q306','Explain the mathematical mechanism of Laplace Smoothing (additive smoothing), and demonstrate how it resolves zero-frequency estimation bugs inside text classification models.','technical','medium','["ML"]','["Software Engineer"]','[]','["pseudo count allocation numerator increments","vocabulary size denominator scaling rules","probability mass distribution smoothing smoothing"]','2026-06-27','2026-06-27'),
+
+-- Set 103: Probabilistic Latent Generative Models
+('Q307','Explain the architectural purpose of Linear Discriminant Analysis (LDA). How does its underlying classification math maximize inter-class variance while minimizing intra-class variance?','technical','medium','["ML"]','["Software Engineer"]','[]','["fisher linear discriminant ratio optimization","between class scatter matrix tracking","pooled class covariance matrix equality rules"]','2026-06-27','2026-06-27'),
+('Q308','What core structural assumptions regarding data covariance matrices separate Linear Discriminant Analysis from Quadratic Discriminant Analysis (QDA)?','technical','hard','["ML"]','["Software Engineer"]','[]','["homoscedastic common covariance matrix matrix","independent class specific covariance arrays","quadratic decision boundary parabolic arcs"]','2026-06-27','2026-06-27'),
+('Q309','Under what explicit sample sizing and feature dimensionality ratios should an engineer select LDA over QDA to prevent model overfitting bugs?','technical','medium','["ML"]','["Software Engineer"]','[]','["small sample size parameter protections","qdas parameter count scaling vulnerabilities","estimation variance inflation stabilization controls"]','2026-06-27','2026-06-27'),
+
+-- Set 104: Instance-Based Spatial Neighborhoods
+('Q310','Explain the core execution mechanism of the K-Nearest Neighbors (KNN) algorithm for classification tasks. Is it an eager or lazy learner?','technical','easy','["ML"]','["Software Engineer"]','[]','["lazy memory instance lookups","euclidean distance index neighbors sorting","majority category class membership assignments"]','2026-06-27','2026-06-27'),
+('Q311','How does the "Curse of Dimensionality" impact the distance evaluation accuracy of KNN models when data dimensions expand into hundreds of distinct feature columns?','technical','medium','["ML"]','["Software Engineer"]','[]','["high dimensional distance convergence uniformities","sparsity matrix coordinate space expansion tracking","nearest vs furthest neighbor vector collapse"]','2026-06-27','2026-06-27'),
+('Q312','How do spatial indexing tree layouts like KD-Trees or Ball-Trees optimize production KNN search queries from a brute-force $O(n)$ check down to sub-linear runtime boundaries?','technical','hard','["DSA","ML"]','["Software Engineer"]','[]','["hierarchical bounding box coordinate segmentations","multidimensional space median splitting maps","sub linear neighborhood pruning search routines"]','2026-06-27','2026-06-27'),
+
+-- Set 105: Latent Topic Matrix Factoring
+('Q313','What is Latent Dirichlet Allocation (LDA) in the context of Unsupervised Topic Modeling, and how does it use a generative probabilistic process to represent documents?','technical','hard','["ML"]','["Software Engineer"]','[]','["dirichlet probability distribution priors","document to topic mixture allocations","topic to token word multinomial charts"]','2026-06-27','2026-06-27'),
+('Q314','Explain how Gibbs Sampling iteratively updates individual token topic assignments to approximate hidden joint probability structures inside a Latent Dirichlet Allocation execution.','technical','hard','["ML"]','["Software Engineer"]','[]','["conditional topic assignment count ratios","markov chain monte carlo state updates","latent theme allocation convergence loops"]','2026-06-27','2026-06-27'),
+('Q315','Contrast the thematic insights extracted via Latent Dirichlet Allocation with matrix-factorization-driven alternatives like Non-Negative Matrix Factorization (NMF).','technical','hard','["ML"]','["Software Engineer"]','[]','["probabilistic bayesian mixture clustering lines","non negative matrix element factorization optimization","additive part based latent component features"]','2026-06-27','2026-06-27'),
+
+
+-- =====================================================
+-- MACHINE LEARNING MODELS - DEEP ARCHITECTURAL BASES (QUESTIONS 316 - 330)
+-- =====================================================
+
+-- Set 106: Perceptron Weight Backpropagations
+('Q316','Explain how a multi-layer Artificial Neural Network (ANN) passes error evaluations backwards through intermediate layer layouts using the Chain Rule of calculus.','technical','medium','["AI","ML"]','["Software Engineer"]','[]','["backpropagation error vector distribution","activation partial derivative multiplications","weight matrix loss gradient descents"]','2026-06-27','2026-06-27'),
+('Q317','What are the operational differences between standard Gradient Descent, Mini-Batch Gradient Descent, and Stochastic Gradient Descent (SGD) regarding weight calculation frequency and loss curve path stability?','technical','medium','["ML"]','["Software Engineer"]','[]','["batch size training iteration configurations","gradient variance stochastic path tracing","hardware vector parallelization computing efficiency"]','2026-06-27','2026-06-27'),
+('Q318','How do advanced optimization algorithms like Adam incorporate momentum and adaptive historical gradient learning rates to accelerate network layer convergence over non-convex cost surfaces?','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["exponentially decaying first moment arrays","second moment squared gradient scale trackers","bias correction initialization vector normalization"]','2026-06-27','2026-06-27'),
+
+-- Set 107: Spatial Invariant Feature Extractions
+('Q319','What is a Convolutional Neural Network (CNN)? Explain how the concepts of local receptive fields, parameter weight sharing, and spatial pooling optimize computer vision tracking pipelines.','technical','medium','["AI","ML"]','["Software Engineer"]','[]','["spatial translation invariant feature extraction","sliding convolutional kernel matrix operations","dense fully connected layer parameter reduction"]','2026-06-27','2026-06-27'),
+('Q320','Deconstruct the operational difference between standard 2D convolutions and Depthwise Separable Convolutions. How does the latter optimize mobile device inference efficiency parameters?','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["channel wise isolated filtering passes","pointwise one by one channel cross merges","computational execution flop reduction wins"]','2026-06-27','2026-06-27'),
+('Q321','Explain the structural purpose of the Transposed Convolution layer inside deep generative architectures (like GANs or autoencoders). How does it manage feature map upsampling loops?','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["fractionally strided forward convolutional steps","low dimension image grid feature expansions","checkerboard artifact generation padding boundaries"]','2026-06-27','2026-06-27'),
+
+-- Set 108: Sequential Memory Recurrence Chains
+('Q322','What structural characteristics inside standard Recurrent Neural Networks (RNN) trigger the Vanishing Gradient problem when processing long context input text sequences?','technical','medium','["AI","ML"]','["Software Engineer"]','[]','["temporal backpropagation matrix chain products","tanh activation layer fractional derivative shrinking","long range memory connection erasure errors"]','2026-06-27','2026-06-27'),
+('Q323','Deconstruct the architectural layout of a Long Short-Term Memory (LSTM) network cell. Explain how its input, forget, and output gates regulate information streams inside the cell state vector.','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["additive cell state error propagation pathways","sigmoid gate attention masking variables","information erasure retention state modulations"]','2026-06-27','2026-06-27'),
+('Q324','Contrast the structural configuration of a Gated Recurrent Unit (GRU) against a standard LSTM. How does the GRU merge cell and hidden state vectors to minimize deployment computation overheads?','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["reset update gate orchestration paths","fewer internal parameter optimization matrices","reduced execution time footprint tracking"]','2026-06-27','2026-06-27'),
+
+-- Set 109: Latent Space Feature Bottlenecks
+('Q325','What is an Autoencoder neural network layout, and how does enforcing a low-dimensional bottleneck layer guide feature abstraction models?','technical','medium','["AI","ML"]','["Software Engineer"]','[]','["unsupervised latent space reconstruction mapping","encoder input dimension compression tracking","decoder target generation output matches"]','2026-06-27','2026-06-27'),
+('Q326','What specific structural modifications elevate a standard Autoencoder structure into a Variational Autoencoder (VAE)? Describe the role of mean and variance parameters.','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["probabilistic continuous latent space maps","gaussian parameter distribution vector generation","reparameterization trick stochastic execution paths"]','2026-06-27','2026-06-27'),
+('Q327','Deconstruct the dual tracking targets of a VAE loss function function. Explain how Reconstruction Loss balances against the Kullback-Leibler (KL) Divergence regularization penalty.','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["standard normal prior distribution matching","pixel reconstruction quality check metrics","latent code space collapse prevention safeguards"]','2026-06-27','2026-06-27'),
+
+-- Set 110: Adversarial Game Theory Consensuses
+('Q328','Explain the game-theoretic optimization setup that underpins Generative Adversarial Networks (GANs). Detail the competitive tracking loop between the Generator and Discriminator.','technical','medium','["AI","ML"]','["Software Engineer"]','[]','["minimax zero sum two player game","synthetic fake image generation arrays","real vs counterfeit classification scoring checks"]','2026-06-27','2026-06-27'),
+('Q329','What is Mode Collapse inside GAN training runs, and what explicit structural anomalies indicate that the Generator has begun cheating the Discriminator network?','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["limited unique sample generation outputs","target data distribution diversity loss","discriminator gradient trick loop lockups"]','2026-06-27','2026-06-27'),
+('Q330','How does the Wasserstein GAN (WGAN) architecture modify the baseline optimization landscape using Earth Mover''s Distance to stabilize adversarial model convergence patterns?','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["continuous weight clipping 1-lipschitz constraints","critic value score output tracks","vanishing generator gradient error eliminations"]','2026-06-27','2026-06-27'),
+
+
+-- =====================================================
+-- MACHINE LEARNING - DATASET CREATION (QUESTIONS 331 - 345)
+-- =====================================================
+
+-- Set 111: Sampling Strategies & Data Representation
+('Q331','What is Stratified Random Sampling, and why is it preferred over Simple Random Sampling when dealing with highly imbalanced target classes?','technical','easy','["ML"]','["Software Engineer"]','[]','["class proportion preservation","sampling bias mitigation","subgroup representation"]','2026-06-27','2026-06-27'),
+('Q332','Explain the concept of Data Leakage during the dataset creation phase. How does performing feature scaling before splitting into train/test sets introduce leakage?','technical','medium','["ML"]','["Software Engineer"]','[]','["information contamination","distribution leakage","premature scaling normalization"]','2026-06-27','2026-06-27'),
+('Q333','How do you design an optimal cross-validation splitting strategy for time-series datasets without violating temporal dependencies?','technical','hard','["ML"]','["Software Engineer"]','[]','["rolling window validation","forward chaining approach","temporal order preservation"]','2026-06-27','2026-06-27'),
+
+-- Set 112: Active Learning & Labeling Mechanics
+('Q334','What is Active Learning in the context of dataset labeling, and how does it optimize human annotation budgets?','technical','medium','["ML"]','["Software Engineer"]','[]','["uncertainty sampling","query-by-committee","selective instance labeling"]','2026-06-27','2026-06-27'),
+('Q335','Explain how Inter-Rater Reliability (e.g., Cohen''s Kappa or Fleiss'' Kappa) is used to validate the quality and consistency of human-labeled datasets.','technical','medium','["ML"]','["Software Engineer"]','[]','["annotator consensus scoring","chance-corrected agreement","labeling variance filtering"]','2026-06-27','2026-06-27'),
+('Q336','How do weak supervision frameworks like Snorkel generate high-quality training labels from noisy, heuristic-driven labeling functions without manual annotation?','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["generative label models","heuristic rule composition","data programming abstractions"]','2026-06-27','2026-06-27'),
+
+-- Set 113: Tabular & Image Data Augmentation
+('Q337','What is the SMOTE (Synthetic Minority Over-sampling Technique) algorithm, and how does it generate synthetic samples to combat class imbalance?','technical','medium','["ML"]','["Software Engineer"]','[]','["k-nearest neighbors interpolation","minority class feature expansion","over-sampling feature spaces"]','2026-06-27','2026-06-27'),
+('Q338','Why can simple duplication of minority class instances lead to high model variance, and how does SMOTE circumvent this structural overfitting?','technical','medium','["ML"]','["Software Engineer"]','[]','["decision region narrowing","memorizing training noise","synthetic geometric interpolation"]','2026-06-27','2026-06-27'),
+('Q339','Explain how Advanced Data Augmentation techniques (like Mixup or CutMix) regularize deep computer vision architectures during dataset compilation.','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["convex image pixel combinations","vicinal risk minimization","spatial label smoothing updates"]','2026-06-27','2026-06-27'),
+
+-- Set 114: Synthetic Data & Generative Foundations
+('Q340','What is Synthetic Data Generation, and what privacy-preserving advantages does it offer over using real production user records?','technical','easy','["ML"]','["Software Engineer"]','[]','["pii data masking alternatives","regulatory compliance sandbox","simulated feature generation"]','2026-06-27','2026-06-27'),
+('Q341','How do Conditional GANs (cGANs) or Tabular Variational Autoencoders (TVAE) ensure that generated synthetic datasets preserve the joint distribution of the original features?','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["latent space conditional seeding","marginal distribution alignment","covariance structure preservation"]','2026-06-27','2026-06-27'),
+('Q342','Explain the role of Differential Privacy parameters ($\epsilon, \delta$) when training a generative model to output privacy-safe synthetic datasets.','technical','hard','["AI","ML"]','["Software Engineer"]','[]','["privacy loss budget boundaries","gradient noise injection mechanisms","membership inference attack shields"]','2026-06-27','2026-06-27'),
+
+-- Set 115: Bias, Drift, & Dataset Auditing
+('Q343','What is Selection Bias during dataset collection, and how does it degrade a model''s out-of-distribution (OOD) generalization capacity?','technical','easy','["ML"]','["Software Engineer"]','[]','["non-representative target sample pools","skewed population boundaries","systemic data collection flaws"]','2026-06-27','2026-06-27'),
+('Q344','Contrast Covariate Shift with Concept Drift. How do you programmatically detect statistical changes in feature distributions over time?','technical','medium','["ML"]','["Software Engineer"]','[]','["population stability index calculation","kolmogorov-smirnov testing sweeps","input vs target relationship mutations"]','2026-06-27','2026-06-27'),
+('Q345','How do you implement an adversarial validation framework to detect if your training dataset distribution matches your production test dataset environment?','technical','hard','["ML"]','["Software Engineer"]','[]','["binary classification domain matching","roc-auc dataset divergence scoring","training feature extraction drops"]','2026-06-27','2026-06-27'),
+
+
+-- =====================================================
+-- MACHINE LEARNING - DATA PREPROCESSING (QUESTIONS 346 - 360)
+-- =====================================================
+
+-- Set 116: Missing Value Engineering
+('Q346','What is the structural difference between data imputation using simple central tendencies (mean/median) versus iterative model-based imputation (MICE)?','technical','easy','["ML"]','["Software Engineer"]','[]','["multivariate conditional relationship preservation","variance deflation minimization","chained equation imputation passes"]','2026-06-27','2026-06-27'),
+('Q347','Classify the three structural mechanisms of missing data: MCAR, MAR, and MNAR. Which type poses the most severe mathematical threat to imputation models?','technical','medium','["ML"]','["Software Engineer"]','[]','["missing completely at random","missingness dependent on unobserved values","systemic selection mechanism bias"]','2026-06-27','2026-06-27'),
+('Q348','Why does creating a missingness indicator column (binary mask) before running data imputation retain critical signal for downstream tree-based classifiers?','technical','medium','["ML"]','["Software Engineer"]','[]','["informative missingness capture","non-random data absence flags","tree node routing optimizations"]','2026-06-27','2026-06-27'),
+
+-- Set 117: Numeric Rescaling Mechanics
+('Q349','Contrast Min-Max Scaling (Normalization) with Standardization (Z-score scaling). How does each handle extreme out-of-distribution outlier points?','technical','easy','["ML"]','["Software Engineer"]','[]','["zero mean unit variance compression","fixed zero to one bounding scales","outlier compression distortion vulnerability"]','2026-06-27','2026-06-27'),
+('Q350','Why do distance-based models (like KNN or SVM) require explicit numeric rescaling, while tree-based models (like Random Forests) are invariant to feature scaling?','technical','medium','["ML"]','["Software Engineer"]','[]','["isotropic coordinate space weights","monotonic feature threshold splits","orthogonal scale dominance protection"]','2026-06-27','2026-06-27'),
+('Q351','Explain how RobustScaler uses the Interquartile Range (IQR) to scale numeric features without allowing extreme outliers to compress the variance of the main distribution.','technical','medium','["ML"]','["Software Engineer"]','[]','["median alignment normalization","iqr outlier mitigation scales","percentile-based coordinate mappings"]','2026-06-27','2026-06-27'),
+
+-- Set 118: Categorical High-Cardinality Transforms
+('Q352','What is One-Hot Encoding, and why does applying it to high-cardinality features (e.g., zip codes) trigger severe memory inflation and matrix sparsity?','technical','easy','["ML"]','["Software Engineer"]','[]','["curse of dimensionality mapping","sparse column vector explosion","dummy variable trap expansion"]','2026-06-27','2026-06-27'),
+('Q353','Explain the operational mechanism of Target Encoding (Mean Encoding) for high-cardinality categorical columns, and detail how it manages categorical mappings without adding dimensions.','technical','medium','["ML"]','["Software Engineer"]','[]','["mean target value conditional map","dimension preservation transformations","category tracking coordinate compressions"]','2026-06-27','2026-06-27'),
+('Q354','How does target encoding introduce data leakage, and how do regularizations like additive smoothing or m-estimate techniques protect against target leakage?','technical','hard','["ML"]','["Software Engineer"]','[]','["overfitting conditional mean variations","global target priors blend","out-of-fold target encoding transformations"]','2026-06-27','2026-06-27'),
+
+-- Set 119: Outlier Detection Geometry
+('Q355','Explain how the Isolation Forest algorithm uses random partition depths to perform multi-dimensional outlier detection without assuming normal distributions.','technical','medium','["ML"]','["Software Engineer"]','[]','["shallow tree split vulnerability","anomaly score trajectory mapping","coordinate space extreme segregation"]','2026-06-27','2026-06-27'),
+('Q356','How does the Local Outlier Factor (LOF) algorithm calculate spatial densities to identify anomalies that are outliers only relative to their local neighborhoods?','technical','hard','["ML"]','["Software Engineer"]','[]','["local reachability density calculation","k-distance spatial neighborhood sorting","relative clustering density quotient"]','2026-06-27','2026-06-27'),
+('Q357','What are the mathematical risks of blindly deleting outliers from a production dataset prior to model training? Contrast measurement errors with genuine extreme trends.','technical','medium','["ML"]','["Software Engineer"]','[]','["valid variance distribution clipping","heavy-tailed reality optimization blindspots","model capacity validation restrictions"]','2026-06-27','2026-06-27'),
+
+-- Set 120: Distribution Stabilization
+('Q358','What are skewed feature distributions, and why do linear and parametric models suffer performance degradation when fed highly right-skewed columns?','technical','easy','["ML"]','["Software Engineer"]','[]','["residuals normality assumption breakdown","extreme variance point gradient distortion","asymmetric error distributions map"]','2026-06-27','2026-06-27'),
+('Q359','Explain how applying a Log Transformation ($\log(x+1)$) or a Box-Cox power transform maps non-linear skewed patterns into symmetrical Gaussian-like curves.','technical','medium','["ML"]','["Software Engineer"]','[]','["variance stabilization mapping","heteroscedasticity reduction conversions","homoscedastic distribution structural alignments"]','2026-06-27','2026-06-27'),
+('Q360','What is the Yeo-Johnson Transformation, and what mathematical advantage does it possess over the classic Box-Cox formulation when pre-processing corporate feature metrics?','technical','hard','["ML"]','["Software Engineer"]','[]','["zero and negative value processing","power parameters piecewise optimization","unconstrained domain data stabilizing"]','2026-06-27','2026-06-27'),
+
+
+-- =====================================================
+-- MACHINE LEARNING - TEXT PREPROCESSING (QUESTIONS 361 - 375)
+-- =====================================================
+
+-- Set 121: Lexical Cleaning Loops
+('Q361','What is text normalization? Contrast the goals of case-folding and punctuation removal when prepping raw scrapings for lexical modeling.','technical','easy','["NLP"]','["Software Engineer"]','[]','["vocabulary dimension footprint reduction","string standardization filtering","token matching consistency sweeps"]','2026-06-27','2026-06-27'),
+('Q362','What are Stop Words, and what are the operational pros and cons of strip-mining them from input streams prior to building classification vocabularies?','technical','easy','["NLP"]','["Software Engineer"]','[]','["high frequency semantic noise drops","context window data compaction","sequence semantic structural preservation losses"]','2026-06-27','2026-06-27'),
+('Q363','Why does filtering out stop words improve simple bag-of-words models but collapse the semantic parsing performance of deep autoregressive transformers?','technical','medium','["AI","NLP"]','["Software Engineer"]','[]','["attention tracking context breaks","syntactic dependency vector interruptions","relational grammar sequence decay"]','2026-06-27','2026-06-27'),
+
+-- Set 122: Morphology Truncation Fields
+('Q364','Explain the structural differences between Stemming and Lemmatization when reducing inflected words down to their baseline linguistic roots.','technical','easy','["NLP"]','["Software Engineer"]','[]','["algorithmic suffix chopping rules","morphological vocabulary root expansions","dictionary-based base form extraction"]','2026-06-27','2026-06-27'),
+('Q365','What is "Over-stemming" and "Under-stemming" inside rule-based text normalizers like the Porter Stemmer? Provide explicit lexical error examples.','technical','medium','["NLP"]','["Software Engineer"]','[]','["false morphological root collapsing","distinct concept semantic erasures","suffix truncation tracking failures"]','2026-06-27','2026-06-27'),
+('Q366','Why does Lemmatization require explicit Part-of-Speech (POS) tagging info to resolve semantic root ambiguities for words like "banking" or "flies"?','technical','medium','["NLP"]','["Software Engineer"]','[]','["lexical context window dependency","syntactic categorical tag injections","morphological base form mappings"]','2026-06-27','2026-06-27'),
+
+-- Set 123: Lexical Segmentation & Token Spans
+('Q367','Explain how N-gram extraction models convert sequential text streams into localized context window frames. What is the difference between a Bigram and a Trigram?','technical','easy','["NLP"]','["Software Engineer"]','[]','["contiguous token grouping windows","local word ordering capture","lexical sequence frequency counters"]','2026-06-27','2026-06-27'),
+('Q368','Why does scaling raw N-gram models to utilize large windows (e.g., 4-grams or 5-grams) trigger an exponential explosion in feature matrix sparsity?','technical','medium','["NLP"]','["Software Engineer"]','[]','["combinatorial vocabulary coordinate bounds","zero count frequency matrix expansion","training instance configuration data drops"]','2026-06-27','2026-06-27'),
+('Q369','Explain how Character N-grams resolve sub-word feature gaps and out-of-vocabulary (OOV) misspellings inside classification workflows like FastText.','technical','medium','["NLP"]','["Software Engineer"]','[]','["sub token morpheme feature tracking","misspelling morph text matching shields","internal character vector composition matrices"]','2026-06-27','2026-06-27'),
+
+-- Set 124: Subword Boundary Compression
+('Q370','How does the Byte-Pair Encoding (BPE) tokenization algorithm construct a compressed subword vocabulary from a raw training text corpus?','technical','medium','["AI","NLP"]','["Software Engineer"]','[]','["iterative frequency pair character merges","token sequence compression loops","vocabulary array expansion thresholds"]','2026-06-27','2026-06-27'),
+('Q371','Contrast BPE with WordPiece tokenization. What alternative statistical optimization criterion does WordPiece use to choose token merges?','technical','hard','["AI","NLP"]','["Software Engineer"]','[]','["likelihood maximization merge rules","language model token probability optimization","joint subword token occurrence ratios"]','2026-06-27','2026-06-27'),
+('Q372','Explain how SentencePiece runs subword tokenization directly on raw byte streams, avoiding the need for language-specific language token pre-splitters.','technical','hard','["AI","NLP"]','["Software Engineer"]','[]','["whitespace treats as character symbols","language independent string segmentation","lossless text sequence reconstruction matches"]','2026-06-27','2026-06-27'),
+
+-- Set 125: Matrix Structural Alignments
+('Q373','Explain the mathematical framework of Term Frequency-Inverse Document Frequency (TF-IDF). How does it measure word importance across a document collection?','technical','easy','["NLP"]','["Software Engineer"]','[]','["logarithmic document frequency scaling","lexical importance feature weight mappings","common term penalization multiplier metrics"]','2026-06-27','2026-06-27'),
+('Q374','Why does the Inverse Document Frequency (IDF) factor scale logarithmically rather than linearly when balancing rare terms against hyper-frequent words?','technical','medium','["NLP"]','["Software Engineer"]','[]','["damping frequent word scaling dominance","exponential term frequency normalization","zipfs law distribution curve dampeners"]','2026-06-27','2026-06-27'),
+('Q375','What are the core structural limitations of TF-IDF vectors regarding semantic word relationships, vocabulary tracking dimensions, and word order layout?','technical','medium','["NLP"]','["Software Engineer"]','[]','["bag of words sequence blindspots","synonym semantic tracking omissions","high dimensional document feature matrices"]','2026-06-27','2026-06-27'),
+
+
+-- =====================================================
+-- NATURAL LANGUAGE PROCESSING (QUESTIONS 376 - 390)
+-- =====================================================
+
+-- Set 126: Classic Language Latent Embeddings
+('Q376','Explain the architectural difference between the Continuous Bag-of-Words (CBOW) and Skip-gram variants of the Word2Vec framework.','technical','medium','["NLP"]','["Software Engineer"]','[]','["target word context prediction loops","context token generation target matches","local sliding semantic vector mappings"]','2026-06-27','2026-06-27'),
+('Q377','How does Word2Vec use Negative Sampling to optimize its objective function, bypassing the need to compute soft distributions over the entire vocabulary?','technical','hard','["NLP"]','["Software Engineer"]','[]','["noise distribution contrastive log functions","binary logistic classification updates","softmax denominator computational runtime shortcuts"]','2026-06-27','2026-06-27'),
+('Q378','What is the fundamental limitation of static word embedding vectors (like Word2Vec or GloVe) when handling polysemous words like "apple" or "run"?','technical','easy','["NLP"]','["Software Engineer"]','[]','["fixed semantic continuous coordinates","context blind lexical vector constraints","homonym meaning collapse distortions"]','2026-06-27','2026-06-27'),
+
+-- Set 127: Sequence-to-Sequence Recurrent Links
+('Q379','Explain the structural layout of an Encoder-Decoder architecture used for Sequence-to-Sequence (Seq2Seq) tasks like Machine Translation.','technical','medium','["NLP"]','["Software Engineer"]','[]','["hidden context bottleneck state compression","recurrent sequence alignment loops","variable length sequence mapping conversions"]','2026-06-27','2026-06-27'),
+('Q380','What is the structural information bottleneck limitation of basic Seq2Seq setups when processing long paragraphs? How does the attention layer fix this?','technical','medium','["NLP"]','["Software Engineer"]','[]','["fixed length vector memory saturation","long distance dependency fading bugs","dynamic hidden state alignment lookups"]','2026-06-27','2026-06-27'),
+('Q381','Deconstruct how Bahdanau (Additive) Attention calculates alignment scores between encoder hidden states and decoder hidden states during text generation.','technical','hard','["AI","NLP"]','["Software Engineer"]','[]','["feed forward alignment network layers","softmax weighted context vector sums","dynamic sequence focus mapping updates"]','2026-06-27','2026-06-27'),
+
+-- Set 128: Autoregressive & Bidirectional Context Blocks
+('Q382','What structural innovations allow the BERT architecture to evaluate text bidirectionally, and how does this differ from standard autoregressive causal language models?','technical','medium','["AI","NLP"]','["Software Engineer"]','[]','["masked language modeling training runs","global transformer encoder self attention","causal lookahead token generation masking limits"]','2026-06-27','2026-06-27'),
+('Q383','Explain the specific objectives of the Masked Language Model (MLM) and Next Sentence Prediction (NSP) training protocols used during BERT pretraining loops.','technical','medium','["AI","NLP"]','["Software Engineer"]','[]','["corrupted token classification reconstruction targets","coherence level classification matching filters","contextual feature layer initialization sweeps"]','2026-06-27','2026-06-27'),
+('Q384','How do generative autoregressive architectures (like the GPT family) enforce causal limits inside their attention layers to prevent downstream tokens from leaking backward into the context map?','technical','hard','["AI","LLM","NLP"]','["Software Engineer"]','[]','["lower triangular causal masking operations","softmax lookahead score zeroing steps","autoregressive token sequence direction limits"]','2026-06-27','2026-06-27'),
+
+-- Set 129: Syntactic Sequence Track Parsing
+('Q385','What is Named Entity Recognition (NER), and how does the BIO (Begin, Inside, Outside) tagging format structure text tokens for entity extraction pipelines?','technical','easy','["NLP"]','["Software Engineer"]','[]','["sequential boundary token classifications","entity span extraction coordinate tagging","text segmentation labeling frameworks"]','2026-06-27','2026-06-27'),
+('Q386','Explain how a Hidden Markov Model (HMM) applies transition and emission probabilities to perform sequential tasks like Part-of-Speech (POS) tagging.','technical','hard','["NLP"]','["Software Engineer"]','[]','["latent state Markov chain properties","lexical observation sequence conditional bounds","viterbi path optimization extraction runs"]','2026-06-27','2026-06-27'),
+('Q387','Why do engineers pair a Bidirectional LSTM with a Conditional Random Field (BiLSTM-CRF) layer for advanced NER tasks instead of relying on token-level softmax outputs?','technical','hard','["NLP"]','["Software Engineer"]','[]','["sentence level global label constraints","illegal label combination sequence filtering","joint sequence probability field modeling"]','2026-06-27','2026-06-27'),
+
+-- Set 130: Machine Evaluation Validation Scales
+('Q388','How does the BLEU score algorithm evaluate the translation quality of machine text outputs against ground truth references? Identify its core reliance on precision metrics.','technical','medium','["NLP"]','["Software Engineer"]','[]','["modified n-gram precision count matches","brevity penalty token length constraints","lexical identity overlap scale assessments"]','2026-06-27','2026-06-27'),
+('Q389','What are the primary operational flaws of the BLEU score metric when applied to evaluating fluent conversational AI agents or creative copywriting systems?','technical','medium','["NLP"]','["Software Engineer"]','[]','["synonym vocabulary evaluation match blindspots","syntactic rearrangement scaling penalty failures","semantic equivalence tracking correlation traps"]','2026-06-27','2026-06-27'),
+('Q390','Contrast the execution mechanics of the ROUGE evaluation metric against BLEU. Explain why ROUGE is preferred for document summarization engineering assessments.','technical','medium','["NLP"]','["Software Engineer"]','[]','["recall oriented token match sequences","longest common subsequence path parsing","summary level data grounding checks"]','2026-06-27','2026-06-27');

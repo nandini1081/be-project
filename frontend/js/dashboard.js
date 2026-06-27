@@ -2,6 +2,51 @@
  * Dashboard Logic - Person B (Performance Tracking)
  */
 
+function resetDashboardUI() {
+    displayStats({
+        total_interviews: 0,
+        avg_total_score: 0,
+        trend: null
+    });
+
+    const profileInfoDiv = document.getElementById('profile-info');
+    if (profileInfoDiv) {
+        profileInfoDiv.innerHTML = `
+            <p style="color: var(--text-secondary); grid-column: 1 / -1;">
+                Upload a resume to see your profile here.
+            </p>
+        `;
+    }
+
+    const historyDiv = document.getElementById('performance-history');
+    if (historyDiv) {
+        historyDiv.innerHTML = `
+            <p style="color: var(--text-secondary); text-align: center; padding: 2rem;">
+                No interview history yet. Complete an interview to see your performance here.
+            </p>
+        `;
+    }
+
+    const recDiv = document.getElementById('recommendations-content');
+    if (recDiv) {
+        recDiv.innerHTML = `
+            <p style="color: var(--text-secondary); padding: 1rem;">
+                Complete an interview to receive personalized recommendations.
+            </p>
+        `;
+    }
+}
+
+async function syncDashboardForUser() {
+    resetDashboardUI();
+
+    if (!appState.isAuthenticated || !appState.hasProfile) {
+        return;
+    }
+
+    await loadDashboard();
+}
+
 /**
  * Toggle collapsible dashboard panels
  */

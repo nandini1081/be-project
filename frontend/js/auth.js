@@ -2,6 +2,8 @@
  * Authentication UI and session handling
  */
 
+let trackedUserId = null;
+
 async function initAuth() {
     try {
         const result = await api.getMe();
@@ -17,11 +19,46 @@ async function initAuth() {
     updateAuthUI();
 }
 
+function clearUserScopedUI() {
+    if (typeof resetUploadUI === 'function') {
+        resetUploadUI();
+    }
+    if (typeof resetDashboardUI === 'function') {
+        resetDashboardUI();
+    }
+    if (typeof resetInterviewUI === 'function') {
+        resetInterviewUI();
+    }
+}
+
+async function syncVisiblePagesForUser() {
+    const page = appState.currentPage;
+    if (page === 'upload' && typeof syncUploadPageForUser === 'function') {
+        await syncUploadPageForUser();
+    } else if (page === 'dashboard' && typeof syncDashboardForUser === 'function') {
+        await syncDashboardForUser();
+    }
+}
+
 function setAuthenticatedUser(user) {
+    const nextUserId = user?.user_id ?? null;
+
+    if (nextUserId !== trackedUserId) {
+        clearUserScopedUI();
+        trackedUserId = nextUserId;
+    }
+
     appState.user = user || null;
     appState.isAuthenticated = Boolean(user);
     appState.hasProfile = Boolean(user?.has_profile);
     saveState();
+
+    if (!user) {
+        trackedUserId = null;
+        return;
+    }
+
+    syncVisiblePagesForUser();
 }
 
 function updateAuthUI() {
@@ -159,6 +196,7 @@ async function logoutUser() {
     } catch (error) {
         console.warn('Logout error:', error);
     }
+
     setAuthenticatedUser(null);
     updateAuthUI();
     showToast('Logged out', 'info');

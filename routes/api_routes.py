@@ -31,7 +31,6 @@ def create_routes():
     profile_updater = ProfileUpdater()
     question_manager = QuestionManager()
     question_retriever = QuestionRetriever()
-    question_retriever = QuestionRetriever()
     db = DatabaseManager()
     auth_service = AuthService()
 

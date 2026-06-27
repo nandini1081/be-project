@@ -2,6 +2,50 @@
  * Resume Processing Logic - Person A
  */
 
+function resetUploadUI() {
+    const resultsDiv = document.getElementById('resume-results');
+    const summaryDiv = document.getElementById('profile-summary');
+    const processingStatus = document.getElementById('processing-status');
+    const resumeText = document.getElementById('resume-text');
+    const resumeFile = document.getElementById('resume-file');
+
+    if (resultsDiv) resultsDiv.style.display = 'none';
+    if (summaryDiv) summaryDiv.innerHTML = '';
+    if (processingStatus) processingStatus.style.display = 'none';
+    if (resumeText) resumeText.value = '';
+    if (resumeFile) resumeFile.value = '';
+}
+
+function displayResumeResultsFromCandidate(candidateData) {
+    const metadata = candidateData?.profile?.metadata || {};
+    const resume = candidateData?.resume || {};
+
+    displayResumeResults({
+        metadata,
+        parsed_data: {
+            skills: resume.skills || [],
+            experience_count: (resume.experience || []).length,
+            project_count: (resume.projects || []).length
+        },
+        vector_dimensions: 384
+    });
+}
+
+async function syncUploadPageForUser() {
+    resetUploadUI();
+
+    if (!appState.isAuthenticated || !appState.hasProfile) {
+        return;
+    }
+
+    try {
+        const candidateData = await api.getCandidate();
+        displayResumeResultsFromCandidate(candidateData);
+    } catch (error) {
+        console.warn('Could not load resume summary for current user:', error);
+    }
+}
+
 async function processResume() {
     if (!requireAuth('upload')) return;
 

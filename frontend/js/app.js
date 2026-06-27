@@ -10,9 +10,25 @@ const appState = {
     currentPage: 'home'
 };
 
+function purgeLegacyLocalStorage() {
+    try {
+        const saved = localStorage.getItem('appState');
+        if (!saved) return;
+        const state = JSON.parse(saved);
+        if ('currentCandidateId' in state || 'user' in state || 'hasProfile' in state) {
+            localStorage.setItem('appState', JSON.stringify({
+                currentPage: state.currentPage || 'home'
+            }));
+        }
+    } catch (error) {
+        localStorage.removeItem('appState');
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     initThemeToggle();
     initializeNavigation();
+    purgeLegacyLocalStorage();
     loadSavedState();
     await initAuth();
     checkAPIHealth();
@@ -100,8 +116,10 @@ function navigateTo(pageName) {
     appState.currentPage = pageName;
     saveState();
 
-    if (pageName === 'dashboard' && appState.hasProfile) {
-        requestAnimationFrame(() => loadDashboard());
+    if (pageName === 'upload' && typeof syncUploadPageForUser === 'function') {
+        syncUploadPageForUser();
+    } else if (pageName === 'dashboard' && typeof syncDashboardForUser === 'function') {
+        syncDashboardForUser();
     }
 }
 

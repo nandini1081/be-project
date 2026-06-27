@@ -676,7 +676,6 @@ async function displayCurrentQuestion() {
     document.getElementById('question-difficulty').textContent = question.difficulty;
     document.getElementById('question-text').textContent = question.question_text;
     document.getElementById('question-topics').textContent = question.topics.join(', ');
-    document.getElementById('question-similarity').textContent = question.similarity_score.toFixed(2);
     
     // Clear answer textarea
     document.getElementById('answer-text').value = '';
@@ -773,7 +772,7 @@ async function submitAnswer() {
         });
         
         // Show feedback
-        displayAnswerFeedback(knowledgeScore, speechScore, speechBreakdown, speechSource);
+        displayAnswerFeedback(knowledgeScore, speechScore);
         
         showLoading(false);
         showToast('Answer submitted successfully!', 'success');
@@ -923,41 +922,12 @@ function calculateSpeechScore(answer, pauseCount = 0) {
 /**
  * Display answer feedback
  */
-function displayAnswerFeedback(knowledgeScore, speechScore, speechBreakdown = null, speechSource = 'text') {
+function displayAnswerFeedback(knowledgeScore, speechScore) {
     const totalScore = computeTotalScore(knowledgeScore, speechScore);
     
     document.getElementById('knowledge-score').textContent = (knowledgeScore * 100).toFixed(0) + '%';
     document.getElementById('speech-score').textContent = (speechScore * 100).toFixed(0) + '%';
     document.getElementById('total-score').textContent = (totalScore * 100).toFixed(0) + '%';
-
-    const breakdownDiv = document.getElementById('speech-breakdown');
-    if (breakdownDiv) {
-        if (speechBreakdown) {
-            const labels = {
-                filler: 'Filler words',
-                pause_pacing: 'Pauses & pacing',
-                pronunciation: 'Pronunciation',
-                tone_energy: 'Tone & energy'
-            };
-            breakdownDiv.style.display = 'block';
-            breakdownDiv.innerHTML = `
-                <p style="margin: 0.75rem 0 0.5rem; font-size: 0.875rem; color: var(--text-secondary);">
-                    Speech analysis (${speechSource === 'audio' ? 'audio' : 'text fallback'})
-                </p>
-                <div class="speech-breakdown-grid">
-                    ${Object.entries(labels).map(([key, label]) => `
-                        <div class="speech-breakdown-item">
-                            <span>${label}</span>
-                            <strong>${((speechBreakdown[key] || 0) * 100).toFixed(0)}%</strong>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        } else {
-            breakdownDiv.style.display = 'none';
-            breakdownDiv.innerHTML = '';
-        }
-    }
     
     // Color code based on score
     const totalScoreElement = document.getElementById('total-score');
@@ -1287,30 +1257,49 @@ async function completeInterview() {
 }
 
 /**
- * Reset interview
+ * Reset interview UI without requiring an active session
  */
-async function resetInterview() {
-    // Stop any ongoing speech
+function resetInterviewUI() {
     stopSpeaking();
-    await releaseAudioStream();
-    
-    // Reset state
+    if (speechState.mediaRecorder && speechState.mediaRecorder.state === 'recording') {
+        speechState.mediaRecorder.stop();
+    }
+    if (speechState.audioStream) {
+        speechState.audioStream.getTracks().forEach(track => track.stop());
+        speechState.audioStream = null;
+    }
+
     interviewState.candidateId = null;
     interviewState.sessionId = null;
     interviewState.questions = [];
     interviewState.currentQuestionIndex = 0;
     interviewState.answers = [];
     interviewState.isActive = false;
-    
-    // Show selection, hide session
-    document.getElementById('candidate-selection').style.display = 'block';
-    document.getElementById('interview-session').style.display = 'none';
-    
-    // Reset display states
-    document.getElementById('interview-session').querySelector('.progress-section').style.display = 'block';
-    document.getElementById('interview-session').querySelector('.question-card').style.display = 'block';
-    document.getElementById('interview-session').querySelector('.answer-section').style.display = 'block';
-    document.getElementById('interview-complete').style.display = 'none';
+
+    const selection = document.getElementById('candidate-selection');
+    const session = document.getElementById('interview-session');
+    const complete = document.getElementById('interview-complete');
+
+    if (selection) selection.style.display = 'block';
+    if (session) session.style.display = 'none';
+    if (complete) complete.style.display = 'none';
+
+    if (session) {
+        const progressSection = session.querySelector('.progress-section');
+        const questionCard = session.querySelector('.question-card');
+        const answerSection = session.querySelector('.answer-section');
+        if (progressSection) progressSection.style.display = 'block';
+        if (questionCard) questionCard.style.display = 'block';
+        if (answerSection) answerSection.style.display = 'block';
+    }
+}
+
+/**
+ * Reset interview
+ */
+async function resetInterview() {
+    await resetInterviewUI();
+    await releaseAudioStream();
 }
 
 // Initialize speech APIs when page loads

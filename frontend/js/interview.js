@@ -607,31 +607,23 @@ function updateRecordingUI(isRecording) {
  * Start interview session
  */
 async function startInterview() {
-    const candidateId = document.getElementById('candidate-id-input').value.trim();
-    
-    if (!candidateId) {
-        showToast('Please enter your Candidate ID', 'error');
-        return;
-    }
-    
+    if (!requireProfile('interview')) return;
+
     showLoading(true);
-    
+
     try {
-        // Initialize speech APIs
         initializeSpeechAPIs();
-        
-        // Get interview settings
+
         const maxQuestions = parseInt(document.getElementById('question-count').value);
         const difficulty = document.getElementById('difficulty-level').value;
         const category = document.getElementById('category-filter').value;
-        
-        // Retrieve questions
+
         const options = { maxQuestions };
         if (difficulty) options.difficulty = difficulty;
         if (category) options.category = category;
-        
-        const result = await api.retrieveQuestions(candidateId, options);
-        
+
+        const result = await api.retrieveQuestions(options);
+
         if (result.success && result.questions.length > 0) {
             if (result.questions.length < maxQuestions) {
                 showToast(
@@ -639,27 +631,17 @@ async function startInterview() {
                     'warning'
                 );
             }
-            // Initialize interview state
-            interviewState.candidateId = candidateId;
+
+            interviewState.candidateId = 'session';
             interviewState.sessionId = createInterviewSessionId();
             interviewState.questions = result.questions;
             interviewState.currentQuestionIndex = 0;
             interviewState.answers = [];
             interviewState.isActive = true;
-            
-            // Save candidate ID
-            if (typeof appState !== 'undefined') {
-                appState.currentCandidateId = candidateId;
-                if (typeof saveState === 'function') {
-                    saveState();
-                }
-            }
-            
-            // Hide selection, show interview
+
             document.getElementById('candidate-selection').style.display = 'none';
             document.getElementById('interview-session').style.display = 'block';
-            
-            // Display first question
+
             displayCurrentQuestion();
             
             showLoading(false);
@@ -767,7 +749,6 @@ async function submitAnswer() {
         
         // Record response
         await api.recordResponse(
-            interviewState.candidateId,
             question.question_id,
             answerText,
             knowledgeScore,
@@ -1251,7 +1232,7 @@ async function completeInterview() {
     };
 
     try {
-        const candidateData = await api.getCandidate(interviewState.candidateId);
+        const candidateData = await api.getCandidate();
         resumeSuggestions = computeResumeSuggestions(candidateData.resume || {}, interviewState.answers);
     } catch (error) {
         console.error('Could not fetch candidate resume for suggestions:', error);

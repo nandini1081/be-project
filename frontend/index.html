@@ -33,6 +33,14 @@
                 <li><a href="#questions" class="nav-link" data-page="questions">Manage Questions</a></li>
             </ul>
             <div class="nav-actions">
+                <div id="auth-logged-out" class="auth-nav">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="showAuthModal('login')">Log in</button>
+                    <button type="button" class="btn btn-primary btn-sm" onclick="showAuthModal('register')">Sign up</button>
+                </div>
+                <div id="auth-logged-in" class="auth-nav" style="display: none;">
+                    <span id="auth-user-email" class="auth-user-email"></span>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="logoutUser()">Log out</button>
+                </div>
                 <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to dark theme" title="Light / dark mode">
                     <i class="fas fa-moon" id="theme-toggle-icon" aria-hidden="true"></i>
                     <span class="theme-toggle-label" id="theme-toggle-label">Dark</span>
@@ -145,14 +153,12 @@
                         <h2><i class="fas fa-microphone"></i> Mock Interview</h2>
                         <p>Answer questions with text or voice and get real-time feedback</p>
                     </div>
-                    
-                    <div class="input-group">
-                        <label for="candidate-id-input">Enter Your Candidate ID:</label>
-                        <input type="text" id="candidate-id-input" class="form-input" 
-                               placeholder="e.g., abc123-def456-ghi789">
-                        <button class="btn btn-primary" onclick="startInterview()">
+
+                    <div class="interview-start-panel">
+                        <button class="btn btn-primary btn-lg" onclick="startInterview()">
                             <i class="fas fa-play"></i> Start Interview
                         </button>
+                        <p class="interview-start-hint">Uses your latest uploaded resume automatically.</p>
                     </div>
 
                     <div class="interview-options">
@@ -334,13 +340,6 @@
                     <h2><i class="fas fa-chart-bar"></i> Performance Dashboard</h2>
                     <p>Track your progress and insights</p>
                 </div>
-                <div class="input-group" style="margin-bottom: 1rem;">
-                    <input type="text" id="dashboard-candidate-id" class="form-input"
-                        placeholder="Enter Candidate ID">
-                    <button class="btn btn-primary" onclick="loadDashboard()">
-                        Load Dashboard
-                    </button>
-                </div>
                 <div class="dashboard-section" id="dashboard-content">
                     <!-- Stats Overview -->
                     <div class="stats-overview">
@@ -515,12 +514,57 @@
         <p>Processing...</p>
     </div>
 
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="auth-modal" style="display: none;">
+        <div class="auth-modal-backdrop" onclick="hideAuthModal()"></div>
+        <div class="auth-modal-content">
+            <button type="button" class="auth-modal-close" onclick="hideAuthModal()" aria-label="Close">&times;</button>
+            <div class="auth-tabs">
+                <button type="button" id="auth-tab-login" class="auth-tab active" onclick="switchAuthTab('login')">Log in</button>
+                <button type="button" id="auth-tab-register" class="auth-tab" onclick="switchAuthTab('register')">Sign up</button>
+            </div>
+
+            <form id="login-form" onsubmit="submitLogin(event)">
+                <h3>Welcome back</h3>
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" class="form-input" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" class="form-input" required autocomplete="current-password">
+                </div>
+                <div id="login-error" class="auth-error" style="display: none;"></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Log in</button>
+            </form>
+
+            <form id="register-form" style="display: none;" onsubmit="submitRegister(event)">
+                <h3>Create account</h3>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" class="form-input" required autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Password</label>
+                    <input type="password" id="register-password" class="form-input" required minlength="6" autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                    <label for="register-password-confirm">Confirm password</label>
+                    <input type="password" id="register-password-confirm" class="form-input" required minlength="6" autocomplete="new-password">
+                </div>
+                <div id="register-error" class="auth-error" style="display: none;"></div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Sign up</button>
+            </form>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/resume.js"></script>
     <script src="js/interview.js"></script>
     <script src="js/dashboard.js"></script>
     <script src="js/question.js"></script>
-    <script src="js/app.js"></script>
 </body>
 </html>

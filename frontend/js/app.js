@@ -3,19 +3,18 @@
  * Main Application Logic
  */
 
-// Global state
 const appState = {
-    currentCandidateId: null,
+    user: null,
+    isAuthenticated: false,
+    hasProfile: false,
     currentPage: 'home'
 };
 
-// Initialize app
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     initThemeToggle();
     initializeNavigation();
     loadSavedState();
-    
-    // Check API health
+    await initAuth();
     checkAPIHealth();
 });
 
@@ -61,12 +60,9 @@ function initThemeToggle() {
     }
 }
 
-/**
- * Navigation handling
- */
 function initializeNavigation() {
     const navLinks = document.querySelectorAll('.nav-link');
-    
+
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
@@ -77,126 +73,99 @@ function initializeNavigation() {
 }
 
 function navigateTo(pageName) {
-    // Hide all pages
+    const protectedPages = ['upload', 'interview', 'dashboard'];
+    if (protectedPages.includes(pageName) && !requireAuth(pageName)) {
+        return;
+    }
+    if (pageName === 'interview' && !requireProfile(pageName)) {
+        return;
+    }
+
     document.querySelectorAll('.page').forEach(page => {
         page.classList.remove('active');
     });
-    
-    // Show target page
+
     const targetPage = document.getElementById(`${pageName}-page`);
     if (targetPage) {
         targetPage.classList.add('active');
     }
-    
-    // Update nav links
+
     document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.remove('active');
         if (link.getAttribute('data-page') === pageName) {
             link.classList.add('active');
         }
     });
-    
-    // Update state
+
     appState.currentPage = pageName;
     saveState();
 
-    if (pageName === 'dashboard') {
-    console.log("Navigated to dashboard");
-
-    const input = document.getElementById('dashboard-candidate-id');
-
-    if (input && input.value.trim()) {
-
-            // 🔥 CRITICAL FIX
-            requestAnimationFrame(() => {
-                loadDashboard();
-            });
-
-        } else {
-            console.warn("No candidate ID entered for dashboard");
-        }
+    if (pageName === 'dashboard' && appState.hasProfile) {
+        requestAnimationFrame(() => loadDashboard());
     }
 }
 
-/**
- * State management
- */
 function saveState() {
-    localStorage.setItem('appState', JSON.stringify(appState));
+    localStorage.setItem('appState', JSON.stringify({
+        currentPage: appState.currentPage
+    }));
 }
 
 function loadSavedState() {
     const saved = localStorage.getItem('appState');
-    if (saved) {
+    if (!saved) return;
+    try {
         const state = JSON.parse(saved);
-        appState.currentCandidateId = state.currentCandidateId;
-        
-        // Restore candidate ID in inputs
-        if (appState.currentCandidateId) {
-            const inputs = document.querySelectorAll('#candidate-id-input, #dashboard-candidate-id');
-            inputs.forEach(input => input.value = appState.currentCandidateId);
+        if (state.currentPage) {
+            appState.currentPage = state.currentPage;
         }
+    } catch (error) {
+        console.warn('Could not restore app state', error);
     }
 }
 
-/**
- * Toast notifications
- */
 function showToast(message, type = 'info') {
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
-    
-    const icon = type === 'success' ? 'fa-check-circle' : 
-                 type === 'error' ? 'fa-exclamation-circle' : 
+
+    const icon = type === 'success' ? 'fa-check-circle' :
+                 type === 'error' ? 'fa-exclamation-circle' :
                  'fa-info-circle';
-    
+
     toast.innerHTML = `
         <i class="fas ${icon} toast-icon"></i>
         <span>${message}</span>
     `;
-    
+
     container.appendChild(toast);
-    
-    // Auto-remove after 5 seconds
+
     setTimeout(() => {
         toast.style.animation = 'slideIn 0.3s reverse';
         setTimeout(() => toast.remove(), 300);
     }, 5000);
 }
 
-/**
- * Loading overlay
- */
 function showLoading(show = true) {
     const overlay = document.getElementById('loading-overlay');
     overlay.style.display = show ? 'flex' : 'none';
 }
 
-/**
- * Check API health
- */
 async function checkAPIHealth() {
     try {
         const result = await api.healthCheck();
-        console.log('✅ API is healthy', result);
+        console.log('API is healthy', result);
     } catch (error) {
-        console.error('❌ API health check failed:', error.message, error);
+        console.error('API health check failed:', error.message);
         showToast('Cannot connect to backend. Make sure the server is running.', 'error');
     }
 }
 
-/**
- * Format date
- */
 function formatDate(isoString) {
     const date = new Date(isoString);
     return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
 }
 
-/**
- * Generate random color
- */
 function getRandomColor() {
     const colors = ['#0d9488', '#6366f1', '#059669', '#d97706', '#dc2626', '#8b5cf6'];
     return colors[Math.floor(Math.random() * colors.length)];

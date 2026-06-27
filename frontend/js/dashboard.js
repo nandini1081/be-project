@@ -21,19 +21,15 @@ function toggleDashboardPanel(panelId) {
  * Load dashboard for candidate
  */
 async function loadDashboard() {
-    const candidateId = document.getElementById('dashboard-candidate-id').value.trim();
-    if (!candidateId) {
-        showToast('Please enter a Candidate ID', 'error');
-        return;
-    }
+    if (!requireProfile('dashboard')) return;
 
     showLoading(true);
 
     try {
         const [candidate, summary, recommendations] = await Promise.all([
-            api.getCandidate(candidateId),
-            api.getPerformanceSummary(candidateId),
-            api.getRecommendations(candidateId)
+            api.getCandidate(),
+            api.getPerformanceSummary(),
+            api.getRecommendations()
         ]);
 
         displayStats(summary);

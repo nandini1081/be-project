@@ -69,3 +69,17 @@ CREATE INDEX IF NOT EXISTS idx_question_category ON questions(category);
 CREATE INDEX IF NOT EXISTS idx_history_session ON interview_history(interview_session_id);
 CREATE INDEX IF NOT EXISTS idx_history_timestamp ON interview_history(timestamp DESC);
 CREATE INDEX IF NOT EXISTS idx_cache_candidate ON retrieval_cache(candidate_id);
+
+-- Table 6: Application users (1 user -> 1 hidden candidate_id)
+CREATE TABLE IF NOT EXISTS users (
+    user_id TEXT PRIMARY KEY,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    candidate_id TEXT UNIQUE,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    FOREIGN KEY (candidate_id) REFERENCES candidate_profiles(candidate_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_candidate ON users(candidate_id);

@@ -30,6 +30,25 @@ class DatabaseManager:
                 'ON interview_history(interview_session_id)'
             )
             conn.commit()
+
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                user_id TEXT PRIMARY KEY,
+                email TEXT UNIQUE NOT NULL,
+                password_hash TEXT NOT NULL,
+                candidate_id TEXT UNIQUE,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                FOREIGN KEY (candidate_id) REFERENCES candidate_profiles(candidate_id)
+            )
+        ''')
+        cursor.execute(
+            'CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)'
+        )
+        cursor.execute(
+            'CREATE INDEX IF NOT EXISTS idx_users_candidate ON users(candidate_id)'
+        )
+        conn.commit()
         conn.close()
     
     def get_connection(self):
@@ -708,3 +727,53 @@ class DatabaseManager:
         
         conn.close()
         return stats
+
+    # ============================================================
+    # AUTH: USER ACCOUNTS
+    # ============================================================
+
+    def create_user(self, email: str, password_hash: str) -> Dict:
+        """Create a new user account."""
+        user_id = str(uuid.uuid4())
+        now = datetime.now().isoformat()
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            INSERT INTO users (user_id, email, password_hash, candidate_id, created_at, updated_at)
+            VALUES (?, ?, ?, NULL, ?, ?)
+        ''', (user_id, email.lower().strip(), password_hash, now, now))
+        conn.commit()
+        conn.close()
+        return {
+            'user_id': user_id,
+            'email': email.lower().strip(),
+            'candidate_id': None,
+            'created_at': now,
+            'updated_at': now,
+        }
+
+    def get_user_by_email(self, email: str) -> Optional[Dict]:
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM users WHERE email = ?', (email.lower().strip(),))
+        row = cursor.fetchone()
+        conn.close()
+        return dict(row) if row else None
+
+    def get_user_by_id(self, user_id: str) -> Optional[Dict]:
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM users WHERE user_id = ?', (user_id,))
+        row = cursor.fetchone()
+        conn.close()
+        return dict(row) if row else None
+
+    def set_user_candidate_id(self, user_id: str, candidate_id: str) -> None:
+        now = datetime.now().isoformat()
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            UPDATE users SET candidate_id = ?, updated_at = ? WHERE user_id = ?
+        ''', (candidate_id, now, user_id))
+        conn.commit()
+        conn.close()

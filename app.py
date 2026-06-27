@@ -20,6 +20,10 @@ def create_app():
     # Configuration
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
     app.config['JSON_SORT_KEYS'] = False
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-interview-system-secret-change-in-production')
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+    app.config['PERMANENT_SESSION_LIFETIME'] = 60 * 60 * 24 * 14  # 14 days
     
     # Initialize database
     db_path = os.getenv('DATABASE_PATH', 'interview_system.db')

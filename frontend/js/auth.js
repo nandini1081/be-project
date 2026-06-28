@@ -64,16 +64,13 @@ function setAuthenticatedUser(user) {
 function updateAuthUI() {
     const loggedInNav = document.getElementById('auth-logged-in');
     const loggedOutNav = document.getElementById('auth-logged-out');
-    const userEmailEl = document.getElementById('auth-user-email');
 
     if (appState.isAuthenticated && appState.user) {
         if (loggedInNav) loggedInNav.style.display = 'flex';
         if (loggedOutNav) loggedOutNav.style.display = 'none';
-        if (userEmailEl) userEmailEl.textContent = appState.user.email;
     } else {
         if (loggedInNav) loggedInNav.style.display = 'none';
         if (loggedOutNav) loggedOutNav.style.display = 'flex';
-        if (userEmailEl) userEmailEl.textContent = '';
     }
 }
 

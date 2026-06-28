@@ -196,19 +196,30 @@ class QuestionRetriever:
             candidate_id, max_questions=10, randomize=False
         )
         
-        # Analyze recommendations
+        # Topic relevance: % of resume-matched questions that include each topic
+        topic_question_counts = {}
+        for q in questions:
+            for topic in set(q.get('topics') or []):
+                topic_question_counts[topic] = topic_question_counts.get(topic, 0) + 1
+
+        total_matches = len(questions)
         recommended_topics = {}
-        for q in questions[:5]:
-            for topic in q['topics']:
-                recommended_topics[topic] = recommended_topics.get(topic, 0) + 1
+        if total_matches:
+            recommended_topics = {
+                topic: round((count / total_matches) * 100, 1)
+                for topic, count in sorted(
+                    topic_question_counts.items(),
+                    key=lambda item: item[1],
+                    reverse=True,
+                )
+            }
         
         return {
             'candidate_id': candidate_id,
             'experience_level': metadata.get('experience_level', 'Unknown'),
             'primary_domain': metadata.get('primary_domain', 'Unknown'),
-            'total_matches': len(questions),
+            'total_matches': total_matches,
             'top_questions': questions[:5],
-            'recommended_topics': dict(sorted(recommended_topics.items(), 
-                                            key=lambda x: x[1], reverse=True)),
+            'recommended_topics': recommended_topics,
             'average_similarity': round(sum(q['similarity_score'] for q in questions) / len(questions), 4) if questions else 0
         }

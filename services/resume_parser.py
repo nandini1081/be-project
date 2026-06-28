@@ -244,7 +244,7 @@ class ResumeParser:
         pattern = (
             r'(?im)^(?P<header>' +
             '|'.join(re.escape(title) for title in titles_sorted) +
-            r')\s*:?\s*$'
+            r')\s*:?\s*(?P<tail>.*)$'
         )
         matches = list(re.finditer(pattern, text))
 
@@ -257,6 +257,12 @@ class ResumeParser:
             section_name = match.group('header').upper().strip()
             section_name = self.SECTION_ALIASES.get(section_name, section_name)
             section_content = text[start:end].strip()
+            inline_tail = (match.group('tail') or '').strip()
+            if inline_tail:
+                section_content = (
+                    f'{inline_tail}\n{section_content}'.strip()
+                    if section_content else inline_tail
+                )
 
             if section_name in sections:
                 sections[section_name] = (
@@ -269,6 +275,35 @@ class ResumeParser:
 
     def _normalize_heading(self, line: str) -> str:
         return re.sub(r'\s+', ' ', line.strip().lower().rstrip(':'))
+
+    def _match_section_start(self, line: str, section_starts: set[str]) -> tuple[bool, str]:
+        """Detect a section header line, including PDF-style inline headers."""
+        stripped = line.strip()
+        if not stripped:
+            return False, ''
+
+        normalized = self._normalize_heading(stripped)
+        if normalized in section_starts:
+            return True, ''
+
+        for header in sorted(section_starts, key=len, reverse=True):
+            prefix = header + ' '
+            if normalized.startswith(prefix):
+                remainder = re.sub(
+                    rf'(?i)^{re.escape(header)}\s*:?\s*',
+                    '',
+                    stripped,
+                    count=1,
+                ).strip()
+                return True, remainder
+
+        return False, ''
+
+    def _is_list_marker_line(self, line: str) -> bool:
+        return bool(re.match(
+            r'^(?:[-•●▪◦*\u2022\u2023\u00b7\uf0b7\u2219]\s+|\d+[\.)]\s+)',
+            line.strip(),
+        ))
 
     def _is_section_header_line(self, line: str) -> bool:
         normalized = self._normalize_heading(line)
@@ -300,10 +335,59 @@ class ResumeParser:
 
     def _clean_entry_line(self, line: str) -> str:
         line = line.strip()
-        line = re.sub(r'^[-•●▪◦*]\s+', '', line)
-        line = re.sub(r'^\d+[\.)]\s+', '', line)
+        line = re.sub(
+            r'^(?:[-•●▪◦*\u2022\u2023\u00b7\uf0b7\u2219]\s+|\d+[\.)]\s+)',
+            '',
+            line,
+        )
         line = re.sub(r'^\*\*(.+?)\*\*$', r'\1', line)
         return line.strip()
+
+    def _looks_like_skill_list_line(self, line: str) -> bool:
+        """Comma-separated skill/tool lists (not project descriptions)."""
+        stripped = line.strip()
+        if not stripped or ':' in stripped:
+            return False
+        if self._is_list_marker_line(stripped):
+            return False
+        if stripped.count(',') < 2:
+            return False
+        cleaned = self._clean_entry_line(stripped)
+        if self._starts_with_description_verb(cleaned):
+            return False
+        words = cleaned.split()
+        return len(words) <= 14
+
+    def _is_sentence_fragment_line(self, line: str) -> bool:
+        """Wrapped description tails — not standalone project titles."""
+        cleaned = self._clean_entry_line(line.strip())
+        if not cleaned:
+            return True
+        if cleaned[0].isdigit():
+            return True
+        if cleaned.endswith('.') and len(cleaned.split()) <= 4:
+            if cleaned == cleaned.lower() or cleaned[0].islower():
+                return True
+            if re.fullmatch(r'[\d,+%]+.*\.', cleaned):
+                return True
+        if re.fullmatch(r'[a-z][\w\s,+%()-]*\.', cleaned) and len(cleaned.split()) <= 6:
+            return True
+        return False
+
+    def _looks_like_project_title_text(self, text: str) -> bool:
+        """Project names are short Title Case phrases, not sentence fragments."""
+        cleaned = text.strip()
+        if not cleaned or self._is_sentence_fragment_line(cleaned):
+            return False
+        if cleaned.endswith('.') and len(cleaned.split()) <= 4:
+            return False
+        words = [w for w in cleaned.split() if w]
+        if not words or len(words) > self.MAX_TITLE_WORDS:
+            return False
+        if words[0][0].islower():
+            return False
+        title_case = sum(1 for w in words if w[0].isupper())
+        return title_case >= max(1, len(words) // 2)
 
     def _looks_like_title_case_name(self, text: str) -> bool:
         words = [word for word in text.split() if word]
@@ -367,9 +451,12 @@ class ResumeParser:
         """
         lines = text.splitlines()
         start_idx = None
+        inline_first_line = ''
         for index, line in enumerate(lines):
-            if self._normalize_heading(line) in self.PROJECT_SECTION_STARTS:
+            matched, remainder = self._match_section_start(line, self.PROJECT_SECTION_STARTS)
+            if matched:
                 start_idx = index + 1
+                inline_first_line = remainder
                 break
 
         if start_idx is None:
@@ -377,6 +464,8 @@ class ResumeParser:
             return sections.get('PROJECTS', '').strip()
 
         kept: List[str] = []
+        if inline_first_line:
+            kept.append(inline_first_line)
         for line in lines[start_idx:]:
             stripped = line.strip()
             if not stripped:
@@ -396,6 +485,9 @@ class ResumeParser:
                     break
 
             if self._is_junk_line(stripped, 'project'):
+                continue
+            if self._is_sentence_fragment_line(stripped) and kept:
+                kept[-1] = f'{kept[-1]} {stripped}'
                 continue
             kept.append(stripped)
 
@@ -424,10 +516,8 @@ class ResumeParser:
             return True
         if entry_type == 'project' and self._extract_colon_title(stripped, 'project'):
             return False
-        if entry_type == 'project' and ':' not in stripped and stripped.count(',') >= 2:
-            words = stripped.split()
-            if len(words) <= 14:
-                return True
+        if entry_type == 'project' and self._looks_like_skill_list_line(stripped):
+            return True
         return False
 
     def _clean_section_text(self, section_text: str, entry_type: str = 'project') -> str:
@@ -449,6 +539,8 @@ class ResumeParser:
     def _validates_project_colon_title(self, title: str) -> bool:
         title = title.strip()
         if len(title) < 3 or len(title.split()) > self.MAX_TITLE_WORDS:
+            return False
+        if not self._looks_like_project_title_text(title):
             return False
         if self._is_label_line(title):
             return False
@@ -478,7 +570,7 @@ class ResumeParser:
         stripped = line.strip()
         if not stripped or ':' not in stripped:
             return ''
-        if re.match(r'^[-•●▪◦*]\s+', stripped):
+        if self._is_list_marker_line(stripped):
             return ''
 
         left, _right = stripped.split(':', 1)
@@ -568,6 +660,8 @@ class ResumeParser:
             return False
 
         if entry_type == 'project':
+            if self._is_sentence_fragment_line(stripped):
+                return False
             colon_title = self._extract_colon_title(stripped, entry_type)
             if colon_title:
                 return True
@@ -580,9 +674,7 @@ class ResumeParser:
         if self._starts_with_description_verb(cleaned):
             return False
 
-        has_list_marker = bool(
-            re.match(r'^[-•●▪◦*]\s+\S', stripped) or re.match(r'^\d+[\.)]\s+\S', stripped)
-        )
+        has_list_marker = self._is_list_marker_line(stripped)
         if has_list_marker:
             if entry_type == 'project' and not self._extract_colon_title(stripped, entry_type):
                 return False
@@ -602,7 +694,7 @@ class ResumeParser:
             return False
         if self._extract_colon_title(stripped, 'project'):
             return False
-        if re.match(r'^[-•●▪◦*]\s+', stripped):
+        if self._is_list_marker_line(stripped):
             return False
 
         cleaned = self._clean_entry_line(stripped)
@@ -611,6 +703,8 @@ class ResumeParser:
         if self._starts_with_description_verb(cleaned):
             return False
         if self._is_project_date_line(cleaned):
+            return False
+        if self._is_sentence_fragment_line(cleaned):
             return False
         if re.search(r'(?i)tools?\s*&\s*technologies?', cleaned):
             return False
@@ -695,6 +789,9 @@ class ResumeParser:
                 continue
             if self._is_section_header_line(stripped) or self._is_skills_footer_line(stripped):
                 break
+            if self._is_sentence_fragment_line(stripped) and current:
+                current.append(stripped)
+                continue
             if self._is_standalone_project_title_line(stripped) and current:
                 flush()
             if self._is_standalone_project_title_line(stripped) or current:
@@ -734,6 +831,9 @@ class ResumeParser:
                 continue
             if self._is_section_header_line(stripped):
                 break
+            if entry_type == 'project' and self._is_sentence_fragment_line(stripped) and current:
+                current.append(stripped)
+                continue
             if self._is_entry_title_line(stripped, entry_type) and current:
                 flush()
             current.append(stripped)
@@ -764,10 +864,18 @@ class ResumeParser:
             if self._is_section_header_line(stripped):
                 break
 
-            is_marker_line = bool(
-                re.match(r'^[-•●▪◦*]\s+\S', stripped)
-                or re.match(r'^\d+[\.)]\s+\S', stripped)
-            )
+            if (
+                entry_type == 'project'
+                and self._is_standalone_project_title_line(stripped)
+                and current
+            ):
+                flush()
+
+            is_marker_line = self._is_list_marker_line(stripped)
+            if entry_type == 'project' and self._is_sentence_fragment_line(stripped):
+                if current:
+                    current.append(stripped)
+                continue
             if is_marker_line and self._is_entry_title_line(stripped, entry_type):
                 flush()
                 current.append(self._clean_entry_line(stripped))
@@ -785,9 +893,15 @@ class ResumeParser:
             1 for entry in entries
             if self._entry_has_valid_title(entry, entry_type)
         )
+        fragment_penalty = sum(
+            3.0 for entry in entries
+            if not self._looks_like_project_title_text(
+                self._extract_entry_title(entry, entry_type)
+            )
+        ) if entry_type == 'project' else 0.0
         over_split_penalty = max(0, len(entries) - 8) * 1.5
         invalid_penalty = (len(entries) - validated) * 2.0
-        return validated * 3.0 - over_split_penalty - invalid_penalty
+        return validated * 3.0 - over_split_penalty - invalid_penalty - fragment_penalty
 
     def _choose_section_entries(self, section_text: str, entry_type: str = 'project') -> List[str]:
         strategies = [

@@ -11,7 +11,8 @@ const interviewState = {
     questions: [],
     currentQuestionIndex: 0,
     answers: [],
-    isActive: false
+    isActive: false,
+    startedAtMs: null
 };
 
 // Speech state
@@ -604,6 +605,24 @@ function updateRecordingUI(isRecording) {
 }
 
 /**
+ * Format elapsed interview time for the completion summary
+ */
+function formatInterviewDuration(elapsedMs) {
+    const totalSeconds = Math.max(0, Math.floor(elapsedMs / 1000));
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    if (hours > 0) {
+        return `${hours}h ${minutes}m ${seconds}s`;
+    }
+    if (minutes > 0) {
+        return `${minutes} min ${seconds} sec`;
+    }
+    return `${seconds} sec`;
+}
+
+/**
  * Start interview session
  */
 async function startInterview() {
@@ -638,6 +657,7 @@ async function startInterview() {
             interviewState.currentQuestionIndex = 0;
             interviewState.answers = [];
             interviewState.isActive = true;
+            interviewState.startedAtMs = Date.now();
 
             document.getElementById('candidate-selection').style.display = 'none';
             document.getElementById('interview-session').style.display = 'block';
@@ -1194,6 +1214,8 @@ async function completeInterview() {
         : 0;
     const skipped = interviewState.answers.filter(a => a.answerText === '[Skipped]').length;
     const improvementFeedback = computeInterviewImprovementFeedback(interviewState.answers);
+    const elapsedMs = interviewState.startedAtMs ? Date.now() - interviewState.startedAtMs : 0;
+    const totalDuration = formatInterviewDuration(elapsedMs);
 
     let resumeSuggestions = {
         sentences: ['Resume suggestions could not be generated at this time.'],
@@ -1226,6 +1248,11 @@ async function completeInterview() {
                 <i class="fas fa-forward"></i>
                 <h3>${skipped}</h3>
                 <p>Questions Skipped</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-clock"></i>
+                <h3>${totalDuration}</h3>
+                <p>Total Time</p>
             </div>
         </div>
         <p style="margin-top: 1.5rem; color: var(--text-secondary);">
@@ -1275,6 +1302,7 @@ function resetInterviewUI() {
     interviewState.currentQuestionIndex = 0;
     interviewState.answers = [];
     interviewState.isActive = false;
+    interviewState.startedAtMs = null;
 
     const selection = document.getElementById('candidate-selection');
     const session = document.getElementById('interview-session');

@@ -26,8 +26,7 @@ function displayResumeResultsFromCandidate(candidateData) {
             skills: resume.skills || [],
             experience_count: (resume.experience || []).length,
             project_count: (resume.projects || []).length
-        },
-        vector_dimensions: 384
+        }
     });
 }
 
@@ -116,10 +115,6 @@ function displayResumeResults(result) {
         <div class="info-item">
             <div class="info-label">Projects</div>
             <div class="info-value">${parsed.project_count ?? 0} projects</div>
-        </div>
-        <div class="info-item">
-            <div class="info-label">Resume Vector</div>
-            <div class="info-value">${result.vector_dimensions || 0} dimensions</div>
         </div>
     `;
 

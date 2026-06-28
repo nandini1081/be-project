@@ -201,35 +201,6 @@ class SpeechAnalyzer:
 
         return _clamp(0.55 * confidence_score + 0.45 * overlap)
 
-    def _score_tone_energy(self, y: np.ndarray, sr: int) -> float:
-        import librosa
-
-        if len(y) < int(sr * 0.4):
-            return 0.5
-
-        rms = librosa.feature.rms(y=y)[0]
-        mean_rms = float(np.mean(rms)) + 1e-6
-        energy_std = float(np.std(rms)) / mean_rms
-        energy_score = _clamp(energy_std / 0.45)
-
-        pitches, magnitudes = librosa.piptrack(y=y, sr=sr)
-        mask = magnitudes > np.median(magnitudes)
-        pitch_vals = pitches[mask]
-        pitch_vals = pitch_vals[pitch_vals > 0]
-
-        if len(pitch_vals) > 8:
-            pitch_std = float(np.std(pitch_vals))
-            pitch_score = _clamp(pitch_std / 35.0)
-        else:
-            pitch_score = 0.5
-
-        combined = 0.5 * energy_score + 0.5 * pitch_score
-        # Slight penalty for extremely flat delivery
-        if energy_score < 0.2 and pitch_score < 0.2:
-            combined *= 0.75
-
-        return _clamp(combined)
-
     def _analyze_file(self, audio_path: str, reference_text: str) -> Dict:
         import librosa
 
@@ -244,13 +215,11 @@ class SpeechAnalyzer:
         filler_score = self._score_fillers(words, transcript)
         pause_pacing_score = self._score_pause_pacing(words, y, sr, duration)
         pronunciation_score = self._score_pronunciation(logprobs, reference_text, transcript)
-        tone_energy_score = self._score_tone_energy(y, sr)
 
         breakdown = {
             "filler": round(filler_score, 3),
             "pause_pacing": round(pause_pacing_score, 3),
             "pronunciation": round(pronunciation_score, 3),
-            "tone_energy": round(tone_energy_score, 3),
         }
 
         weights = SPEECH_COMPONENT_WEIGHTS
@@ -258,7 +227,6 @@ class SpeechAnalyzer:
             breakdown["filler"] * weights["filler"]
             + breakdown["pause_pacing"] * weights["pause_pacing"]
             + breakdown["pronunciation"] * weights["pronunciation"]
-            + breakdown["tone_energy"] * weights["tone_energy"]
         )
 
         return {

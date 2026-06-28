@@ -62,18 +62,18 @@ function setAuthenticatedUser(user) {
 }
 
 function updateAuthUI() {
-    const loggedInNav = document.getElementById('auth-logged-in');
-    const loggedOutNav = document.getElementById('auth-logged-out');
-    const userEmailEl = document.getElementById('auth-user-email');
+    const loginItem = document.getElementById('auth-login-item');
+    const signupItem = document.getElementById('auth-signup-item');
+    const logoutItem = document.getElementById('auth-logout-item');
 
     if (appState.isAuthenticated && appState.user) {
-        if (loggedInNav) loggedInNav.style.display = 'flex';
-        if (loggedOutNav) loggedOutNav.style.display = 'none';
-        if (userEmailEl) userEmailEl.textContent = appState.user.email;
+        if (loginItem) loginItem.style.display = 'none';
+        if (signupItem) signupItem.style.display = 'none';
+        if (logoutItem) logoutItem.style.display = 'list-item';
     } else {
-        if (loggedInNav) loggedInNav.style.display = 'none';
-        if (loggedOutNav) loggedOutNav.style.display = 'flex';
-        if (userEmailEl) userEmailEl.textContent = '';
+        if (loginItem) loginItem.style.display = 'list-item';
+        if (signupItem) signupItem.style.display = 'list-item';
+        if (logoutItem) logoutItem.style.display = 'none';
     }
 }
 

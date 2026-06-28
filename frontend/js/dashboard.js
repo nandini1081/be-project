@@ -241,31 +241,34 @@ function displayRecommendations(recommendations) {
             <p style="color: var(--text-secondary);">
                 Experience Level: <strong>${recommendations.experience_level || 'N/A'}</strong><br>
                 Primary Domain: <strong>${recommendations.primary_domain || 'N/A'}</strong><br>
-                Matched Questions: <strong>${recommendations.total_matches || 0}</strong><br>
-                Average Similarity: <strong>${(avgSimilarity * 100).toFixed(0)}%</strong>
+                Resume Match Strength: <strong>${(avgSimilarity * 100).toFixed(0)}%</strong>
             </p>
         </div>
 
         <div style="background: var(--bg-color); padding: 1.5rem; border-radius: 0.375rem;">
-            <h4 style="margin-bottom: 1rem;">Recommended Focus Areas</h4>
+            <h4 style="margin-bottom: 0.35rem;">Most Relevant Topics</h4>
+            <p style="color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">
+                How often each topic appears among your top 10 resume-matched interview questions.
+            </p>
             ${topTopics.length > 0 ? `
-                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                    ${topTopics.map(([topic, count]) => `
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span>${topic}</span>
-                            <span style="background: var(--primary-color);
-                                         color: white;
-                                         padding: 0.25rem 0.75rem;
-                                         border-radius: 0.25rem;
-                                         font-size: 0.875rem;">
-                                ${count} questions
-                            </span>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    ${topTopics.map(([topic, percent]) => `
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                                <span>${topic}</span>
+                                <span style="color: var(--primary-color); font-weight: 600; font-size: 0.875rem;">
+                                    ${percent % 1 === 0 ? percent.toFixed(0) : percent}% relevant
+                                </span>
+                            </div>
+                            <div style="background: var(--border-color); border-radius: 999px; height: 0.5rem; overflow: hidden;">
+                                <div style="background: var(--primary-color); height: 100%; width: ${Math.min(percent, 100)}%; border-radius: 999px;"></div>
+                            </div>
                         </div>
                     `).join('')}
                 </div>
             ` : `
                 <p style="color: var(--text-secondary);">
-                    No specific recommendations yet. Complete more interviews to get personalized suggestions.
+                    Upload a resume to see which topics align best with your profile.
                 </p>
             `}
         </div>

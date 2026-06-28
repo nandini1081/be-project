@@ -38,10 +38,9 @@ SPEECH_SCORE_MAX = 0.94                # speech score is capped below 100%
 SPEECH_WHISPER_MODEL = "base"
 SPEECH_WHISPER_DEVICE = "cpu"
 SPEECH_COMPONENT_WEIGHTS = {
-    "filler": 0.25,
-    "pause_pacing": 0.25,
-    "pronunciation": 0.25,
-    "tone_energy": 0.25,
+    "filler": 0.20,
+    "pause_pacing": 0.40,
+    "pronunciation": 0.40,
 }
 SPEECH_IDEAL_WPM = 135
 SPEECH_LONG_PAUSE_SECONDS = 1.2

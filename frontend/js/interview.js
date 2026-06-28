@@ -11,7 +11,8 @@ const interviewState = {
     questions: [],
     currentQuestionIndex: 0,
     answers: [],
-    isActive: false
+    isActive: false,
+    startedAtMs: null
 };
 
 // Speech state
@@ -605,6 +606,24 @@ function updateRecordingUI(isRecording) {
 }
 
 /**
+ * Format elapsed interview time for the completion summary
+ */
+function formatInterviewDuration(elapsedMs) {
+    const totalSeconds = Math.max(0, Math.floor(elapsedMs / 1000));
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    if (hours > 0) {
+        return `${hours}h ${minutes}m ${seconds}s`;
+    }
+    if (minutes > 0) {
+        return `${minutes} min ${seconds} sec`;
+    }
+    return `${seconds} sec`;
+}
+
+/**
  * Start interview session
  */
 async function startInterview() {
@@ -639,6 +658,7 @@ async function startInterview() {
             interviewState.currentQuestionIndex = 0;
             interviewState.answers = [];
             interviewState.isActive = true;
+            interviewState.startedAtMs = Date.now();
 
             document.getElementById('candidate-selection').style.display = 'none';
             document.getElementById('interview-session').style.display = 'block';
@@ -1051,7 +1071,7 @@ function renderFeedbackLoading() {
 }
 
 function renderFinalSummary(stats, improvementFeedback, resumeSuggestions, feedbackLoading = false) {
-    const { totalAnswers, avgScore, skipped } = stats;
+    const { totalAnswers, avgScore, skipped, totalDuration } = stats;
 
     return `
         <div class="stats-grid">
@@ -1070,6 +1090,13 @@ function renderFinalSummary(stats, improvementFeedback, resumeSuggestions, feedb
                 <h3>${skipped}</h3>
                 <p>Questions Skipped</p>
             </div>
+            ${totalDuration ? `
+            <div class="stat-card">
+                <i class="fas fa-clock"></i>
+                <h3>${totalDuration}</h3>
+                <p>Total Time</p>
+            </div>
+            ` : ''}
         </div>
         <p style="margin-top: 1.5rem; color: var(--text-secondary);">
             Great job! Your responses have been recorded and your profile has been updated.
@@ -1109,7 +1136,13 @@ async function completeInterview() {
         ? interviewState.answers.reduce((sum, a) => sum + a.totalScore, 0) / totalAnswers
         : 0;
     const skipped = interviewState.answers.filter(a => a.answerText === '[Skipped]').length;
-    const stats = { totalAnswers, avgScore, skipped };
+    const elapsedMs = interviewState.startedAtMs ? Date.now() - interviewState.startedAtMs : 0;
+    const stats = {
+        totalAnswers,
+        avgScore,
+        skipped,
+        totalDuration: formatInterviewDuration(elapsedMs)
+    };
 
     const summaryDiv = document.getElementById('final-summary');
     summaryDiv.innerHTML = renderFinalSummary(stats, {}, {}, true);
@@ -1164,6 +1197,7 @@ function resetInterviewUI() {
     interviewState.currentQuestionIndex = 0;
     interviewState.answers = [];
     interviewState.isActive = false;
+    interviewState.startedAtMs = null;
 
     const selection = document.getElementById('candidate-selection');
     const session = document.getElementById('interview-session');

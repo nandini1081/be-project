@@ -23,10 +23,14 @@ UPDATE_NEW_WEIGHT = 0.2
 MAX_QUESTIONS_PER_SESSION = 15
 TOP_MATCH_POOL_SIZE = 40
 MIN_SIMILARITY_SCORE = 0.7
+MAX_FOLLOWUPS_PER_GROUP = 3          # entry question + up to 3 follow-ups
+MAX_QUESTIONS_PER_GROUP = MAX_FOLLOWUPS_PER_GROUP + 1
+MAX_BEHAVIORAL_RATIO = 0.20          # at most 20% behavioral in a mixed interview
 
 # Scoring Weights
 KNOWLEDGE_WEIGHT = 0.6
 SPEECH_WEIGHT = 0.4
+SPEECH_SCORE_MAX = 0.94                # speech score is capped below 100%
 
 # Audio speech analysis (faster-whisper + librosa)
 SPEECH_WHISPER_MODEL = "base"

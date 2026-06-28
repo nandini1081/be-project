@@ -15,6 +15,7 @@ from services import (
 from services.auth_service import AuthService
 from routes.auth_helpers import login_required, get_current_user, get_current_candidate_id
 from database import DatabaseManager
+from config import SPEECH_SCORE_MAX
 import os
 import traceback
 
@@ -223,7 +224,7 @@ def create_routes():
                 question_id=data['question_id'],
                 answer_text=data['answer_text'],
                 knowledge_score=data['knowledge_score'],
-                speech_score=data['speech_score'],
+                speech_score=min(float(data['speech_score']), SPEECH_SCORE_MAX),
                 interview_session_id=data.get('interview_session_id')
             )
 
@@ -396,6 +397,30 @@ def create_routes():
                 'questions': questions
             })
         
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+    @api.route('/retrieve-next-question/<candidate_id>', methods=['GET'])
+    def retrieve_next_question(candidate_id):
+        """Get next question: follow-up in current group or new matched group."""
+        try:
+            last_question_id = request.args.get('last_question_id')
+            asked_ids = request.args.getlist('asked')
+            difficulty = request.args.get('difficulty')
+            category = request.args.get('category')
+
+            question = question_retriever.retrieve_next_question(
+                candidate_id=candidate_id,
+                last_question_id=last_question_id,
+                asked_question_ids=asked_ids,
+                difficulty=difficulty,
+                category=category,
+            )
+
+            if not question:
+                return jsonify({'success': True, 'question': None, 'done': True})
+
+            return jsonify({'success': True, 'question': question, 'done': False})
         except Exception as e:
             return jsonify({'error': str(e)}), 500
     

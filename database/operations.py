@@ -31,6 +31,31 @@ class DatabaseManager:
             )
             conn.commit()
 
+        cursor.execute('PRAGMA table_info(questions)')
+        question_columns = {row[1] for row in cursor.fetchall()}
+        if question_columns:
+            if 'question_group' not in question_columns:
+                cursor.execute(
+                    'ALTER TABLE questions ADD COLUMN question_group TEXT'
+                )
+            if 'followup_order' not in question_columns:
+                cursor.execute(
+                    'ALTER TABLE questions ADD COLUMN followup_order INTEGER DEFAULT 1'
+                )
+            if 'parent_question_id' not in question_columns:
+                cursor.execute(
+                    'ALTER TABLE questions ADD COLUMN parent_question_id TEXT'
+                )
+            cursor.execute(
+                'CREATE INDEX IF NOT EXISTS idx_question_group '
+                'ON questions(question_group)'
+            )
+            cursor.execute(
+                'CREATE INDEX IF NOT EXISTS idx_question_group_order '
+                'ON questions(question_group, followup_order)'
+            )
+            conn.commit()
+
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
                 user_id TEXT PRIMARY KEY,
@@ -341,6 +366,28 @@ class DatabaseManager:
     # PERSON C: DATABASE CREATION (QUESTIONS)
     # ============================================================
     
+    def _parse_question_row(self, row) -> Dict:
+        """Normalize a questions table row into a dict."""
+        return {
+            'question_id': row['question_id'],
+            'question_text': row['question_text'],
+            'category': row['category'],
+            'difficulty': row['difficulty'],
+            'topics': json.loads(row['topics']),
+            'job_roles': json.loads(row['job_roles']),
+            'embedding': json.loads(row['embedding']),
+            'ideal_keywords': json.loads(row['ideal_keywords']),
+            'ideal_answer_embedding': (
+                json.loads(row['ideal_answer_embedding'])
+                if row['ideal_answer_embedding']
+                else None
+            ),
+            'question_group': row['question_group'],
+            'followup_order': row['followup_order'] if row['followup_order'] is not None else 1,
+            'parent_question_id': row['parent_question_id'],
+            'created_at': row['created_at'],
+        }
+
     def insert_question(self, question_data: Dict) -> str:
         """
         Insert question with pre-computed embedding
@@ -366,8 +413,10 @@ class DatabaseManager:
         
         cursor.execute('''
             INSERT INTO questions 
-            (question_id, question_text, category, difficulty, topics, job_roles, embedding, ideal_keywords, ideal_answer_embedding, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (question_id, question_text, category, difficulty, topics, job_roles, embedding,
+             ideal_keywords, ideal_answer_embedding, question_group, followup_order,
+             parent_question_id, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
             question_id,
             question_data['question_text'],
@@ -377,7 +426,10 @@ class DatabaseManager:
             json.dumps(question_data['job_roles']),
             json.dumps(question_data['embedding']),
             json.dumps(question_data.get('ideal_keywords', [])),
-            None,  # 🔥 initially empty
+            None,
+            question_data.get('question_group'),
+            question_data.get('followup_order', 1),
+            question_data.get('parent_question_id'),
             now,
             now
         ))
@@ -408,8 +460,10 @@ class DatabaseManager:
             
             cursor.execute('''
                 INSERT INTO questions 
-                (question_id, question_text, category, difficulty, topics, job_roles, embedding, ideal_keywords, ideal_answer_embedding, created_at, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (question_id, question_text, category, difficulty, topics, job_roles, embedding,
+                 ideal_keywords, ideal_answer_embedding, question_group, followup_order,
+                 parent_question_id, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 qid,
                 q['question_text'],
@@ -419,7 +473,10 @@ class DatabaseManager:
                 json.dumps(q['job_roles']),
                 json.dumps(q['embedding']),
                 json.dumps(q.get('ideal_keywords', [])),
-                None,  # 🔥 important
+                None,
+                q.get('question_group'),
+                q.get('followup_order', 1),
+                q.get('parent_question_id'),
                 now,
                 now
             ))
@@ -437,21 +494,38 @@ class DatabaseManager:
         rows = cursor.fetchall()
         conn.close()
         
-        return [{
-            'question_id': row['question_id'],
-            'question_text': row['question_text'],
-            'category': row['category'],
-            'difficulty': row['difficulty'],
-            'topics': json.loads(row['topics']),
-            'job_roles': json.loads(row['job_roles']),
-            'embedding': json.loads(row['embedding']),
-            'ideal_keywords': json.loads(row['ideal_keywords']),
-            
-            # 🔥 ADD THIS LINE
-            'ideal_answer_embedding': json.loads(row['ideal_answer_embedding']) if row['ideal_answer_embedding'] else None,
-            
-            'created_at': row['created_at']
-        } for row in rows]
+        return [self._parse_question_row(row) for row in rows]
+    
+    def get_questions_by_group(self, question_group: str) -> List[Dict]:
+        """Get all questions in a group ordered by followup_order."""
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT * FROM questions
+            WHERE question_group = ?
+            ORDER BY followup_order ASC
+        ''', (question_group,))
+        rows = cursor.fetchall()
+        conn.close()
+        return [self._parse_question_row(row) for row in rows]
+
+    def get_next_followup_question(
+        self, question_group: str, after_order: int, max_order: int = 4
+    ) -> Optional[Dict]:
+        """Get the next question in a cross-question chain."""
+        next_order = after_order + 1
+        if next_order > max_order:
+            return None
+        conn = self.get_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+            SELECT * FROM questions
+            WHERE question_group = ? AND followup_order = ?
+            LIMIT 1
+        ''', (question_group, next_order))
+        row = cursor.fetchone()
+        conn.close()
+        return self._parse_question_row(row) if row else None
     
     def get_questions_by_filter(self, category: Optional[str] = None,
                                difficulty: Optional[str] = None,
@@ -517,19 +591,7 @@ class DatabaseManager:
         conn.close()
         
         if row:
-            return {
-            'question_id': row['question_id'],
-            'question_text': row['question_text'],
-            'category': row['category'],
-            'difficulty': row['difficulty'],
-            'topics': json.loads(row['topics']),
-            'job_roles': json.loads(row['job_roles']),
-            'embedding': json.loads(row['embedding']),
-            'ideal_keywords': json.loads(row['ideal_keywords']),
-            
-            # 🔥 ADD THIS
-            'ideal_answer_embedding': json.loads(row['ideal_answer_embedding']) if row['ideal_answer_embedding'] else None
-        }
+            return self._parse_question_row(row)
         return None
     
     def cache_retrieval_results(self, candidate_id: str,

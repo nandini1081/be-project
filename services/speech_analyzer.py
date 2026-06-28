@@ -17,6 +17,7 @@ from config import (
     SPEECH_IDEAL_WPM,
     SPEECH_LONG_PAUSE_SECONDS,
     SPEECH_MAX_FILLER_RATE,
+    SPEECH_SCORE_MAX,
 )
 
 FILLER_PHRASES = [
@@ -30,6 +31,10 @@ FILLER_WORDS = {
 
 def _clamp(value: float, low: float = 0.0, high: float = 1.0) -> float:
     return max(low, min(high, value))
+
+
+def _cap_speech_score(value: float) -> float:
+    return _clamp(value, high=SPEECH_SCORE_MAX)
 
 
 def _tokenize(text: str) -> set:
@@ -257,7 +262,7 @@ class SpeechAnalyzer:
         )
 
         return {
-            "speech_score": round(_clamp(speech_score), 3),
+            "speech_score": round(_cap_speech_score(speech_score), 3),
             "breakdown": breakdown,
             "transcript": transcript,
             "source": "audio",

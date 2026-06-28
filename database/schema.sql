@@ -6,13 +6,17 @@ CREATE TABLE IF NOT EXISTS questions (
     question_text TEXT NOT NULL,
     category TEXT NOT NULL CHECK(category IN ('technical', 'behavioral', 'situational')),
     difficulty TEXT NOT NULL CHECK(difficulty IN ('easy', 'medium', 'hard')),
-    topics TEXT NOT NULL,              -- JSON
+    topics TEXT NOT NULL,              -- JSON: DSA, ML, AI
     job_roles TEXT NOT NULL,           -- JSON
-    embedding TEXT NOT NULL,           -- question embedding (keep it)
-    ideal_keywords TEXT,               -- keep (useful fallback)
-    ideal_answer_embedding TEXT,       -- 🔥 NEW (THIS IS KEY)
+    embedding TEXT NOT NULL,
+    ideal_keywords TEXT,
+    ideal_answer_embedding TEXT,
+    question_group TEXT,               -- cross-question chain identifier (e.g. DSA_SEARCH)
+    followup_order INTEGER DEFAULT 1, -- 1 = entry point; 2+ = follow-ups in same group
+    parent_question_id TEXT,           -- first question in group for follow-ups
     created_at TEXT NOT NULL,
-    updated_at TEXT NOT NULL
+    updated_at TEXT NOT NULL,
+    FOREIGN KEY (parent_question_id) REFERENCES questions(question_id)
 );
 
 -- Table 2: Candidate profiles with vectors
@@ -66,6 +70,8 @@ CREATE TABLE IF NOT EXISTS retrieval_cache (
 CREATE INDEX IF NOT EXISTS idx_candidate_history ON interview_history(candidate_id);
 CREATE INDEX IF NOT EXISTS idx_question_difficulty ON questions(difficulty);
 CREATE INDEX IF NOT EXISTS idx_question_category ON questions(category);
+CREATE INDEX IF NOT EXISTS idx_question_group ON questions(question_group);
+CREATE INDEX IF NOT EXISTS idx_question_group_order ON questions(question_group, followup_order);
 CREATE INDEX IF NOT EXISTS idx_history_session ON interview_history(interview_session_id);
 CREATE INDEX IF NOT EXISTS idx_history_timestamp ON interview_history(timestamp DESC);
 CREATE INDEX IF NOT EXISTS idx_cache_candidate ON retrieval_cache(candidate_id);

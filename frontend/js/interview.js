@@ -37,6 +37,7 @@ const SCORING_WEIGHTS = {
     knowledge: 0.6,
     speech: 0.4
 };
+const SPEECH_SCORE_MAX = 0.99;
 
 function createInterviewSessionId() {
     if (typeof crypto !== 'undefined' && crypto.randomUUID) {
@@ -736,7 +737,7 @@ async function submitAnswer() {
             try {
                 const speechResult = await api.analyzeSpeech(audioBlob, answerText);
                 if (speechResult.success && typeof speechResult.speech_score === 'number') {
-                    speechScore = speechResult.speech_score;
+                    speechScore = capSpeechScore(speechResult.speech_score);
                     speechBreakdown = speechResult.breakdown || null;
                     speechSource = speechResult.source || 'audio';
                 }
@@ -747,22 +748,23 @@ async function submitAnswer() {
         }
         
         // Record response
+        const cappedSpeechScore = capSpeechScore(speechScore);
         await api.recordResponse(
             question.question_id,
             answerText,
             knowledgeScore,
-            speechScore,
+            cappedSpeechScore,
             interviewState.sessionId
         );
-        
+
         // Store answer
         interviewState.answers.push({
             questionId: question.question_id,
             questionText: question.question_text,
             answerText: answerText,
             knowledgeScore: knowledgeScore,
-            speechScore: speechScore,
-            totalScore: computeTotalScore(knowledgeScore, speechScore),
+            speechScore: cappedSpeechScore,
+            totalScore: computeTotalScore(knowledgeScore, cappedSpeechScore),
             pauseCount: pauseCount,
             speechBreakdown: speechBreakdown,
             speechSource: speechSource,
@@ -772,7 +774,7 @@ async function submitAnswer() {
         });
         
         // Show feedback
-        displayAnswerFeedback(knowledgeScore, speechScore);
+        displayAnswerFeedback(knowledgeScore, cappedSpeechScore);
         
         showLoading(false);
         showToast('Answer submitted successfully!', 'success');
@@ -785,6 +787,10 @@ async function submitAnswer() {
 
 function clampScore(value) {
     return Math.max(0, Math.min(1, value));
+}
+
+function capSpeechScore(value) {
+    return Math.max(0, Math.min(SPEECH_SCORE_MAX, value));
 }
 
 function computeTotalScore(knowledgeScore, speechScore) {
@@ -916,17 +922,18 @@ function calculateSpeechScore(answer, pauseCount = 0) {
         score += 0.05;
     }
 
-    return clampScore(score);
+    return capSpeechScore(score);
 }
 
 /**
  * Display answer feedback
  */
 function displayAnswerFeedback(knowledgeScore, speechScore) {
-    const totalScore = computeTotalScore(knowledgeScore, speechScore);
-    
+    const cappedSpeech = capSpeechScore(speechScore);
+    const totalScore = computeTotalScore(knowledgeScore, cappedSpeech);
+
     document.getElementById('knowledge-score').textContent = (knowledgeScore * 100).toFixed(0) + '%';
-    document.getElementById('speech-score').textContent = (speechScore * 100).toFixed(0) + '%';
+    document.getElementById('speech-score').textContent = (cappedSpeech * 100).toFixed(0) + '%';
     document.getElementById('total-score').textContent = (totalScore * 100).toFixed(0) + '%';
     
     // Color code based on score

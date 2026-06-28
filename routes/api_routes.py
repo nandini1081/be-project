@@ -10,7 +10,8 @@ from services import (
     ProfileCreator,
     ProfileUpdater,
     QuestionManager,
-    QuestionRetriever
+    QuestionRetriever,
+    FeedbackGenerator,
 )
 from services.auth_service import AuthService
 from routes.auth_helpers import login_required, get_current_user, get_current_candidate_id
@@ -32,6 +33,7 @@ def create_routes():
     profile_updater = ProfileUpdater()
     question_manager = QuestionManager()
     question_retriever = QuestionRetriever()
+    feedback_generator = FeedbackGenerator()
     db = DatabaseManager()
     auth_service = AuthService()
 
@@ -490,6 +492,31 @@ def create_routes():
     
     # ==================== COMMON ROUTES ====================
     
+    @api.route('/me/generate-feedback', methods=['POST'])
+    @login_required
+    def generate_feedback():
+        """Generate LLM-powered interview and resume feedback after an interview."""
+        try:
+            data = request.get_json() or {}
+            answers = data.get('answers', [])
+            stats = data.get('stats', {})
+            resume = data.get('resume')
+
+            if not answers:
+                return jsonify({'error': 'answers are required'}), 400
+
+            if resume is None:
+                candidate_id, error = get_current_candidate_id(db, require_profile=True)
+                if error:
+                    return jsonify({'error': error[0]['error']}), error[1]
+                resume = db.get_parsed_resume(candidate_id) or {}
+
+            feedback = feedback_generator.generate(answers, resume, stats)
+            return jsonify({'success': True, **feedback})
+        except Exception as e:
+            traceback.print_exc()
+            return jsonify({'error': str(e)}), 500
+
     @api.route('/me/candidate', methods=['GET'])
     @login_required
     def my_candidate():

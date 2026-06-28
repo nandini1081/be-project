@@ -134,6 +134,17 @@ class APIService {
         return this.request('/me/performance-summary');
     }
 
+    async generateFeedback(answers, stats = {}, resume = null) {
+        const body = { answers, stats };
+        if (resume) {
+            body.resume = resume;
+        }
+        return this.request('/me/generate-feedback', {
+            method: 'POST',
+            body: JSON.stringify(body)
+        });
+    }
+
     // ==================== PERSON D APIs ====================
 
     async retrieveQuestions(options = {}) {

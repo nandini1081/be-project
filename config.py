@@ -2,6 +2,8 @@
 Shared configuration for all team members
 """
 
+import os
+
 # Vector and Model Configuration
 EMBEDDING_MODEL = "all-MiniLM-L6-v2"
 VECTOR_DIMENSION = 384
@@ -44,3 +46,9 @@ SPEECH_COMPONENT_WEIGHTS = {
 SPEECH_IDEAL_WPM = 135
 SPEECH_LONG_PAUSE_SECONDS = 1.2
 SPEECH_MAX_FILLER_RATE = 0.15
+
+# LLM feedback (set OPENAI_API_KEY in .env to enable)
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
+OPENAI_API_BASE = os.getenv("OPENAI_API_BASE", "https://api.openai.com/v1")
+OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
+LLM_TIMEOUT_SECONDS = int(os.getenv("LLM_TIMEOUT_SECONDS", "45"))

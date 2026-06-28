@@ -1003,154 +1003,12 @@ function endInterview() {
 /**
  * Complete interview
  */
-function normalizeToken(text) {
-    return String(text || '').toLowerCase().trim();
-}
-
-function answerIncludesKeyword(answerText, keyword) {
-    const answer = normalizeToken(answerText);
-    const key = normalizeToken(keyword);
-    if (!answer || !key) return false;
-    return answer.includes(key);
-}
-
-function countOccurrences(items) {
-    const counts = {};
-    (items || []).forEach(item => {
-        const normalized = normalizeToken(item);
-        if (!normalized) return;
-        counts[normalized] = (counts[normalized] || 0) + 1;
-    });
-    return counts;
-}
-
-function pickTopKeys(countMap, limit = 5) {
-    return Object.entries(countMap || {})
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, limit)
-        .map(([key]) => key);
-}
-
-function getExpectedKeywords(answer) {
-    return (answer.idealKeywords && answer.idealKeywords.length > 0)
-        ? answer.idealKeywords
-        : (answer.topics || []);
-}
-
-function getMissingKeywordsForAnswer(answer) {
-    return getExpectedKeywords(answer).filter(
-        keyword => !answerIncludesKeyword(answer.answerText, keyword)
-    );
-}
-
 function escapeHtml(text) {
     return String(text || '')
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
-}
-
-function computeInterviewImprovementFeedback(answers) {
-    const attempted = (answers || []).filter(a => a.answerText !== '[Skipped]');
-    const lowScoreAnswers = attempted.filter(a => (a.knowledgeScore || 0) < 0.6);
-
-    const weakTopicCounts = countOccurrences(
-        lowScoreAnswers.flatMap(a => a.topics || [])
-    );
-    const weakTopics = pickTopKeys(weakTopicCounts, 5);
-
-    const missingKeywordCounts = {};
-    attempted.forEach(answer => {
-        getMissingKeywordsForAnswer(answer).forEach(keyword => {
-            const normalized = normalizeToken(keyword);
-            if (!normalized) return;
-            missingKeywordCounts[normalized] = (missingKeywordCounts[normalized] || 0) + 1;
-        });
-    });
-
-    const missingKeywords = pickTopKeys(missingKeywordCounts, 8);
-    const focusAreas = weakTopics.length > 0 ? weakTopics : missingKeywords.slice(0, 4);
-
-    const staticSentence = focusAreas.length > 0
-        ? `These are the topics you need to focus more on: ${focusAreas.join(', ')}.`
-        : 'Your performance is stable; continue practicing with more depth in your explanations.';
-
-    const basicsSentence = missingKeywords.length > 0
-        ? `Brush up on basics like ${missingKeywords.slice(0, 4).join(', ')} and include these terms explicitly in your answers.`
-        : 'Try to include key concepts and terminology clearly while answering to improve your score.';
-
-    const questionFeedback = (answers || []).map((answer, index) => ({
-        questionNumber: index + 1,
-        questionText: answer.questionText || `Question ${index + 1}`,
-        answerText: answer.answerText,
-        missingKeywords: getMissingKeywordsForAnswer(answer)
-    }));
-
-    return {
-        focusAreas,
-        missingKeywords,
-        sentences: [staticSentence, basicsSentence],
-        questionFeedback
-    };
-}
-
-function buildRoleSkillMap() {
-    return {
-        'data scientist': ['python', 'machine learning', 'statistics', 'sql', 'pandas', 'numpy', 'model evaluation'],
-        'ml engineer': ['python', 'machine learning', 'deep learning', 'tensorflow', 'pytorch', 'mlops', 'deployment'],
-        'software engineer': ['data structures', 'algorithms', 'system design', 'oop', 'git', 'testing'],
-        'backend engineer': ['apis', 'database', 'sql', 'microservices', 'scalability', 'caching'],
-        'frontend engineer': ['javascript', 'html', 'css', 'react', 'state management', 'performance'],
-        'product manager': ['product strategy', 'metrics', 'stakeholder management', 'prioritization']
-    };
-}
-
-function computeResumeSuggestions(resume = {}, answers = []) {
-    const roleCounts = countOccurrences(answers.flatMap(a => a.jobRoles || []));
-    const topRoles = pickTopKeys(roleCounts, 3);
-    const primaryRole = topRoles[0] || '';
-
-    const roleSkillMap = buildRoleSkillMap();
-    const roleSkills = roleSkillMap[primaryRole] || [];
-    const interviewTopics = pickTopKeys(countOccurrences(answers.flatMap(a => a.topics || [])), 8);
-    const requiredSignals = [...new Set([...roleSkills, ...interviewTopics.map(normalizeToken)])];
-
-    const resumeSkills = (resume.skills || []).map(normalizeToken);
-    const missingSkills = requiredSignals.filter(skill =>
-        skill && !resumeSkills.some(rs => rs.includes(skill) || skill.includes(rs))
-    );
-
-    const hasExperience = (resume.experience || []).length > 0;
-    const projectText = (resume.projects || [])
-        .map(p => `${p.name || ''} ${p.description || ''}`)
-        .join(' ')
-        .toLowerCase();
-    const hasMetrics = /\b(\d+(\.\d+)?%|accuracy|f1|auc|precision|recall|latency)\b/.test(projectText);
-    const roleLooksML = primaryRole.includes('data scientist') || primaryRole.includes('ml');
-
-    const sentences = [];
-    if (missingSkills.length > 0) {
-        sentences.push(`For the ${primaryRole || 'target'} role, consider adding or highlighting skills such as: ${missingSkills.slice(0, 6).join(', ')}.`);
-    } else {
-        sentences.push('Your resume aligns reasonably well with the role topics from this interview; keep skill names explicit for better matching.');
-    }
-
-    if (!hasExperience) {
-        sentences.push('Add internship, freelance, or academic project experience to show practical application of your skills.');
-    }
-
-    if (roleLooksML && !hasMetrics) {
-        sentences.push('For ML projects, include measurable outcomes like model accuracy, F1-score, AUC, or latency improvements.');
-    } else if (!hasMetrics) {
-        sentences.push('Add measurable impact in projects (percent improvements, scale, or business outcomes) to strengthen your resume.');
-    }
-
-    return {
-        topRoles,
-        missingSkills: missingSkills.slice(0, 8),
-        sentences
-    };
 }
 
 function renderSuggestionList(items) {
@@ -1168,7 +1026,7 @@ function renderQuestionImprovementFeedback(questionFeedback) {
 
     return `
         <div style="margin-top: 1rem;">
-            <p style="margin-bottom: 0.5rem;"><strong>Question-wise keyword feedback</strong></p>
+            <p style="margin-bottom: 0.5rem;"><strong>Question-wise feedback</strong></p>
             ${questionFeedback.map((item, index) => `
                 <div style="margin-top: ${index === 0 ? '0' : '1rem'}; padding-top: ${index === 0 ? '0' : '1rem'}; border-top: ${index === 0 ? 'none' : '1px solid var(--border-color)'};">
                     <p style="margin-bottom: 0.5rem;"><strong>Q${item.questionNumber}:</strong> ${escapeHtml(item.questionText)}</p>
@@ -1176,10 +1034,7 @@ function renderQuestionImprovementFeedback(questionFeedback) {
                         <strong>Your answer:</strong> ${escapeHtml(item.answerText)}
                     </p>
                     <p style="color: var(--text-secondary);">
-                        <strong>Missing expected keywords:</strong>
-                        ${item.missingKeywords.length > 0
-                            ? escapeHtml(item.missingKeywords.join(', '))
-                            : '<span style="color: var(--success-color, #10B981);">None</span>'}
+                        <strong>Feedback:</strong> ${escapeHtml(item.feedback || 'No feedback available for this question.')}
                     </p>
                 </div>
             `).join('')}
@@ -1187,37 +1042,18 @@ function renderQuestionImprovementFeedback(questionFeedback) {
     `;
 }
 
-async function completeInterview() {
-    interviewState.isActive = false;
-    
-    // Stop any ongoing speech
-    stopSpeaking();
-    await stopRecording();
-    
-    // Calculate final statistics
-    const totalAnswers = interviewState.answers.length;
-    const avgScore = totalAnswers > 0
-        ? interviewState.answers.reduce((sum, a) => sum + a.totalScore, 0) / totalAnswers
-        : 0;
-    const skipped = interviewState.answers.filter(a => a.answerText === '[Skipped]').length;
-    const improvementFeedback = computeInterviewImprovementFeedback(interviewState.answers);
+function renderFeedbackLoading() {
+    return `
+        <p style="margin-top: 0.75rem; color: var(--text-secondary);">
+            <i class="fas fa-spinner fa-spin"></i> Generating personalized feedback...
+        </p>
+    `;
+}
 
-    let resumeSuggestions = {
-        sentences: ['Resume suggestions could not be generated at this time.'],
-        topRoles: [],
-        missingSkills: []
-    };
+function renderFinalSummary(stats, improvementFeedback, resumeSuggestions, feedbackLoading = false) {
+    const { totalAnswers, avgScore, skipped } = stats;
 
-    try {
-        const candidateData = await api.getCandidate();
-        resumeSuggestions = computeResumeSuggestions(candidateData.resume || {}, interviewState.answers);
-    } catch (error) {
-        console.error('Could not fetch candidate resume for suggestions:', error);
-    }
-    
-    // Display summary
-    const summaryDiv = document.getElementById('final-summary');
-    summaryDiv.innerHTML = `
+    return `
         <div class="stats-grid">
             <div class="stat-card">
                 <i class="fas fa-question-circle"></i>
@@ -1241,24 +1077,70 @@ async function completeInterview() {
         </p>
         <div style="margin-top: 1.5rem; background: var(--bg-color); border-radius: 0.75rem; padding: 1rem;">
             <h4 style="margin-bottom: 0.5rem;"><i class="fas fa-lightbulb"></i> Interview Improvement Feedback</h4>
-            ${renderSuggestionList(improvementFeedback.sentences)}
-            ${renderQuestionImprovementFeedback(improvementFeedback.questionFeedback)}
+            ${feedbackLoading
+                ? renderFeedbackLoading()
+                : `${renderSuggestionList(improvementFeedback.sentences || [])}
+                   ${renderQuestionImprovementFeedback(improvementFeedback.questionFeedback)}`}
         </div>
         <div style="margin-top: 1rem; background: var(--bg-color); border-radius: 0.75rem; padding: 1rem;">
             <h4 style="margin-bottom: 0.5rem;"><i class="fas fa-file-alt"></i> Resume Enhancement Suggestions</h4>
-            ${renderSuggestionList(resumeSuggestions.sentences)}
-            ${resumeSuggestions.topRoles.length > 0 ? `
-                <p style="margin-top: 0.75rem;"><strong>Role context from interview:</strong> ${resumeSuggestions.topRoles.join(', ')}</p>
-            ` : ''}
+            ${feedbackLoading
+                ? renderFeedbackLoading()
+                : `${renderSuggestionList(resumeSuggestions.sentences || [])}
+                   ${(resumeSuggestions.roleContext || (resumeSuggestions.topRoles || []).length > 0) ? `
+                <p style="margin-top: 0.75rem;"><strong>Role context from interview:</strong> ${
+                    escapeHtml(resumeSuggestions.roleContext || resumeSuggestions.topRoles.join(', '))
+                }</p>
+            ` : ''}`}
         </div>
     `;
+}
+
+async function completeInterview() {
+    interviewState.isActive = false;
     
-    // Hide question section, show complete
+    // Stop any ongoing speech
+    stopSpeaking();
+    await stopRecording();
+    
+    // Calculate final statistics
+    const totalAnswers = interviewState.answers.length;
+    const avgScore = totalAnswers > 0
+        ? interviewState.answers.reduce((sum, a) => sum + a.totalScore, 0) / totalAnswers
+        : 0;
+    const skipped = interviewState.answers.filter(a => a.answerText === '[Skipped]').length;
+    const stats = { totalAnswers, avgScore, skipped };
+
+    const summaryDiv = document.getElementById('final-summary');
+    summaryDiv.innerHTML = renderFinalSummary(stats, {}, {}, true);
+
     document.getElementById('interview-session').querySelector('.progress-section').style.display = 'none';
     document.getElementById('interview-session').querySelector('.question-card').style.display = 'none';
     document.getElementById('interview-session').querySelector('.answer-section').style.display = 'none';
     document.getElementById('answer-feedback').style.display = 'none';
     document.getElementById('interview-complete').style.display = 'block';
+
+    let improvementFeedback = { sentences: [], questionFeedback: [] };
+    let resumeSuggestions = { sentences: [], topRoles: [], roleContext: '' };
+
+    try {
+        const result = await api.generateFeedback(interviewState.answers, stats);
+        improvementFeedback = result.interviewFeedback || improvementFeedback;
+        resumeSuggestions = result.resumeSuggestions || resumeSuggestions;
+    } catch (error) {
+        console.error('Could not generate feedback:', error);
+        improvementFeedback = {
+            sentences: ['Personalized feedback could not be generated at this time. Please try again later.'],
+            questionFeedback: []
+        };
+        resumeSuggestions = {
+            sentences: ['Resume suggestions could not be generated at this time.'],
+            topRoles: [],
+            roleContext: ''
+        };
+    }
+
+    summaryDiv.innerHTML = renderFinalSummary(stats, improvementFeedback, resumeSuggestions, false);
     
     showToast('Interview completed!', 'success');
 }

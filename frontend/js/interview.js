@@ -38,7 +38,14 @@ const SCORING_WEIGHTS = {
     knowledge: 0.6,
     speech: 0.4
 };
-const SPEECH_SCORE_MAX = 0.99;
+/** Speech component weights — matches config.py SPEECH_COMPONENT_WEIGHTS */
+const SPEECH_COMPONENT_WEIGHTS = {
+    filler: 0.2,
+    pausePacing: 0.4,
+    pronunciation: 0.4
+};
+const SPEECH_MAX_FILLER_RATE = 0.15;
+const SPEECH_SCORE_MAX = 0.94;
 
 function createInterviewSessionId() {
     if (typeof crypto !== 'undefined' && crypto.randomUUID) {
@@ -748,8 +755,9 @@ async function submitAnswer() {
         const pauseCount = Math.max(0, speechState.recordingSessionsStarted - 1);
         const knowledgeScore = await calculateKnowledgeScore(answerText, question);
 
-        let speechScore = calculateSpeechScore(answerText, pauseCount);
-        let speechBreakdown = null;
+        let speechScoreResult = calculateSpeechScore(answerText, pauseCount);
+        let speechScore = speechScoreResult.speechScore;
+        let speechBreakdown = speechScoreResult.breakdown;
         let speechSource = 'text';
 
         const audioBlob = speechState.recordedAudioBlob || finalizeAudioBlob();
@@ -758,7 +766,7 @@ async function submitAnswer() {
                 const speechResult = await api.analyzeSpeech(audioBlob, answerText);
                 if (speechResult.success && typeof speechResult.speech_score === 'number') {
                     speechScore = capSpeechScore(speechResult.speech_score);
-                    speechBreakdown = speechResult.breakdown || null;
+                    speechBreakdown = speechResult.breakdown || speechBreakdown;
                     speechSource = speechResult.source || 'audio';
                 }
             } catch (audioError) {
@@ -855,13 +863,61 @@ function countFillerWords(answer) {
     return count;
 }
 
+function scoreSpeechFillers(answer) {
+    const wordCount = Math.max(answer.trim().split(/\s+/).filter(Boolean).length, 1);
+    const fillerRate = countFillerWords(answer) / wordCount;
+    return clampScore(1.0 - (fillerRate / SPEECH_MAX_FILLER_RATE));
+}
+
+function scoreSpeechPausePacing(answer, pauseCount = 0) {
+    const words = answer.trim().split(/\s+/).filter(Boolean);
+    const wordCount = Math.max(words.length, 1);
+
+    const pauseScore = clampScore(1.0 - Math.min(pauseCount * 0.12, 0.6));
+
+    const sentences = answer.split(/[.!?]+/).map(s => s.trim()).filter(Boolean);
+    const avgWordsPerSentence = wordCount / Math.max(sentences.length, 1);
+    const pacingScore = clampScore(1.0 - Math.abs(avgWordsPerSentence - 14) / 20);
+
+    return clampScore(0.55 * pauseScore + 0.45 * pacingScore);
+}
+
+function scoreSpeechPronunciation(answer) {
+    const stutterMatches = answer.match(/\b(\w+)\s+\1\b/gi) || [];
+    const stutterPenalty = Math.min(stutterMatches.length * 0.12, 0.5);
+    return clampScore(1.0 - stutterPenalty);
+}
+
+/**
+ * Speech score (text fallback): weighted filler, pause/pacing, and pronunciation.
+ * @param {number} pauseCount - extra recording sessions after the first
+ */
+function calculateSpeechScore(answer, pauseCount = 0) {
+    const breakdown = {
+        filler: scoreSpeechFillers(answer),
+        pause_pacing: scoreSpeechPausePacing(answer, pauseCount),
+        pronunciation: scoreSpeechPronunciation(answer)
+    };
+
+    const speechScore = (
+        breakdown.filler * SPEECH_COMPONENT_WEIGHTS.filler +
+        breakdown.pause_pacing * SPEECH_COMPONENT_WEIGHTS.pausePacing +
+        breakdown.pronunciation * SPEECH_COMPONENT_WEIGHTS.pronunciation
+    );
+
+    return {
+        speechScore: capSpeechScore(speechScore),
+        breakdown
+    };
+}
+
 /**
  * Fallback when ideal_answer_embedding is unavailable
  */
 function calculateKnowledgeScoreFallback(answer, question) {
     const wordCount = answer.trim().split(/\s+/).length;
-    if (wordCount <= 2) return 0.1;
-    if (wordCount <= 5) return 0.3;
+    // if (wordCount <= 2) return 0.1;
+    // if (wordCount <= 5) return 0.3;
 
     let score = 0.35;
     const answerLower = answer.toLowerCase();
@@ -879,10 +935,10 @@ function calculateKnowledgeScoreFallback(answer, question) {
     });
 
     if (keywordMatches > 0) {
-        score += Math.min(0.45, keywordMatches * 0.12);
+        score += Math.min(0.45, keywordMatches * 0.40);
     }
-    if (wordCount >= 30) score += 0.1;
-    if (wordCount >= 50) score += 0.1;
+    if (wordCount >= 10) score += 0.1;
+    if (wordCount >= 20) score += 0.1;
 
     return clampScore(score);
 }
@@ -892,8 +948,8 @@ function calculateKnowledgeScoreFallback(answer, question) {
  */
 async function calculateKnowledgeScore(answer, question) {
     const wordCount = answer.trim().split(/\s+/).length;
-    if (wordCount <= 2) return 0.1;
-    if (wordCount <= 5) return 0.25;
+    if (wordCount <= 2) return 0.15;
+    // if (wordCount <= 5) return 0.25;
 
     const idealVector = question.ideal_answer_embedding;
     if (!idealVector?.length) {
@@ -917,32 +973,6 @@ async function calculateKnowledgeScore(answer, question) {
         console.warn('Embedding API unavailable, using keyword fallback:', error);
         return calculateKnowledgeScoreFallback(answer, question);
     }
-}
-
-/**
- * Speech score: filler-word usage and extra recording sessions (pauses)
- * @param {number} pauseCount - recording starts after the first (ignored)
- */
-function calculateSpeechScore(answer, pauseCount = 0) {
-    const wordCount = answer.trim().split(/\s+/).length;
-    if (wordCount <= 2) return 0.15;
-    if (wordCount <= 5) return 0.3;
-
-    let score = 1.0;
-
-    const fillerCount = countFillerWords(answer);
-    const fillerPenalty = Math.min(0.45, fillerCount * 0.09);
-    score -= fillerPenalty;
-
-    const pausePenalty = Math.min(0.4, pauseCount * 0.12);
-    score -= pausePenalty;
-
-    const sentences = answer.split(/[.!?]+/).filter(s => s.trim().length > 0);
-    if (sentences.length >= 2 && fillerCount <= 2) {
-        score += 0.05;
-    }
-
-    return capSpeechScore(score);
 }
 
 /**

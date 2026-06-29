@@ -34,7 +34,8 @@ KNOWLEDGE_WEIGHT = 0.6
 SPEECH_WEIGHT = 0.4
 SPEECH_SCORE_MAX = 0.94                # speech score is capped below 100%
 
-# Audio speech analysis (faster-whisper + librosa)
+# Audio speech analysis (faster-whisper)
+# Final score = filler*0.2 + pause_pacing*0.4 + pronunciation*0.4 (no tone/energy)
 SPEECH_WHISPER_MODEL = "base"
 SPEECH_WHISPER_DEVICE = "cpu"
 SPEECH_COMPONENT_WEIGHTS = {

@@ -142,29 +142,24 @@ class SpeechAnalyzer:
         filler_rate = filler_count / word_count
         return _clamp(1.0 - (filler_rate / SPEECH_MAX_FILLER_RATE))
 
-    def _score_pause_pacing(
-        self,
-        words: List[Dict],
-        y: np.ndarray,
-        sr: int,
-        duration: float,
-    ) -> float:
-        import librosa
-
+    def _score_pause_pacing(self, words: List[Dict], duration: float) -> float:
         long_pauses = 0
+        gaps: List[float] = []
         for index in range(1, len(words)):
-            gap = words[index]["start"] - words[index - 1]["end"]
+            gap = max(words[index]["start"] - words[index - 1]["end"], 0.0)
+            gaps.append(gap)
             if gap >= SPEECH_LONG_PAUSE_SECONDS:
                 long_pauses += 1
 
         pause_score = _clamp(1.0 - long_pauses * 0.12)
 
-        if len(y) > 0:
-            rms = librosa.feature.rms(y=y)[0]
-            silence_ratio = float(np.mean(rms < 0.008))
-            silence_score = _clamp(1.0 - silence_ratio * 1.5)
+        if gaps:
+            avg_gap = float(np.mean(gaps))
+            spacing_score = _clamp(1.0 - abs(avg_gap - 0.25) / 0.35)
+        elif len(words) <= 1:
+            spacing_score = 0.75
         else:
-            silence_score = 0.5
+            spacing_score = 0.5
 
         word_count = max(len(words), 1)
         if words:
@@ -175,7 +170,7 @@ class SpeechAnalyzer:
         wpm = word_count / spoken_duration * 60.0
         wpm_score = _clamp(1.0 - abs(wpm - SPEECH_IDEAL_WPM) / 90.0)
 
-        return _clamp(0.45 * pause_score + 0.25 * silence_score + 0.30 * wpm_score)
+        return _clamp(0.40 * pause_score + 0.35 * spacing_score + 0.25 * wpm_score)
 
     def _score_pronunciation(
         self,
@@ -202,18 +197,10 @@ class SpeechAnalyzer:
         return _clamp(0.55 * confidence_score + 0.45 * overlap)
 
     def _analyze_file(self, audio_path: str, reference_text: str) -> Dict:
-        import librosa
-
         words, transcript, logprobs, duration = self._transcribe(audio_path)
 
-        try:
-            y, sr = librosa.load(audio_path, sr=16000, mono=True)
-        except Exception:
-            y = np.array([], dtype=np.float32)
-            sr = 16000
-
         filler_score = self._score_fillers(words, transcript)
-        pause_pacing_score = self._score_pause_pacing(words, y, sr, duration)
+        pause_pacing_score = self._score_pause_pacing(words, duration)
         pronunciation_score = self._score_pronunciation(logprobs, reference_text, transcript)
 
         breakdown = {
